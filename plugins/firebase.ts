@@ -1,12 +1,20 @@
 import firebase from 'firebase'
+
 const config = {
   apiKey: process.env.FB_API_KEY,
   authDomain: process.env.FB_AUTH_DOMAIN,
   databaseURL: process.env.FB_DATABASE_URL,
   projectId: process.env.FB_PROJECTID,
 }
-if (!firebase.apps.length) {
-  firebase.initializeApp(config)
-}
+// firebase 初期化
+firebase.initializeApp(config)
 
-export default firebase
+// firestore
+const db = firebase.firestore()
+db.collection('tests').get().then((querySnapshot) => {
+  querySnapshot.forEach((doc) => {
+    console.log('data: ', doc.data())
+  })
+})
+
+export default db
