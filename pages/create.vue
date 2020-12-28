@@ -1,14 +1,10 @@
-<template>
-  <div></div>
-</template>
+<template></template>
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: '',
-  setup(_, { root }) {
-    root.context.redirect('/search')
-  }
+  setup() {}
 })
 </script>
 
