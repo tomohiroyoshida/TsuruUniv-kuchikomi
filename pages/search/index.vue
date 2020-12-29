@@ -12,7 +12,7 @@
             rounded
             outlined
             clearable
-            color="teal"
+            color="light-blue"
             placeholder="授業名を入力 検索"
             append-outer-icon="mdi-magnify"
             @click:append-outer="search(searchContent)"
@@ -25,7 +25,7 @@
           <v-card
             v-for="item in kuchikomis"
             :key="item.id"
-            class="card my-1"
+            class="card my-2"
             rounded
             outlined
             max-width="50rem"
@@ -37,7 +37,7 @@
               <!-- <div>口コミ数: {{ item.numOfKuchikomi }} 個</div> -->
               <v-card-actions class="btn">
                 <v-btn
-                  color="teal"
+                  color="light-blue"
                   rounded
                   outlined
                   @click="goToDetail(item.title)"
@@ -125,14 +125,14 @@ const items = [
   }
 ]
 export default defineComponent({
-  name: 'home',
+  name: 'search',
   setup(_, { root }) {
     const searchContent = ref('')
     const kuchikomis = ref<any>([])
     const isLoading = ref(false)
 
     // クチコミを検索
-    const search = (title: string) => {
+    const search = async (title: string) => {
       console.debug('title: ', title)
       // タイトルが空文字またはnullの時は何もしない
       if (title === '' || title === null) return
@@ -140,7 +140,8 @@ export default defineComponent({
       // 一度クチコミを空にする
       kuchikomis.value = []
       // クチコミ取得
-      db.collection('classes')
+      await db
+        .collection('classes')
         .doc(title)
         .get()
         .then((doc) => {

@@ -1,7 +1,7 @@
 <template>
   <v-app id="default">
     <!-- TODO: ヘッダーのデザイン -->
-    <v-app-bar app flat color="">
+    <v-app-bar app flat color="light-blue lighten-3">
       <v-app-bar-nav-icon @click.stop="isOpenDrawer = !isOpenDrawer" />
       <v-app-bar-title>みんなの口コミ</v-app-bar-title>
     </v-app-bar>
@@ -15,7 +15,10 @@
       <v-divider />
       <!-- リスト -->
       <v-list nav>
-        <v-list-item-group v-model="selectedItem" active-class="teal--text">
+        <v-list-item-group
+          v-model="selectedItem"
+          active-class="light-blue--text"
+        >
           <v-list-item nuxt link to="/search">
             <v-list-item-icon>
               <v-icon> mdi-magnify </v-icon>
@@ -44,10 +47,22 @@
       </v-list>
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn v-if="isLoggedIn" block outlined color="teal" @click="login">
+          <v-btn
+            v-if="isLoggedIn"
+            block
+            outlined
+            color="light-blue lighten-3"
+            @click="login"
+          >
             ログイン
           </v-btn>
-          <v-btn v-else block outlined color="teal" @click="logout">
+          <v-btn
+            v-else
+            block
+            outlined
+            color="light-blue lighten-3"
+            @click="logout"
+          >
             ログアウト
           </v-btn>
         </div>
