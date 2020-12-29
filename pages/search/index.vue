@@ -6,7 +6,7 @@
         <div class="text-h6 d-flex justify-center my-3">口コミ検索</div>
         <div class="search-field">
           <v-text-field
-            v-model="content"
+            v-model="searchContent"
             solo
             dense
             rounded
@@ -15,42 +15,50 @@
             color="teal"
             placeholder="授業名を入力 検索"
             append-outer-icon="mdi-magnify"
-            @click:append-outer="search"
+            @click:append-outer="search(searchContent)"
           />
         </div>
         <!-- 検索結果一覧 -->
         <div class="text-h6 d-flex justify-center mb-3">検索結果</div>
-        <div v-if="$fetchState.pending" class="text-h6">
-          検索結果を取得中・・・
+        <div v-if="isLoading" class="text-h6">検索結果を取得中・・・</div>
+        <div v-if="kuchikomis">
+          <v-card
+            v-for="item in kuchikomis"
+            :key="item.id"
+            class="card my-1"
+            rounded
+            outlined
+            max-width="50rem"
+          >
+            <v-card-title>{{ item.title }}</v-card-title>
+            <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
+            <v-card-text class="d-flex card-text">
+              <!-- <div class="pr-3">平均評価: {{ item.rating }} / 5</div> -->
+              <!-- <div>口コミ数: {{ item.numOfKuchikomi }} 個</div> -->
+              <v-card-actions class="btn">
+                <v-btn
+                  color="teal"
+                  rounded
+                  outlined
+                  @click="goToDetail(item.title)"
+                >
+                  詳細を見る
+                </v-btn>
+              </v-card-actions>
+            </v-card-text>
+          </v-card>
         </div>
-        <v-card
-          v-for="item in items"
-          :key="item.id"
-          class="card my-1"
-          rounded
-          outlined
-          max-width="50rem"
-        >
-          <v-card-title>{{ item.title }}</v-card-title>
-          <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
-          <v-card-text class="d-flex card-text">
-            <div class="pr-3">平均評価: {{ item.rating }} / 5</div>
-            <div>口コミ数: {{ item.numOfKuchikomi }} 個</div>
-            <v-card-actions class="btn">
-              <v-btn color="teal" rounded outlined @click="goToDetail(item.id)">
-                詳細を見る
-              </v-btn>
-            </v-card-actions>
-          </v-card-text>
-        </v-card>
+        <div v-else class="text-h6 d-flex justify-center mb-3">
+          クチコミが存在しません。
+        </div>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
-// import db from '@/plugins/firebase'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
+import db from '@/plugins/firebase'
 const items = [
   {
     id: '1',
@@ -119,21 +127,41 @@ const items = [
 export default defineComponent({
   name: 'home',
   setup(_, { root }) {
-    const content = ref('')
-    const search = () => {
-      console.debug('hoge')
-    }
-    const goToDetail = (id: string) => {
-      root.$router.push(`/search/${id}`)
-    }
-    /**
-     * init
-     */
-    useFetch(async () => {
-      await console.log('init')
-    })
+    const searchContent = ref('')
+    const kuchikomis = ref<any>([])
+    const isLoading = ref(false)
 
-    return { search, items, content, goToDetail }
+    // クチコミを検索
+    const search = (title: string) => {
+      console.debug('title: ', title)
+      // タイトルが空文字またはnullの時は何もしない
+      if (title === '' || title === null) return
+      isLoading.value = true
+      // 一度クチコミを空にする
+      kuchikomis.value = []
+      // クチコミ取得
+      db.collection('classes')
+        .doc(title)
+        .get()
+        .then((doc) => {
+          kuchikomis.value.push(doc.data())
+        })
+      console.debug('data:', kuchikomis.value)
+      isLoading.value = false
+    }
+    // 詳細ページへ飛ぶ
+    const goToDetail = (title: string) => {
+      root.$router.push(`/search/${title}`)
+    }
+
+    return {
+      isLoading,
+      search,
+      items,
+      searchContent,
+      goToDetail,
+      kuchikomis
+    }
   }
 })
 </script>

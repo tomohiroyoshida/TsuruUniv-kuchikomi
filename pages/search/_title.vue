@@ -2,7 +2,7 @@
   <div class="pt-15">
     <!-- TODO: -->
     授業情報詳細ページ
-    {{ $route.params.id }}
+    {{ $route.params.title }}
   </div>
 </template>
 
