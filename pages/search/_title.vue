@@ -1,6 +1,11 @@
 <template>
-  <div v-if="$fetchState.pending" class="d-flex justify-center pt-15">
-    データを取得中・・・
+  <div v-if="$fetchState.pending" class="loading pt-15">
+    <v-progress-circular
+      indeterminate
+      size="100"
+      width="6"
+      color="light-blue lighten-3"
+    />
   </div>
   <!-- クチコミ一覧 -->
   <div v-else class="pt-15">
@@ -75,6 +80,9 @@ export default defineComponent({
 <style scoped>
 .card {
   margin: 8px auto;
+}
+.loading {
+  margin: auto;
 }
 /* 画面幅が800px以下の時 */
 @media (max-width: 800px) {

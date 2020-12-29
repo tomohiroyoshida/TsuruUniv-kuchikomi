@@ -20,7 +20,14 @@
         </div>
         <!-- 検索結果一覧 -->
         <div class="text-h6 d-flex justify-center mb-3">検索結果</div>
-        <div v-if="isLoading" class="text-h6">検索結果を取得中・・・</div>
+        <div v-if="isLoading" class="d-flex justify-center text-h6 mt-10">
+          <v-progress-circular
+            indeterminate
+            size="100"
+            width="6"
+            color="light-blue lighten-3"
+          />
+        </div>
         <div v-if="kuchikomis">
           <v-card
             v-for="item in kuchikomis"
