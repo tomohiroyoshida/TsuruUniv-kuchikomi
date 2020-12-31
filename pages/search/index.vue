@@ -3,10 +3,10 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <!-- 検索ボックス -->
-        <div class="text-h6 d-flex justify-center my-3">口コミ検索</div>
+        <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
         <div class="search-field">
           <v-text-field
-            v-model="searchContent"
+            v-model="searchTitle"
             solo
             dense
             rounded
@@ -14,9 +14,19 @@
             clearable
             color="light-blue"
             placeholder="授業名を入力 検索"
-            append-outer-icon="mdi-magnify"
-            @click:append-outer="search(searchContent)"
-          />
+          >
+            <template v-slot:append-outer>
+              <v-btn
+                fab
+                text
+                small
+                :disabled="disabled"
+                @click="search(searchTitle)"
+              >
+                <v-icon>mdi-magnify</v-icon>
+              </v-btn>
+            </template>
+          </v-text-field>
         </div>
         <!-- 検索結果一覧 -->
         <div class="text-h6 d-flex justify-center mb-3">検索結果</div>
@@ -40,8 +50,6 @@
             <v-card-title>{{ item.title }}</v-card-title>
             <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
             <v-card-text class="d-flex card-text">
-              <!-- <div class="pr-3">平均評価: {{ item.rating }} / 5</div> -->
-              <!-- <div>口コミ数: {{ item.numOfKuchikomi }} 個</div> -->
               <v-card-actions class="btn">
                 <v-btn
                   color="light-blue"
@@ -64,111 +72,51 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
-const items = [
-  {
-    id: '1',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  },
-  {
-    id: '2',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  },
-  {
-    id: '3',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  },
-  {
-    id: '4',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  },
-  {
-    id: '5',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  },
-  {
-    id: '6',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  },
-  {
-    id: '7',
-    title: '英語学概論',
-    teacher: '吉田智洋',
-    dayOfWeek: '月',
-    period: '1',
-    numOfKuchikomi: '10',
-    rating: '4.5'
-  }
-]
+
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
-    const searchContent = ref('')
-    const kuchikomis = ref<any>([])
+    const searchTitle = ref('')
+    const kuchikomis = ref<any>([]) // TODO: データ構造とかが決まったら型つける
     const isLoading = ref(false)
 
     // クチコミを検索
     const search = async (title: string) => {
-      console.debug('title: ', title)
-      // タイトルが空文字またはnullの時は何もしない
-      if (title === '' || title === null) return
       isLoading.value = true
-      // 一度クチコミを空にする
-      kuchikomis.value = []
+      // 既にクチコミがあれば空にする
+      if (kuchikomis.value.length) kuchikomis.value = []
       // クチコミ取得
       await db
         .collection('classes')
         .doc(title)
         .get()
         .then((doc) => {
+          if (!doc.data()) return
           kuchikomis.value.push(doc.data())
         })
       console.debug('data:', kuchikomis.value)
       isLoading.value = false
     }
+
     // 詳細ページへ飛ぶ
     const goToDetail = (title: string) => {
       root.$router.push(`/search/${title}`)
     }
 
+    // 検索欄に文字が入力されていれば検索ボタンが押せるようになるフラグ
+    const disabled = computed(() => {
+      return searchTitle.value === '' || searchTitle.value === null
+    })
+
     return {
       isLoading,
       search,
-      items,
-      searchContent,
+      searchTitle,
       goToDetail,
-      kuchikomis
+      kuchikomis,
+      disabled
     }
   }
 })
@@ -180,7 +128,11 @@ export default defineComponent({
 }
 
 /* アイテムを真ん中に置く */
-.search-field,
+.search-field {
+  margin: 0 auto;
+  margin-top: 8px;
+}
+
 .card {
   margin: 0 auto;
 }
@@ -193,6 +145,10 @@ export default defineComponent({
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+.v-input >>> .v-input__append-outer {
+  margin: 0;
 }
 
 /* 画面幅が1440px以上の時 */

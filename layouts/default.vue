@@ -3,7 +3,7 @@
     <!-- TODO: ヘッダーのデザイン -->
     <v-app-bar app flat color="light-blue lighten-3">
       <v-app-bar-nav-icon @click.stop="isOpenDrawer = !isOpenDrawer" />
-      <v-app-bar-title>みんなの口コミ</v-app-bar-title>
+      <v-app-bar-title>みんなのクチコミ</v-app-bar-title>
     </v-app-bar>
     <!-- ドロワー -->
     <v-navigation-drawer v-model="isOpenDrawer" app temporary>
@@ -24,7 +24,7 @@
               <v-icon> mdi-magnify </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title> 口コミ検索 </v-list-item-title>
+              <v-list-item-title> クチコミ検索 </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item nuxt link to="/create">
@@ -32,7 +32,7 @@
               <v-icon>mdi-pencil</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title> 口コミ作成 </v-list-item-title>
+              <v-list-item-title> クチコミ作成 </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item nuxt link to="/about">
@@ -50,11 +50,11 @@
           <v-btn
             v-if="isLoggedIn"
             block
-            outlined
+            depressed
             color="light-blue lighten-3"
             @click="login"
           >
-            ログイン
+            <span class="white--text"> ログイン </span>
           </v-btn>
           <v-btn
             v-else
