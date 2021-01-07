@@ -1,5 +1,5 @@
 <template>
-  <v-app v-if="!$fetchState.pending" id="default">
+  <v-app id="default">
     <!-- TODO: ヘッダーのデザイン -->
     <v-app-bar app color="light-blue lighten-3">
       <v-app-bar-nav-icon @click.stop="isOpenDrawer = !isOpenDrawer" />
@@ -79,12 +79,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, useFetch, watch } from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
+import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'default',
-  setup(_, { root }) {
+  setup() {
     const isOpenDrawer = ref(false)
     const selectedItem = ref(null)
     const isLoggedIn = ref(true)
@@ -97,24 +96,7 @@ export default defineComponent({
     // リストのアイテムが選択されたらドロワーをとじる
     watch(selectedItem, () => (isOpenDrawer.value = false))
 
-    /**
-     * init
-     */
-    const classes = ref<any>([])
-    useFetch(async () => {
-      await db
-        .collection('classes')
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            classes.value.push(doc.data())
-          })
-        })
-      console.debug('classes:', classes.value)
-      root.$store.dispatch('setClass', classes.value)
-    })
-
-    return { isOpenDrawer, selectedItem, isLoggedIn, login, logout, classes }
+    return { isOpenDrawer, selectedItem, isLoggedIn, login, logout }
   }
 })
 </script>

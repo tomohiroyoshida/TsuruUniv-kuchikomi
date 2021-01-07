@@ -6,7 +6,7 @@
         <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
         <div class="search-field">
           <v-text-field
-            v-model="searchTitle"
+            v-model="searchingTitle"
             solo
             dense
             rounded
@@ -21,7 +21,7 @@
                 text
                 small
                 :disabled="disabled"
-                @click="search(searchTitle)"
+                @click="search(searchingTitle)"
               >
                 <v-icon>mdi-magnify</v-icon>
               </v-btn>
@@ -38,9 +38,9 @@
             color="light-blue lighten-3"
           />
         </div>
-        <div v-if="kuchikomis">
+        <div v-if="filteredClasses">
           <v-card
-            v-for="item in kuchikomis"
+            v-for="item in filteredClasses"
             :key="item.id"
             class="card my-2"
             rounded
@@ -72,31 +72,32 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useFetch
+} from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
+import { Class } from '@/types/State'
 
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
-    const searchTitle = ref('')
-    const kuchikomis = ref<any>([]) // TODO: データ構造とかが決まったら型つける
+    const searchingTitle = ref('')
+    const filteredClasses = ref<Class[]>([])
     const isLoading = ref(false)
 
     // クチコミを検索
-    const search = async (title: string) => {
+    const search = (title: string) => {
       isLoading.value = true
       // 既にクチコミがあれば空にする
-      if (kuchikomis.value.length) kuchikomis.value = []
-      // クチコミ取得
-      await db
-        .collection('classes')
-        .doc(title)
-        .get()
-        .then((doc) => {
-          if (!doc.data()) return
-          kuchikomis.value.push(doc.data())
-        })
-      console.debug('data:', kuchikomis.value)
+      if (filteredClasses.value.length) filteredClasses.value = []
+      // フェッチした授業リストから入力欄にある名前が含まれる要素を取得
+      filteredClasses.value = fetchedClasses.value.filter((item) =>
+        item.title.includes(title)
+      )
+      console.debug('検索した結果:', filteredClasses.value)
       isLoading.value = false
     }
 
@@ -107,16 +108,35 @@ export default defineComponent({
 
     // 検索欄に文字が入力されていれば検索ボタンが押せるようになるフラグ
     const disabled = computed(() => {
-      return searchTitle.value === '' || searchTitle.value === null
+      return searchingTitle.value === '' || searchingTitle.value === null
+    })
+
+    /**
+     * init
+     * 全ての講義のリストを取得
+     */
+    const fetchedClasses = ref<Class[]>([])
+    useFetch(async () => {
+      await db
+        .collection('classes')
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            fetchedClasses.value.push(doc.data() as Class)
+          })
+        })
+      console.debug('fetchedClasses:', fetchedClasses.value)
+      root.$store.dispatch('setClass', fetchedClasses.value)
     })
 
     return {
       isLoading,
       search,
-      searchTitle,
+      searchingTitle,
       goToDetail,
-      kuchikomis,
-      disabled
+      filteredClasses,
+      disabled,
+      fetchedClasses
     }
   }
 })
