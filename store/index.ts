@@ -1,4 +1,5 @@
 import { NuxtAppOptions, NuxtState } from '@nuxt/types/app'
+import { User, Class } from '@/types/State'
 
 export const state = () => ({
   // ユーザーの情報
