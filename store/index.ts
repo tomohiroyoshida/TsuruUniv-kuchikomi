@@ -9,7 +9,10 @@ export const state = () => ({
     loggedIn: false
   },
   //  講義のリスト
-  classes: []
+  classes: [],
+  // 検索ページで検索欄に入力された講義名 + フィルタリングされた講義一覧
+  searchingTitle: '',
+  filteredClasses: []
 })
 
 export const getters = {
@@ -18,6 +21,12 @@ export const getters = {
   },
   classes: (state: NuxtState) => {
     return state.classes
+  },
+  searchingTitle: (state: NuxtState) => {
+    return state.searchingTitle
+  },
+  filteredClasses: (state: NuxtState) => {
+    return state.filteredClasses
   }
 }
 
@@ -25,16 +34,32 @@ export const mutations = {
   setUser(state: NuxtState, user: User) {
     state.user = user
   },
-  setClass(state: NuxtState, classes: Class[]) {
+  setClasses(state: NuxtState, classes: Class[]) {
     state.classes = classes
+  },
+  setSearchingTitle(state: NuxtState, searchingTitle: string) {
+    state.searchingTitle = searchingTitle
+  },
+  setFilteredClasses(state: NuxtState, filteredClasses: string) {
+    state.filteredClasses = filteredClasses
   }
 }
 
 export const actions = {
+  // ログインしているユーザーを保存
   setUser({ commit }: NuxtAppOptions, user: User) {
     commit('setUser', user)
   },
-  setClass({ commit }: NuxtAppOptions, classes: Class[]) {
-    commit('setClass', classes)
+  // TODO: 講義リストの一覧を保存 いらない？
+  setClasses({ commit }: NuxtAppOptions, classes: Class[]) {
+    commit('setClasses', classes)
+  },
+  // 検索ページで検索欄に入力された講義名を保存
+  setSearchingTitle({ commit }: NuxtAppOptions, searchingTitle: string) {
+    commit('setSearchingTitle', searchingTitle)
+  },
+  // 検索ページでフィルタリングされた講義一覧
+  setFilteredClasses({ commit }: NuxtAppOptions, filteredClasses: string) {
+    commit('setFilteredClasses', filteredClasses)
   }
 }
