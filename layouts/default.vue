@@ -87,9 +87,11 @@ export default defineComponent({
     const isOpenDrawer = ref(false)
     const selectedItem = ref(null)
     const isLoggedIn = ref(true)
+    // TODO
     const login = () => {
       console.debug('login')
     }
+    // TODO
     const logout = () => {
       console.debug('logout')
     }

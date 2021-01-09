@@ -13,25 +13,14 @@
             outlined
             clearable
             color="light-blue"
-            placeholder="授業名を入力 検索"
-          >
-            <template v-slot:append-outer>
-              <v-btn
-                fab
-                text
-                small
-                :disabled="disabled"
-                @click="search(searchingTitle)"
-              >
-                <v-icon>mdi-magnify</v-icon>
-              </v-btn>
-            </template>
-          </v-text-field>
+            prepend-inner-icon="mdi-magnify"
+            placeholder="授業名を入力"
+          />
         </div>
 
         <!-- 検索結果一覧 -->
-        <!-- 初めてこのページを訪れたとき -->
-        <div v-if="!filteredClasses.length && !isSearchedOnce">
+        <!-- 検索欄に文字が入力されていない場合、全ての講義のリストを表示 -->
+        <section v-if="searchingTitle === '' || searchingTitle === null">
           <div class="text-h6 d-flex justify-center mb-3">
             登録されている講義一覧
           </div>
@@ -58,34 +47,24 @@
               </v-card-actions>
             </v-card-text>
           </v-card>
+        </section>
+
+        <!-- 検索結果のコメント -->
+        <div class="text-h6 d-flex justify-center mb-3">
+          {{ filteredClasses.length ? RESULT_COMMENT.YES : RESULT_COMMENT.NO }}
         </div>
-        <!-- 検索して講義が存在した時 -->
-        <div
-          v-else-if="
-            (filteredClasses.length && isSearchedOnce) ||
-            (filteredClasses.length && !isSearchedOnce)
-          "
-          class="text-h6 d-flex justify-center mb-3"
-        >
-          検索結果
-        </div>
-        <div
-          v-else-if="!filteredClasses.length && isSearchedOnce"
-          class="text-h6 d-flex justify-center mb-3"
-        >
-          まだクチコミが作成されていない、<br />または講義名が正しくありません。
-        </div>
-        <!-- プログレスサークル -->
-        <div v-if="isLoading" class="d-flex justify-center text-h6 mt-10">
-          <v-progress-circular
-            indeterminate
-            size="100"
-            width="6"
-            color="light-blue lighten-3"
-          />
-        </div>
-        <!-- 講義のカード一覧 -->
-        <div v-if="filteredClasses.length">
+
+        <!-- 講義カード一覧 -->
+        <section v-if="filteredClasses.length">
+          <!-- プログレスサークル -->
+          <div v-if="isSearching" class="d-flex justify-center mt-10">
+            <v-progress-circular
+              indeterminate
+              size="70"
+              width="6"
+              color="light-blue lighten-3"
+            />
+          </div>
           <v-card
             v-for="item in filteredClasses"
             :key="item.id"
@@ -109,90 +88,58 @@
               </v-card-actions>
             </v-card-text>
           </v-card>
-        </div>
+        </section>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  ref,
-  useFetch
-} from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
+import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 
+const RESULT_COMMENT = {
+  YES: '検索結果',
+  NO: 'まだクチコミが作成されていない、または講義名が正しくありません'
+}
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
-    // クチコミを検索
-    const isSearchedOnce = ref(false)
+    const isSearching = ref(false)
     const searchingTitle = ref('')
     const filteredClasses = ref<Class[]>([])
-    const isLoading = ref(false)
-    const search = (title: string) => {
-      isLoading.value = true
-      isSearchedOnce.value = true
-      // 既にクチコミがあれば一度空にする
+    // 検索欄に文字が入力されるたびにマッチする講義を探す
+    watch(searchingTitle, (title: string) => {
+      isSearching.value = true
       if (filteredClasses.value.length) filteredClasses.value = []
-      // フェッチした全ての授業リストから入力欄にある文字列が含まれる講義リストを取得
+      // 全ての授業リストから、検索欄にある文字列が含まれる講義を取得
       filteredClasses.value = fetchedClasses.value.filter((item) =>
         item.title.includes(title)
       )
+      isSearching.value = false
       console.debug('検索した結果:', filteredClasses.value)
-      // Storeに検索欄に入力された講義名を保存
-      root.$store.dispatch('setSearchingTitle', searchingTitle.value)
-      root.$store.dispatch('setFilteredClasses', filteredClasses.value)
-      isLoading.value = false
-    }
+    })
 
     // クチコミのページへ飛ぶ
     const goToKuchikomi = (title: string) => {
       root.$router.push(`/search/${title}`)
     }
 
-    // 検索欄に文字が入力されていれば検索ボタンが押せるようになるフラグ
-    const disabled = computed(() => {
-      return searchingTitle.value === '' || searchingTitle.value === null
-    })
-
     /**
      * init
-     * 全ての講義のリストを取得
      */
+    // storeから全ての講義リストをフェッチ
     const fetchedClasses = ref<Class[]>([])
-    useFetch(async () => {
-      await db
-        .collection('classes')
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            fetchedClasses.value.push(doc.data() as Class)
-          })
-        })
-      console.debug('fetchedClasses:', fetchedClasses.value)
-      root.$store.dispatch('setClasses', fetchedClasses.value) // TODO: いらないかも
-    })
-
-    /**
-     * Storeに検索した結果が残っていれば、それをデフォルトで表示する
-     * ブラウザバックしたときに、バックする前の状態に戻すため
-     */
-    searchingTitle.value = root.$store.getters.searchingTitle
-    filteredClasses.value = root.$store.getters.filteredClasses
+    fetchedClasses.value = root.$store.getters.classes
+    console.debug('fetchedClasses', fetchedClasses.value)
 
     return {
-      isLoading,
-      isSearchedOnce,
-      search,
+      RESULT_COMMENT,
+      isSearching,
       searchingTitle,
-      goToKuchikomi,
       filteredClasses,
-      disabled,
-      fetchedClasses
+      fetchedClasses,
+      goToKuchikomi
     }
   }
 })
