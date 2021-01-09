@@ -20,6 +20,15 @@
           v-model="selectedItem"
           active-class="light-blue--text"
         >
+          <!-- 使い方 -->
+          <v-list-item nuxt link to="/">
+            <v-list-item-icon>
+              <v-icon>mdi-file-document-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title> 使い方 </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <!-- 検索 -->
           <v-list-item nuxt link to="/search">
             <v-list-item-icon>
@@ -32,19 +41,10 @@
           <!-- 作成 -->
           <v-list-item nuxt link to="/create">
             <v-list-item-icon>
-              <v-icon>mdi-pencil</v-icon>
+              <v-icon>mdi-pencil-plus-outline</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title> クチコミ作成 </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <!-- 使い方 -->
-          <v-list-item nuxt link to="/about">
-            <v-list-item-icon>
-              <v-icon>mdi-book</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title> 使い方 </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
