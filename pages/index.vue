@@ -1,15 +1,17 @@
 <template>
-  <div></div>
+  <div id="index">説明ページ</div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
-  name: '',
-  setup(_, { root }) {
-    root.context.redirect('/search')
-  }
+  name: 'index',
+  setup() {}
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+#index {
+  margin-top: 5rem;
+}
+</style>
