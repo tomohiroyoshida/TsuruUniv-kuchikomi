@@ -10,7 +10,7 @@
     <v-navigation-drawer v-model="isOpenDrawer" app temporary>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title>メニュー</v-list-item-title>
+          <v-list-item-title class="ml-10">メニュー</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
@@ -53,7 +53,7 @@
       <template v-slot:append>
         <div class="pa-2">
           <v-btn
-            v-if="isLoggedIn"
+            v-if="!isLoggedIn"
             block
             depressed
             color="light-blue lighten-3"
@@ -86,14 +86,14 @@ export default defineComponent({
   setup() {
     const isOpenDrawer = ref(false)
     const selectedItem = ref(null)
-    const isLoggedIn = ref(true)
+    const isLoggedIn = ref(false)
     // TODO
     const login = () => {
-      console.debug('login')
+      isLoggedIn.value = true
     }
     // TODO
     const logout = () => {
-      console.debug('logout')
+      isLoggedIn.value = false
     }
     // リストのアイテムが選択されたらドロワーをとじる
     watch(selectedItem, () => (isOpenDrawer.value = false))

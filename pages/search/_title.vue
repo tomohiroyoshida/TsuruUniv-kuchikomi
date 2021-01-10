@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$fetchState.pending" class="loading pt-15">
+  <div v-if="$fetchState.pending" class="loading">
     <v-progress-circular
       indeterminate
       size="100"
@@ -16,6 +16,7 @@
         もしこの授業を受けたことがあれば、ぜひクチコミの作成をよろしくお願いいたします🙇‍♂️
       </div>
     </div>
+
     <!-- クチコミが存在する場合 -->
     <div v-else-if="kuchikomis.length">
       <div class="mt-3 text-h6 d-flex justify-center">クチコミ一覧</div>
@@ -39,6 +40,7 @@
             :value="item.rating"
             small
             dense
+            readonly
             half-increments
             color="warning"
             background-color="grey lighten-1"

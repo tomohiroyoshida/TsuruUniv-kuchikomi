@@ -3,7 +3,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <!-- 検索ボックス -->
-        <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
+        <title class="text-h6 d-flex justify-center my-3">クチコミ検索</title>
         <div class="search-field">
           <v-text-field
             v-model="searchingTitle"
@@ -14,16 +14,16 @@
             clearable
             color="light-blue"
             prepend-inner-icon="mdi-magnify"
-            placeholder="授業名を入力"
+            placeholder="授業名を入力 検索"
           />
         </div>
 
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、全ての講義のリストを表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
-          <div class="text-h6 d-flex justify-center mb-3">
+          <title class="text-h6 d-flex justify-center mb-3">
             登録されている講義一覧
-          </div>
+          </title>
           <v-card
             v-for="item in fetchedClasses"
             :key="item.id"
@@ -50,10 +50,12 @@
         </section>
 
         <!-- 検索結果のコメント -->
-        <div class="text-h6 d-flex justify-center mb-3">
-          {{ filteredClasses.length ? RESULT_COMMENT.YES : RESULT_COMMENT.NO }}
-        </div>
-
+        <title
+          v-if="!filteredClasses.length && searchingTitle"
+          class="text-h6 d-flex justify-center mb-3"
+        >
+          {{ RESULT_COMMENT.NO }}
+        </title>
         <!-- 講義カード一覧 -->
         <section v-if="filteredClasses.length">
           <!-- プログレスサークル -->
@@ -116,12 +118,18 @@ export default defineComponent({
       filteredClasses.value = fetchedClasses.value.filter((item) =>
         item.title.includes(title)
       )
+
+      // Storeを綺麗にする
+      root.$store.dispatch('setSearchingTitle', '')
+      root.$store.dispatch('setFilteredClasses', [])
+
       isSearching.value = false
       console.debug('検索した結果:', filteredClasses.value)
     })
 
     // クチコミのページへ飛ぶ
     const goToKuchikomi = (title: string) => {
+      root.$store.dispatch('setSearchingTitle', searchingTitle.value)
       root.$router.push(`/search/${title}`)
     }
 
@@ -133,13 +141,23 @@ export default defineComponent({
     fetchedClasses.value = root.$store.getters.classes
     console.debug('fetchedClasses', fetchedClasses.value)
 
+    // Storeに 'searchingTitle' があればその講義の一覧を表示する
+    const storeSearchingTitle = root.$store.getters.searchingTitle
+    if (storeSearchingTitle) {
+      searchingTitle.value = storeSearchingTitle
+      filteredClasses.value = fetchedClasses.value.filter((item) =>
+        item.title.includes(searchingTitle.value)
+      )
+    }
+
     return {
       RESULT_COMMENT,
       isSearching,
       searchingTitle,
       filteredClasses,
       fetchedClasses,
-      goToKuchikomi
+      goToKuchikomi,
+      storeSearchingTitle
     }
   }
 })
