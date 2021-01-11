@@ -8,9 +8,9 @@ export const state = () => ({
     username: 'サンプル太郎',
     loggedIn: false
   },
-  //  講義のリスト
+  //  授業のリスト
   classes: [],
-  // 検索ページで検索欄に入力された講義名 + フィルタリングされた講義一覧
+  // 検索ページで検索欄に入力された授業名 + フィルタリングされた授業一覧
   searchingTitle: '',
   filteredClasses: []
 })
@@ -50,15 +50,15 @@ export const actions = {
   setUser({ commit }: NuxtAppOptions, user: User) {
     commit('setUser', user)
   },
-  // TODO: 講義リストの一覧を保存 いらない？
+  // TODO: 授業リストの一覧を保存 いらない？
   setClasses({ commit }: NuxtAppOptions, classes: Class[]) {
     commit('setClasses', classes)
   },
-  // 検索ページで検索欄に入力された講義名を保存
+  // 検索ページで検索欄に入力された授業名を保存
   setSearchingTitle({ commit }: NuxtAppOptions, searchingTitle: string) {
     commit('setSearchingTitle', searchingTitle)
   },
-  // 検索ページでフィルタリングされた講義一覧
+  // 検索ページでフィルタリングされた授業一覧
   setFilteredClasses({ commit }: NuxtAppOptions, filteredClasses: string) {
     commit('setFilteredClasses', filteredClasses)
   }

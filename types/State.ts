@@ -5,7 +5,7 @@ export interface User {
   loggedIn: boolean
 }
 
-// 講義の情報
+// 授業の情報
 export interface Class {
   id: string
   title: string
