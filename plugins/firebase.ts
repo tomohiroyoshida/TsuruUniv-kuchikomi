@@ -11,12 +11,5 @@ firebase.initializeApp(config)
 
 // firestore
 const db = firebase.firestore()
-// db.collection('tests')
-//   .get()
-//   .then((querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//       console.debug('data: ', doc.data())
-//     })
-//   })
 
 export default db
