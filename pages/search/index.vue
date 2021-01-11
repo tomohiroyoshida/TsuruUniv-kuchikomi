@@ -7,22 +7,23 @@
         <div class="search-field">
           <v-text-field
             v-model="searchingTitle"
+            flat
             solo
             dense
             rounded
             outlined
             clearable
-            color="light-blue"
+            color="primary"
             prepend-inner-icon="mdi-magnify"
             placeholder="授業名を入力 検索"
           />
         </div>
 
         <!-- 検索結果一覧 -->
-        <!-- 検索欄に文字が入力されていない場合、全ての講義のリストを表示 -->
+        <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
           <title class="text-h6 d-flex justify-center mb-3">
-            登録されている講義一覧
+            登録されている授業一覧
           </title>
           <v-card
             v-for="item in fetchedClasses"
@@ -37,7 +38,7 @@
             <v-card-text class="d-flex card-text">
               <v-card-actions class="btn">
                 <v-btn
-                  color="light-blue"
+                  color="primary"
                   rounded
                   outlined
                   @click="goToKuchikomi(item.title)"
@@ -56,7 +57,7 @@
         >
           {{ RESULT_COMMENT.NO }}
         </title>
-        <!-- 講義カード一覧 -->
+        <!-- 授業カード一覧 -->
         <section v-if="filteredClasses.length">
           <!-- プログレスサークル -->
           <div v-if="isSearching" class="d-flex justify-center mt-10">
@@ -64,7 +65,7 @@
               indeterminate
               size="70"
               width="6"
-              color="light-blue lighten-3"
+              color="primary lighten-3"
             />
           </div>
           <v-card
@@ -80,7 +81,7 @@
             <v-card-text class="d-flex card-text">
               <v-card-actions class="btn">
                 <v-btn
-                  color="light-blue"
+                  color="primary"
                   rounded
                   outlined
                   @click="goToKuchikomi(item.title)"
@@ -102,7 +103,7 @@ import { Class } from '@/types/State'
 
 const RESULT_COMMENT = {
   YES: '検索結果',
-  NO: 'まだクチコミが作成されていない、または講義名が正しくありません'
+  NO: 'まだクチコミが作成されていない、または授業名が正しくありません'
 }
 export default defineComponent({
   name: 'search',
@@ -110,11 +111,11 @@ export default defineComponent({
     const isSearching = ref(false)
     const searchingTitle = ref('')
     const filteredClasses = ref<Class[]>([])
-    // 検索欄に文字が入力されるたびにマッチする講義を探す
+    // 検索欄に文字が入力されるたびにマッチする授業を探す
     watch(searchingTitle, (title: string) => {
       isSearching.value = true
       if (filteredClasses.value.length) filteredClasses.value = []
-      // 全ての授業リストから、検索欄にある文字列が含まれる講義を取得
+      // 全ての授業リストから、検索欄にある文字列が含まれる授業を取得
       filteredClasses.value = fetchedClasses.value.filter((item) =>
         item.title.includes(title)
       )
@@ -136,12 +137,12 @@ export default defineComponent({
     /**
      * init
      */
-    // storeから全ての講義リストをフェッチ
+    // storeから全ての授業リストをフェッチ
     const fetchedClasses = ref<Class[]>([])
     fetchedClasses.value = root.$store.getters.classes
     console.debug('fetchedClasses', fetchedClasses.value)
 
-    // Storeに 'searchingTitle' があればその講義の一覧を表示する
+    // Storeに 'searchingTitle' があればその授業の一覧を表示する
     const storeSearchingTitle = root.$store.getters.searchingTitle
     if (storeSearchingTitle) {
       searchingTitle.value = storeSearchingTitle

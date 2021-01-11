@@ -1,11 +1,6 @@
 <template>
   <div v-if="$fetchState.pending" class="loading">
-    <v-progress-circular
-      indeterminate
-      size="100"
-      width="6"
-      color="light-blue lighten-3"
-    />
+    <v-progress-circular indeterminate size="100" width="6" color="primary" />
   </div>
   <!-- クチコミ一覧 -->
   <div v-else class="pt-15">
@@ -30,7 +25,7 @@
       >
         <!-- アイコン＋ユーザー名 -->
         <div class="d-flex px-1 pt-1">
-          <v-icon color="light-blue lighten-3"> mdi-account-circle </v-icon>
+          <v-icon color="primary"> mdi-account-circle </v-icon>
           <div class="text-body-2 pa-1">{{ item.user }}</div>
         </div>
 

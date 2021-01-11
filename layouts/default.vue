@@ -1,9 +1,11 @@
 <template>
   <v-app id="default">
-    <!-- TODO: ヘッダーのデザイン -->
-    <v-app-bar app color="light-blue lighten-3">
+    <!-- ヘッダーのデザイン -->
+    <v-app-bar app flat color="primary">
       <v-app-bar-nav-icon @click.stop="isOpenDrawer = !isOpenDrawer" />
-      <v-app-bar-title>みんなのクチコミ</v-app-bar-title>
+      <v-spacer />
+      <div class="white--text text-h6 mr-5">みんなのクチコミ</div>
+      <v-spacer />
     </v-app-bar>
 
     <!-- ドロワー -->
@@ -15,11 +17,8 @@
       </v-list-item>
       <v-divider />
       <!-- リスト -->
-      <v-list nav>
-        <v-list-item-group
-          v-model="selectedItem"
-          active-class="light-blue--text"
-        >
+      <v-list shaped>
+        <v-list-item-group v-model="selectedItem" active-class="primary--text">
           <!-- 使い方 -->
           <v-list-item nuxt link to="/">
             <v-list-item-icon>
@@ -56,18 +55,12 @@
             v-if="!isLoggedIn"
             block
             depressed
-            color="light-blue lighten-3"
+            color="primary"
             @click="login"
           >
             <span class="white--text"> ログイン </span>
           </v-btn>
-          <v-btn
-            v-else
-            block
-            outlined
-            color="light-blue lighten-3"
-            @click="logout"
-          >
+          <v-btn v-else block outlined color="primary" @click="logout">
             ログアウト
           </v-btn>
         </div>
