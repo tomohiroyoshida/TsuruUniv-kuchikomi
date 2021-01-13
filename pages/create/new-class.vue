@@ -5,7 +5,7 @@
         <div class="text-h6 d-flex justify-center mt-4 mb-2">
           新しい授業とクチコミを作成
         </div>
-        <v-form ref="form" v-model="isValid">
+        <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
             <v-col cols="12" md="6">
@@ -149,7 +149,7 @@
           <AppBtn
             depressed
             color="primary"
-            :disabled="!isValid"
+            :disabled="!isFormValid"
             @click="openCreateConfirm"
           >
             作成
@@ -192,7 +192,7 @@ const RULES = {
     (v: string) =>
       (v && v.length < 1000) || 'クチコミ内容は1000文字以下で記入してください'
   ]
-}
+} as const
 const DAYS = ['月', '火', '水', '木', '金', '土', '日'] as const
 const PERIODS = ['1', '2', '3', '4', '5', '6'] as const
 const TERMS = ['前期', '後期', '通年', '時間外授業'] as const
@@ -202,17 +202,17 @@ export default defineComponent({
   setup(_, { root }) {
     const title = ref('')
     const teacher = ref('')
+    const term = ref(null)
     const dayOfWeek = ref(null)
     const period = ref(null)
-    const term = ref(null)
+    const rating = ref<Number>(0.5)
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
     const year = ref(null)
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
-    const rating = ref<Number>(0.5)
-    const isValid = ref(true)
+    const isFormValid = ref(true)
 
-    // 開講期が「短期集中」の場合は「曜日・限目」を null にする
+    // 開講期が「時間外授業」の場合は「曜日・限目」を null にする
     const isTermShort = computed(() => term.value === '時間外授業')
     watch(isTermShort, () => {
       if (term.value === '時間外授業') {
@@ -220,49 +220,74 @@ export default defineComponent({
         period.value = null
       }
     })
-    // 開講期が「短期集中」の場合はルールを無くす
+    // 開講期が「時間外授業」の場合はルールを無くす
     const dayAndPeriodRule = [
       (v: string) =>
         term.value === '時間外授業' ? false : !!v || 'この欄の入力は必須です'
     ]
 
-    // 作成
+    // 新規作成
     const isOpenCreateConfirm = ref(false)
     const openCreateConfirm = () => {
       isOpenCreateConfirm.value = true
     }
-    // TODO
+    // TODO firebase接続
+    const isOpenErrorDialog = ref(false)
     const createKuchikomi = () => {
       isOpenCreateConfirm.value = false
       const createdAt = new Date().toLocaleString()
       console.debug('date', createdAt)
       // 授業そのものの情報を追加
-      const docRef = db.collection('classes').doc(title.value).get()
-
-      // db.collection('classes').doc(title.value).set({
-      //   title: title.value,
-      //   teacher: teacher.value,
-      //   dayOfWeek: dayOfWeek.value,
-      //   period: period.value,
-      //   year: year.value,
-      //   rating: rating.value,
-      //   createdAt
-      // })
-      // root.$router.replace('/create')
+      db.collection('classes')
+        .doc(title.value)
+        .get()
+        .then((doc) => {
+          // もしすでに入力されたタイトルの授業が存在していたら処理を中止してエラーを出す
+          if (doc.exists) {
+            isOpenErrorDialog.value = true
+            console.debug('もうあるよ')
+          } else {
+            // 授業の情報を追加
+            db.collection('classes').doc(title.value).set({
+              title: title.value,
+              teacher: teacher.value,
+              term: term.value,
+              dayOfWeek: dayOfWeek.value,
+              period: period.value,
+              createdAt
+            })
+            // クチコミの情報を追加
+            db.collection('classes')
+              .doc(title.value)
+              .collection('kuchikomis')
+              .doc()
+              .set({
+                title: kuchikomiTitle.value,
+                content: kuchikomi.value,
+                rating: rating.value,
+                year: year.value,
+                username: 'TOMO' // TODO: ログインしているユーザーの名前にする
+              })
+            console.debug('done')
+          }
+        })
+      root.$router.replace('/create')
     }
 
     // キャンセル
     const isOpenResetConfirm = ref(false)
     const openResetConfirm = () => {
       isOpenResetConfirm.value = true
-      const data = db
-        .collection('classes')
-        .doc(title.value)
-        .get()
-        .then((doc) => {
-          return console.debug(doc.data())
-        })
-      console.debug(data)
+      // db.collection('classes')
+      //   .doc(title.value)
+      //   .get()
+      //   .then((doc) => {
+      //     if (doc.exists) {
+      //       console.debug('yes')
+      //     } else {
+      //       console.debug('no')
+      //     }
+      //   })
     }
     // 記入内容を全てリセット
     const resetInput = () => {
@@ -313,8 +338,9 @@ export default defineComponent({
       isTermShort,
       isOpenCreateConfirm,
       openCreateConfirm,
-      isValid,
+      isFormValid,
       createKuchikomi,
+      isOpenErrorDialog,
       isOpenResetConfirm,
       openResetConfirm,
       resetInput
