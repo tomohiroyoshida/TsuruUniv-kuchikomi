@@ -195,7 +195,7 @@ const RULES = {
 }
 const DAYS = ['月', '火', '水', '木', '金', '土', '日'] as const
 const PERIODS = ['1', '2', '3', '4', '5', '6'] as const
-const TERMS = ['前期', '後期', '通年', '短期集中', 'その他'] as const
+const TERMS = ['前期', '後期', '通年', '時間外授業'] as const
 
 export default defineComponent({
   name: 'create',
@@ -213,9 +213,9 @@ export default defineComponent({
     const isValid = ref(true)
 
     // 開講期が「短期集中」の場合は「曜日・限目」を null にする
-    const isTermShort = computed(() => term.value === '短期集中')
+    const isTermShort = computed(() => term.value === '時間外授業')
     watch(isTermShort, () => {
-      if (term.value === '短期集中') {
+      if (term.value === '時間外授業') {
         dayOfWeek.value = null
         period.value = null
       }
@@ -223,7 +223,7 @@ export default defineComponent({
     // 開講期が「短期集中」の場合はルールを無くす
     const dayAndPeriodRule = [
       (v: string) =>
-        term.value === '短期集中' ? false : !!v || 'この欄の入力は必須です'
+        term.value === '時間外授業' ? false : !!v || 'この欄の入力は必須です'
     ]
 
     // 作成
