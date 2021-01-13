@@ -15,11 +15,11 @@
             <!-- テキスト -->
             <v-card-text class="d-flex justify-center">
               <div v-if="text === '作成'">
-                <div>記入した内容で授業とクチコミを新規作成します。</div>
+                <div>入力した内容で授業とクチコミを新規作成します。</div>
                 <div>よろしいですか？</div>
               </div>
               <div v-else>
-                <div>記入した内容をリセットします。</div>
+                <div>入力した内容をリセットします。</div>
                 <div>よろしいですか？</div>
               </div>
             </v-card-text>
