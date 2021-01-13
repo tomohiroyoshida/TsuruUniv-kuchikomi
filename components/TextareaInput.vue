@@ -13,6 +13,7 @@
     height="130"
     counter="1000"
     color="primary"
+    :placeholder="placeholder"
     @input="$emit('input', $event)"
   />
 </template>
@@ -26,6 +27,9 @@ export default defineComponent({
     value: {
       type: String,
       required: false
+    },
+    placeholder: {
+      type: String
     },
     rules: {
       type: Array,

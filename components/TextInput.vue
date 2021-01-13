@@ -11,6 +11,7 @@
     :counter="counter"
     color="primary"
     class="text-input"
+    :placeholder="placeholder"
     @input="$emit('input', $event)"
   />
 </template>
@@ -21,6 +22,9 @@ export default defineComponent({
   name: 'TextInput',
   props: {
     value: {
+      type: String
+    },
+    placeholder: {
       type: String
     },
     counter: {
