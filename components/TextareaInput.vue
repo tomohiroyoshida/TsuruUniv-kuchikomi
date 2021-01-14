@@ -1,8 +1,8 @@
 <template>
   <v-textarea
     :value="value"
-    class="textarea-input"
     :rules="rules"
+    :placeholder="placeholder"
     flat
     solo
     dense
@@ -13,7 +13,7 @@
     height="130"
     counter="1000"
     color="primary"
-    :placeholder="placeholder"
+    class="textarea-input"
     @input="$emit('input', $event)"
   />
 </template>
