@@ -1,46 +1,42 @@
 <template>
-  <div class="confirm-dialog">
-    <v-dialog :value="value" persistent width="30rem">
-      <v-card rounded>
-        <v-toolbar color="primary" flat dense>
-          <v-toolbar-title class="white--text">確認</v-toolbar-title>
-          <v-spacer />
-          <v-btn text fab small @click.stop="$emit('input', false)">
-            <v-icon color="white">mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-
-        <v-row no-gutters>
-          <v-col cols="12">
-            <!-- テキスト -->
-            <v-card-text class="d-flex justify-center">
-              <div v-if="text === '作成'">
-                <div>入力した内容で授業とクチコミを新規作成します。</div>
-                <div>よろしいですか？</div>
+  <v-dialog :value="value" persistent width="30rem" class="confirm-dialog">
+    <v-card rounded>
+      <!-- タイトル -->
+      <v-toolbar color="primary" class="d-flex justify-center" flat dense>
+        <v-toolbar-title class="white--text">確認</v-toolbar-title>
+      </v-toolbar>
+      <!-- 中身 -->
+      <v-row no-gutters>
+        <v-col cols="12">
+          <!-- テキスト -->
+          <v-card-text class="d-flex justify-center">
+            <div v-if="text === '作成'">
+              <div>
+                入力した内容で授業とクチコミを新規作成します。よろしいですか？
               </div>
-              <div v-else>
-                <div>入力した内容をリセットします。</div>
-                <div>よろしいですか？</div>
-              </div>
-            </v-card-text>
-          </v-col>
-          <!-- ボタン -->
-          <v-col cols="12" class="d-flex justify-center py-3">
-            <AppBtn
-              color="grey darken-2"
-              class="mx-1"
-              @click.stop="$emit('input', false)"
-            >
-              いいえ
-            </AppBtn>
-            <AppBtn color="primary" class="mr-1" @click.stop="$emit('ok')">
-              はい
-            </AppBtn>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-dialog>
-  </div>
+            </div>
+            <div v-else>
+              <div>入力した内容をリセットします。</div>
+              <div>よろしいですか？</div>
+            </div>
+          </v-card-text>
+        </v-col>
+        <!-- ボタン -->
+        <v-col cols="12" class="d-flex justify-center py-3">
+          <AppBtn
+            color="grey darken-2"
+            class="mx-1"
+            @click.stop="$emit('input', false)"
+          >
+            いいえ
+          </AppBtn>
+          <AppBtn color="primary" class="mr-1" @click.stop="$emit('ok')">
+            はい
+          </AppBtn>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script lang="ts">
