@@ -128,15 +128,24 @@
         v-model="isOpenCreateConfirm"
         text="作成"
         @ok="createKuchikomi"
-        @cancel="isOpenCreateConfirm = false"
       />
       <ConfirmDialog
         v-model="isOpenResetConfirm"
         text="リセット"
         @ok="resetInput"
       />
+
       <!-- スナックバー -->
-      <Snackbar />
+      <SnackBar
+        v-model="isOpenSuccessSnackbar"
+        text="作成に成功しました"
+        color="success"
+      />
+      <SnackBar
+        v-model="isOpenDuplicatedSnackbar"
+        text="この授業名はすでに存在します。メニュー「クチコミを作成」でクチコミを作成してください。"
+        color="error"
+      />
     </v-row>
   </v-container>
 </template>
@@ -200,8 +209,9 @@ export default defineComponent({
     const openCreateConfirm = () => {
       isOpenCreateConfirm.value = true
     }
-    // TODO firebase接続
-    const isOpenSnackbar = ref(false)
+    const isOpenSuccessSnackbar = ref(false)
+    const isOpenDuplicatedSnackbar = ref(false)
+
     const createKuchikomi = () => {
       isOpenCreateConfirm.value = false
       const createdAt = new Date().toLocaleString()
@@ -213,7 +223,7 @@ export default defineComponent({
         .then((doc) => {
           // もしすでに入力されたタイトルの授業が存在していたら処理を中止してエラーを出す
           if (doc.exists) {
-            isOpenSnackbar.value = true
+            isOpenDuplicatedSnackbar.value = true
           } else {
             // 授業の情報を追加
             db.collection('classes').doc(title.value).set({
@@ -226,7 +236,8 @@ export default defineComponent({
             })
           }
         })
-      // root.$router.replace('/create')
+      isOpenSuccessSnackbar.value = true
+      root.$router.replace('/create')
     }
 
     // キャンセル
@@ -285,7 +296,8 @@ export default defineComponent({
       openCreateConfirm,
       isFormValid,
       createKuchikomi,
-      isOpenSnackbar,
+      isOpenSuccessSnackbar,
+      isOpenDuplicatedSnackbar,
       isOpenResetConfirm,
       openResetConfirm,
       resetInput
