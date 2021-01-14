@@ -5,7 +5,7 @@ export const state = () => ({
   // ユーザーの情報
   user: {
     userId: 'user0001',
-    username: 'サンプル太郎',
+    username: 'Tomo',
     loggedIn: false
   },
   //  授業のリスト

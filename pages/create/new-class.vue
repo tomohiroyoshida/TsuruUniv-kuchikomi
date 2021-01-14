@@ -143,7 +143,7 @@
       />
       <SnackBar
         v-model="isOpenDuplicatedSnackbar"
-        text="この授業名はすでに存在します。メニュー「クチコミを作成」でクチコミを作成してください。"
+        text="この授業名はすでに存在します。メニュー「クチコミを作成」からクチコミを作成してください。"
         color="error"
       />
     </v-row>
@@ -212,12 +212,12 @@ export default defineComponent({
     const isOpenSuccessSnackbar = ref(false)
     const isOpenDuplicatedSnackbar = ref(false)
 
-    const createKuchikomi = () => {
+    const createKuchikomi = async () => {
       isOpenCreateConfirm.value = false
       const createdAt = new Date().toLocaleString()
-      console.debug('date', createdAt)
-      // 授業そのものの情報を追加
-      db.collection('classes')
+      //  Firestoreに追加
+      await db
+        .collection('classes')
         .doc(title.value)
         .get()
         .then((doc) => {
@@ -234,10 +234,23 @@ export default defineComponent({
               period: period.value,
               createdAt
             })
+            // クチコミの情報追加
+            db.collection('classes')
+              .doc(title.value)
+              .collection('kuchikomis')
+              .doc()
+              .set({
+                title: kuchikomiTitle.value,
+                content: kuchikomi.value,
+                rating: rating.value,
+                year: year.value,
+                username: root.$store.getters.user.username, // TODO: ログインしているユーザー名にする
+                createdAt
+              })
+            isOpenSuccessSnackbar.value = true
+            root.$router.replace('/create/')
           }
         })
-      isOpenSuccessSnackbar.value = true
-      root.$router.replace('/create')
     }
 
     // キャンセル
