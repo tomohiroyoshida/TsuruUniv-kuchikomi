@@ -33,33 +33,19 @@
             <!-- 開講期 -->
             <v-col cols="6">
               <RequiredCaption title="開講期" />
-              <v-select
+              <SelectInput
                 v-model="term"
                 :items="TERMS"
                 :rules="RULES.required"
-                flat
-                dense
-                solo
-                rounded
-                outlined
-                clearable
-                color="primary"
               />
             </v-col>
             <!-- 受講した年 -->
             <v-col cols="6">
               <RequiredCaption title="受講した年" />
-              <v-select
+              <SelectInput
                 v-model="year"
                 :items="years"
                 :rules="RULES.required"
-                flat
-                dense
-                solo
-                rounded
-                outlined
-                clearable
-                color="primary"
               />
             </v-col>
           </v-row>
@@ -68,37 +54,23 @@
             <!-- 曜日 -->
             <v-col cols="6">
               <RequiredCaption title="曜日" />
-              <v-select
+              <SelectInput
                 v-model="dayOfWeek"
                 :items="DAYS"
-                :rules="dayAndPeriodRule"
+                :rules="isTermShort ? [] : dayAndPeriodRule"
                 :disabled="isTermShort"
                 :placeholder="isTermShort ? '入力不要' : ''"
-                flat
-                dense
-                solo
-                rounded
-                outlined
-                clearable
-                color="primary"
               />
             </v-col>
             <!-- 限目 -->
             <v-col cols="6">
               <RequiredCaption title="限目" />
-              <v-select
+              <SelectInput
                 v-model="period"
                 :items="PERIODS"
-                :rules="dayAndPeriodRule"
+                :rules="isTermShort ? [] : dayAndPeriodRule"
                 :disabled="isTermShort"
                 :placeholder="isTermShort ? '入力不要' : ''"
-                flat
-                solo
-                dense
-                rounded
-                outlined
-                clearable
-                color="primary"
               />
             </v-col>
           </v-row>
@@ -138,17 +110,12 @@
 
         <!-- 送信・キャンセルボタン -->
         <div class="d-flex justify-center py-3">
-          <AppBtn
-            outlined
-            color="grey darken-2"
-            class="mr-2"
-            @click="openResetConfirm"
-          >
+          <AppBtn color="grey darken-2" class="mr-2" @click="openResetConfirm">
             リセット
           </AppBtn>
           <AppBtn
-            depressed
             color="primary"
+            depressed
             :disabled="!isFormValid"
             @click="openCreateConfirm"
           >
@@ -168,6 +135,8 @@
         text="リセット"
         @ok="resetInput"
       />
+      <!-- スナックバー -->
+      <Snackbar />
     </v-row>
   </v-container>
 </template>
@@ -232,7 +201,7 @@ export default defineComponent({
       isOpenCreateConfirm.value = true
     }
     // TODO firebase接続
-    const isOpenErrorDialog = ref(false)
+    const isOpenSnackbar = ref(false)
     const createKuchikomi = () => {
       isOpenCreateConfirm.value = false
       const createdAt = new Date().toLocaleString()
@@ -244,8 +213,7 @@ export default defineComponent({
         .then((doc) => {
           // もしすでに入力されたタイトルの授業が存在していたら処理を中止してエラーを出す
           if (doc.exists) {
-            isOpenErrorDialog.value = true
-            console.debug('もうあるよ')
+            isOpenSnackbar.value = true
           } else {
             // 授業の情報を追加
             db.collection('classes').doc(title.value).set({
@@ -256,38 +224,15 @@ export default defineComponent({
               period: period.value,
               createdAt
             })
-            // クチコミの情報を追加
-            db.collection('classes')
-              .doc(title.value)
-              .collection('kuchikomis')
-              .doc()
-              .set({
-                title: kuchikomiTitle.value,
-                content: kuchikomi.value,
-                rating: rating.value,
-                year: year.value,
-                username: 'TOMO' // TODO: ログインしているユーザーの名前にする
-              })
-            console.debug('done')
           }
         })
-      root.$router.replace('/create')
+      // root.$router.replace('/create')
     }
 
     // キャンセル
     const isOpenResetConfirm = ref(false)
     const openResetConfirm = () => {
       isOpenResetConfirm.value = true
-      // db.collection('classes')
-      //   .doc(title.value)
-      //   .get()
-      //   .then((doc) => {
-      //     if (doc.exists) {
-      //       console.debug('yes')
-      //     } else {
-      //       console.debug('no')
-      //     }
-      //   })
     }
     // 記入内容を全てリセット
     const resetInput = () => {
@@ -340,7 +285,7 @@ export default defineComponent({
       openCreateConfirm,
       isFormValid,
       createKuchikomi,
-      isOpenErrorDialog,
+      isOpenSnackbar,
       isOpenResetConfirm,
       openResetConfirm,
       resetInput
