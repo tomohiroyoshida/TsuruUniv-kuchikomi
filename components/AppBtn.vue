@@ -1,6 +1,7 @@
 <template>
   <v-btn
     v-bind="$attrs"
+    text
     rounded
     width="10rem"
     class="app-btn white--text"

@@ -55,12 +55,13 @@
             v-if="!isLoggedIn"
             block
             depressed
+            rounded
             color="primary"
             @click="login"
           >
             <span class="white--text"> ログイン </span>
           </v-btn>
-          <v-btn v-else block outlined color="primary" @click="logout">
+          <v-btn v-else text block rounded color="primary" @click="logout">
             ログアウト
           </v-btn>
         </div>

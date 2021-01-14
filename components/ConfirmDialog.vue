@@ -5,7 +5,7 @@
         <v-toolbar color="primary" flat dense>
           <v-toolbar-title class="white--text">確認</v-toolbar-title>
           <v-spacer />
-          <v-btn text fab small @click="$emit('input', false)">
+          <v-btn text fab small @click.stop="$emit('input', false)">
             <v-icon color="white">mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
@@ -27,14 +27,13 @@
           <!-- ボタン -->
           <v-col cols="12" class="d-flex justify-center py-3">
             <AppBtn
-              outlined
               color="grey darken-2"
               class="mx-1"
-              @click="$emit('input', false)"
+              @click.stop="$emit('input', false)"
             >
               いいえ
             </AppBtn>
-            <AppBtn depressed color="primary" class="mr-1" @click="$emit('ok')">
+            <AppBtn color="primary" class="mr-1" @click.stop="$emit('ok')">
               はい
             </AppBtn>
           </v-col>

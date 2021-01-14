@@ -3,7 +3,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <!-- 検索ボックス -->
-        <title class="text-h6 d-flex justify-center my-3">クチコミ検索</title>
+        <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
         <div class="search-field">
           <v-text-field
             v-model="searchingTitle"
@@ -36,16 +36,13 @@
             <v-card-title>{{ item.title }}</v-card-title>
             <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
             <v-card-text class="d-flex card-text">
-              <v-card-actions class="btn">
-                <v-btn
-                  color="primary"
-                  rounded
-                  outlined
-                  @click="goToKuchikomi(item.title)"
-                >
-                  クチコミを見る
-                </v-btn>
-              </v-card-actions>
+              <AppBtn
+                class="btn"
+                color="primary"
+                @click="goToKuchikomi(item.title)"
+              >
+                クチコミを見る
+              </AppBtn>
             </v-card-text>
           </v-card>
         </section>
