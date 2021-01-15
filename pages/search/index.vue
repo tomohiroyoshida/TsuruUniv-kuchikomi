@@ -27,12 +27,12 @@
                 outlined
               >
                 <v-card-title>{{ item.title }}</v-card-title>
-                <v-card-subtitle class="d-flex py-0">
-                  <div class="mr-3">講師: {{ item.teacher }}</div>
-                </v-card-subtitle>
                 <v-card-subtitle class="py-0">
-                  <div class="mr-3">開講期: {{ item.term }}</div>
-                  曜日時限: {{ item.dayOfWeek }}曜 {{ item.period }}限
+                  <div class="mr-3">講師: {{ item.teacher }}</div>
+                  <div class="mr-3">
+                    開講期: {{ item.term }} 曜日時限: {{ item.dayOfWeek }}曜
+                    {{ item.period }}限
+                  </div>
                 </v-card-subtitle>
                 <v-card-text>
                   <AppBtn

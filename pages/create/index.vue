@@ -15,7 +15,7 @@
               <v-autocomplete
                 v-model="title"
                 :items="classTitles"
-                :rules="RULES.title"
+                :rules="RULES.required"
                 flat
                 solo
                 dense
@@ -30,8 +30,109 @@
               />
             </v-col>
           </v-row>
+
+          <!-- TODO授業の情報 -->
+          <v-row v-if="title" no-gutters justify="center">
+            <v-col cols="10">
+              <div class="required-caption text-caption my-1 ml-3">
+                授業の情報
+              </div>
+              <v-card rounded outlined>
+                <v-card-title>{{ title }}</v-card-title>
+                <v-card-subtitle> 情報がくる </v-card-subtitle>
+              </v-card>
+            </v-col>
+          </v-row>
+          <!--  -->
+          <!-- 受講した年 -->
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <RequiredCaption title="受講した年" />
+              <SelectInput
+                v-model="year"
+                :items="years"
+                :rules="RULES.required"
+              />
+            </v-col>
+          </v-row>
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <RequiredCaption title="評価(0.5~5)" />
+              <div class="ml-2 my-2 d-flex justify-start">
+                <v-rating
+                  v-model="rating"
+                  half-increments
+                  color="warning"
+                  background-color="grey lighten-1"
+                />
+                <div class="ml-5 my-2">({{ rating }})</div>
+              </div>
+            </v-col>
+          </v-row>
+          <!-- タイトル -->
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <RequiredCaption title="クチコミのタイトル" />
+              <TextInput
+                v-model="kuchikomiTitle"
+                :rules="RULES.requiredWith20"
+                :counter="20"
+                placeholder="例： おすすめの授業です"
+              />
+            </v-col>
+          </v-row>
+          <!-- クチコミ -->
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <RequiredCaption title="クチコミの内容" />
+              <TextareaInput
+                v-model="kuchikomi"
+                :rules="RULES.kuchikomi"
+                placeholder="例： 授業も面白いし先生も優しいです！ ただテストは難しいので要対策です！"
+              />
+            </v-col>
+          </v-row>
         </v-form>
+
+        <!-- 送信・キャンセルボタン -->
+        <div class="d-flex justify-center py-3">
+          <AppBtn color="grey darken-2" class="mr-2" @click="openResetConfirm">
+            リセット
+          </AppBtn>
+          <AppBtn
+            color="primary"
+            depressed
+            :disabled="!isFormValid"
+            @click="openCreateConfirm"
+          >
+            作成
+          </AppBtn>
+        </div>
       </v-col>
+
+      <!-- 確認ダイアログ -->
+      <ConfirmDialog
+        v-model="isOpenCreateConfirm"
+        text="作成"
+        @ok="createKuchikomi"
+      />
+      <ConfirmDialog
+        v-model="isOpenResetConfirm"
+        text="リセット"
+        @ok="resetInput"
+      />
+
+      <!-- スナックバー -->
+      <SnackBar
+        v-model="isOpenSuccessSnackbar"
+        text="作成に成功しました"
+        color="success"
+      />
+      <SnackBar
+        v-model="isOpenErrorSnackbar"
+        text="この授業名はすでに存在します。メニュー「クチコミを作成」からクチコミを作成してください。"
+        color="error"
+      />
     </v-row>
   </v-container>
 </template>
@@ -39,10 +140,20 @@
 <script lang="ts">
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
+import db from '@/plugins/firebase'
 
 const RULES = {
-  title: [(v: string) => !!v || '授業名は必須です'],
-  teacher: [(v: string) => !!v || '講師名は必須です']
+  required: [(v: string) => !!v || 'この欄の入力は必須です'],
+  teacher: [(v: string) => !!v || '講師名は必須です'],
+  kuchikomi: [
+    (v: string) => !!v || 'この欄の入力は必須です',
+    (v: string) =>
+      (v && v.length < 1000) || 'クチコミ内容は1000文字以下で記入してください'
+  ],
+  requiredWith20: [
+    (v: string) => !!v || 'この欄の入力は必須です',
+    (v: string) => (v && v.length < 20) || '20文字以下で記入してください'
+  ]
 }
 
 export default defineComponent({
@@ -51,6 +162,59 @@ export default defineComponent({
     const title = ref('')
     const teacher = ref('')
     const isFormValid = ref(true)
+    const rating = ref<Number>(0.5)
+    const kuchikomiTitle = ref('')
+    const kuchikomi = ref('')
+    const year = ref(null)
+    const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
+
+    const isOpenSuccessSnackbar = ref(false)
+    const isOpenCreateConfirm = ref(false)
+    const openCreateConfirm = () => {
+      isOpenCreateConfirm.value = true
+    }
+    const createKuchikomi = async () => {
+      isOpenCreateConfirm.value = false
+      const createdAt = new Date().toLocaleString()
+      //  Firestoreにクチコミの情報追加
+      try {
+        await db
+          .collection('classes')
+          .doc(title.value)
+          .collection('kuchikomis')
+          .doc()
+          .set({
+            title: kuchikomiTitle.value,
+            content: kuchikomi.value,
+            rating: rating.value,
+            year: year.value,
+            username: root.$store.getters.user.username, // TODO: ログインしているユーザー名にする
+            createdAt
+          })
+      } catch {
+        isOpenErrorSnackbar.value = true
+      }
+      isOpenSuccessSnackbar.value = true
+      resetInput()
+      root.$router.push('/create/')
+    }
+    const isOpenErrorSnackbar = ref(false)
+
+    // キャンセル
+    const isOpenResetConfirm = ref(false)
+    const openResetConfirm = () => {
+      isOpenResetConfirm.value = true
+    }
+    // 記入内容を全てリセット
+    const resetInput = () => {
+      isOpenResetConfirm.value = false
+      title.value = ''
+      year.value = null
+      rating.value = 0.5
+      kuchikomiTitle.value = ''
+      kuchikomi.value = ''
+    }
+
     /**
      * init
      */
@@ -65,7 +229,27 @@ export default defineComponent({
     })
     console.debug('titles:', classTitles.value)
 
-    return { RULES, isFormValid, fetchedClasses, title, classTitles, teacher }
+    return {
+      RULES,
+      isFormValid,
+      rating,
+      kuchikomiTitle,
+      kuchikomi,
+      year,
+      years,
+      fetchedClasses,
+      title,
+      classTitles,
+      teacher,
+      isOpenSuccessSnackbar,
+      isOpenErrorSnackbar,
+      openResetConfirm,
+      resetInput,
+      openCreateConfirm,
+      createKuchikomi,
+      isOpenCreateConfirm,
+      isOpenResetConfirm
+    }
   }
 })
 </script>
