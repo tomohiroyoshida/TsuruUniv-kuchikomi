@@ -1,14 +1,14 @@
 <template>
   <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
-      <v-col ref="form" cols="12" md="9">
-        <div class="text-h6 d-flex justify-center mt-4 mb-2">
+      <v-col cols="12">
+        <div class="text-h6 d-flex justify-center my-3">
           新しい授業とクチコミを作成
         </div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="12" md="6">
+            <v-col cols="10" class="mx-1">
               <RequiredCaption title="授業名" />
               <TextInput
                 v-model="title"
@@ -18,7 +18,7 @@
               />
             </v-col>
             <!-- 講師名 -->
-            <v-col cols="12" md="6">
+            <v-col cols="10" class="mx-1">
               <RequiredCaption title="講師名" />
               <TextInput
                 v-model="teacher"
@@ -31,7 +31,7 @@
 
           <v-row no-gutters justify="center">
             <!-- 開講期 -->
-            <v-col cols="6">
+            <v-col cols="5" class="mx-1">
               <RequiredCaption title="開講期" />
               <SelectInput
                 v-model="term"
@@ -40,7 +40,7 @@
               />
             </v-col>
             <!-- 受講した年 -->
-            <v-col cols="6">
+            <v-col cols="5" class="mx-1">
               <RequiredCaption title="受講した年" />
               <SelectInput
                 v-model="year"
@@ -52,7 +52,7 @@
 
           <v-row no-gutters justify="center">
             <!-- 曜日 -->
-            <v-col cols="6">
+            <v-col cols="5" class="mx-1">
               <RequiredCaption title="曜日" />
               <SelectInput
                 v-model="dayOfWeek"
@@ -63,7 +63,7 @@
               />
             </v-col>
             <!-- 時限 -->
-            <v-col cols="6">
+            <v-col cols="5" class="mx-1">
               <RequiredCaption title="時限" />
               <SelectInput
                 v-model="period"
@@ -76,8 +76,8 @@
           </v-row>
 
           <!-- 評価 -->
-          <v-row no-gutters>
-            <v-col cols="6">
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
               <RequiredCaption title="評価(0.5~5)" />
               <div class="ml-2 my-2 d-flex justify-start">
                 <v-rating
@@ -92,20 +92,28 @@
           </v-row>
 
           <!-- タイトル -->
-          <RequiredCaption title="クチコミのタイトル" />
-          <TextInput
-            v-model="kuchikomiTitle"
-            :rules="RULES.requiredWith20"
-            :counter="20"
-            placeholder="例： おすすめの授業です"
-          />
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <RequiredCaption title="クチコミのタイトル" />
+              <TextInput
+                v-model="kuchikomiTitle"
+                :rules="RULES.requiredWith20"
+                :counter="20"
+                placeholder="例： おすすめの授業です"
+              />
+            </v-col>
+          </v-row>
           <!-- クチコミ -->
-          <RequiredCaption title="クチコミの内容" />
-          <TextareaInput
-            v-model="kuchikomi"
-            :rules="RULES.kuchikomi"
-            placeholder="例： 授業も面白いし先生も優しいです！ ただテストは難しいので要対策です！"
-          />
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <RequiredCaption title="クチコミの内容" />
+              <TextareaInput
+                v-model="kuchikomi"
+                :rules="RULES.kuchikomi"
+                placeholder="例： 授業も面白いし先生も優しいです！ ただテストは難しいので要対策です！"
+              />
+            </v-col>
+          </v-row>
         </v-form>
 
         <!-- 送信・キャンセルボタン -->

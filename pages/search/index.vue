@@ -9,13 +9,14 @@
             color="primary"
             placeholder="授業名を入力 検索"
             prepend-inner-icon="mdi-magnify"
+            class="mx-1"
           />
         </div>
 
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
-          <div class="text-subtitle-1 mb-3">登録されている授業一覧</div>
+          <div class="text-subtitle-1 mb-3 ml-1">登録されている授業一覧</div>
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
@@ -163,7 +164,7 @@ export default defineComponent({
   width: 100px;
 }
 
-/* アイテムを真ん中に置く */
+/* 検索ボックスを真ん中に置く */
 .search-field {
   margin: 2rem auto 0;
 }
@@ -175,7 +176,7 @@ export default defineComponent({
 }
 
 /* カードのレスポンシブ */
-@media (min-width: 600px) {
+@media (min-width: 700px) {
   .flex {
     display: -webkit-flex;
     display: flex;
@@ -183,7 +184,7 @@ export default defineComponent({
     flex-wrap: wrap;
   }
   .card {
-    width: 49%;
+    width: 48%;
   }
 }
 @media (min-width: 1200px) {

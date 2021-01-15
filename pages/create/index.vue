@@ -3,49 +3,34 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-3">クチコミを作成</div>
-        <v-row no-gutters>
-          <!-- 授業名 -->
-          <v-col cols="12" md="6" class="px-1">
-            <div class="text-caption my-1">
-              <span class="red--text">* </span>
-              授業名 (見つからない場合は
-              <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link>)
-            </div>
-            <v-autocomplete
-              v-model="title"
-              :items="classTitles"
-              :rules="RULES.title"
-              flat
-              solo
-              dense
-              outlined
-              clearable
-              cache-items
-              hide-no-data
-              item-color="primary"
-              color="primary"
-              label="「全角」で入力"
-              persistent-hint
-            />
-          </v-col>
-          <!-- 講師名 -->
-          <v-col cols="12" md="6">
-            <div class="text-caption my-1">
-              <span class="red--text">* </span>
-              講師名
-            </div>
-            <TextInput
-              v-model="teacher"
-              :rules="RULES.teacher"
-              color="primary"
-            />
-          </v-col>
-        </v-row>
-        <!-- 曜日・時限 -->
-        <v-row no-gutters>
-          <v-col cols="6"> </v-col>
-          <v-col cols="6"></v-col>
-        </v-row>
+        <v-form ref="form" v-model="isFormValid">
+          <v-row no-gutters justify="center">
+            <!-- 授業名 -->
+            <v-col cols="10" class="px-1">
+              <RequiredCaption class="my-1">
+                授業名 (見つからない場合は
+                <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link
+                >)
+              </RequiredCaption>
+              <v-autocomplete
+                v-model="title"
+                :items="classTitles"
+                :rules="RULES.title"
+                flat
+                solo
+                dense
+                outlined
+                clearable
+                cache-items
+                hide-no-data
+                item-color="primary"
+                color="primary"
+                label="「全角」で入力"
+                persistent-hint
+              />
+            </v-col>
+          </v-row>
+        </v-form>
       </v-col>
     </v-row>
   </v-container>
@@ -65,6 +50,7 @@ export default defineComponent({
   setup(_, { root }) {
     const title = ref('')
     const teacher = ref('')
+    const isFormValid = ref(true)
     /**
      * init
      */
@@ -79,7 +65,7 @@ export default defineComponent({
     })
     console.debug('titles:', classTitles.value)
 
-    return { RULES, fetchedClasses, title, classTitles, teacher }
+    return { RULES, isFormValid, fetchedClasses, title, classTitles, teacher }
   }
 })
 </script>
