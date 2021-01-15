@@ -1,25 +1,42 @@
 <template>
   <v-app id="default">
-    <!-- ヘッダーのデザイン -->
-    <v-app-bar app flat color="primary">
-      <v-app-bar-nav-icon @click.stop="isOpenDrawer = !isOpenDrawer" />
+    <!-- ヘッダー -->
+    <v-app-bar v-if="width > 700" app flat color="grey lighten-5" outlined>
+      <div class="mr-5">みんなのクチコミ</div>
+      <!-- TODO:タブにするかも -->
+      <v-btn text color="primary" class="mx-1" to="/search">
+        <v-icon>mdi-magnify</v-icon>
+        <div>検索</div>
+      </v-btn>
+      <v-divider vertical />
+      <v-btn text color="primary" class="mx-1" to="/create">
+        <v-icon> mdi-pencil-plus-outline </v-icon>
+        <div>作成</div>
+      </v-btn>
+      <v-divider vertical />
+      <v-btn text color="primary" class="mx-1" to="/">
+        <v-icon> mdi-file-document-outline </v-icon>
+        <div>使い方</div>
+      </v-btn>
       <v-spacer />
-      <div class="white--text text-h6 mr-5">みんなのクチコミ</div>
-      <v-spacer />
+      <v-btn v-if="!isLoggedIn" depressed color="primary" class="mr-8">
+        ログイン
+      </v-btn>
+      <v-btn v-else outlined small fab color="primary" class="mr-8">
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
     </v-app-bar>
 
-    <!-- ドロワー -->
-    <v-navigation-drawer v-model="isOpenDrawer" app temporary>
+    <!-- TODO: ドロワー -->
+    <!-- <v-navigation-drawer v-model="isOpenDrawer" app temporary>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="ml-10">メニュー</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider />
-      <!-- リスト -->
       <v-list nav>
         <v-list-item-group v-model="selectedItem" active-class="primary--text">
-          <!-- 使い方 -->
           <v-list-item nuxt link to="/">
             <v-list-item-icon>
               <v-icon>mdi-file-document-outline</v-icon>
@@ -28,7 +45,7 @@
               <v-list-item-title> 使い方 </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <!-- 検索 -->
+
           <v-list-item nuxt link to="/search">
             <v-list-item-icon>
               <v-icon> mdi-magnify </v-icon>
@@ -37,7 +54,7 @@
               <v-list-item-title> クチコミ検索 </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <!-- 作成 -->
+
           <v-list-item nuxt link to="/create">
             <v-list-item-icon>
               <v-icon>mdi-pencil-plus-outline</v-icon>
@@ -48,7 +65,7 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-      <!-- ログイン -->
+
       <template v-slot:append>
         <div class="pa-2">
           <v-btn
@@ -65,7 +82,8 @@
           </v-btn>
         </div>
       </template>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
+
     <!-- 中身 -->
     <nuxt />
   </v-app>
@@ -77,6 +95,8 @@ import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'default',
   setup() {
+    const width = ref()
+    width.value = window.innerWidth
     const isOpenDrawer = ref(false)
     const selectedItem = ref(null)
     const isLoggedIn = ref(false)
@@ -91,7 +111,14 @@ export default defineComponent({
     // リストのアイテムが選択されたらドロワーをとじる
     watch(selectedItem, () => (isOpenDrawer.value = false))
 
-    return { isOpenDrawer, selectedItem, isLoggedIn, login, logout }
+    return {
+      width,
+      isOpenDrawer,
+      selectedItem,
+      isLoggedIn,
+      login,
+      logout
+    }
   }
 })
 </script>
