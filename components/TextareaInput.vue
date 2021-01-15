@@ -6,7 +6,6 @@
     flat
     solo
     dense
-    rounded
     outlined
     clearable
     no-resize

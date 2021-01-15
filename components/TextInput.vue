@@ -1,17 +1,17 @@
 <template>
   <v-text-field
+    v-bind="$attrs"
     :value="value"
     :rules="rules"
+    :counter="counter"
+    :placeholder="placeholder"
     flat
     dense
     solo
-    rounded
     outlined
     clearable
-    :counter="counter"
     color="primary"
     class="text-input"
-    :placeholder="placeholder"
     @input="$emit('input', $event)"
   />
 </template>
@@ -31,8 +31,7 @@ export default defineComponent({
       type: Number
     },
     rules: {
-      type: Array,
-      required: true
+      type: Array
     }
   },
   setup() {}

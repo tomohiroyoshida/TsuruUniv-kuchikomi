@@ -15,44 +15,46 @@
     <!-- クチコミが存在する場合 -->
     <div v-else-if="kuchikomis.length">
       <div class="mt-3 text-h6 d-flex justify-center">クチコミ一覧</div>
-      <v-card
-        v-for="item in kuchikomis"
-        :key="item.id"
-        class="card"
-        rounded
-        outlined
-        max-width="80rem"
-      >
-        <!-- アイコン＋ユーザー名 -->
-        <div class="d-flex px-1 pt-1">
-          <v-icon color="primary"> mdi-account-circle </v-icon>
-          <div class="text-body-2 pa-1">{{ item.user }}</div>
-        </div>
-
-        <!-- タイトル＋レーティング -->
-        <div class="d-flex px-1">
-          <v-rating
-            :value="item.rating"
-            small
-            dense
-            readonly
-            half-increments
-            color="warning"
-            background-color="grey lighten-1"
-          />
-          <div class="text-subtitle-2 font-weight-bold px-2">
-            {{ item.title }}
+      <div class="flex">
+        <v-card
+          v-for="item in kuchikomis"
+          :key="item.id"
+          class="card"
+          rounded
+          outlined
+          max-width="80rem"
+        >
+          <!-- アイコン＋ユーザー名 -->
+          <div class="d-flex px-1 pt-1">
+            <v-icon color="primary"> mdi-account-circle </v-icon>
+            <div class="text-body-2 pa-1">{{ item.username }}</div>
           </div>
-        </div>
-        <!-- 受講年 -->
-        <div class="text-caption text--disabled px-2">
-          受講年: {{ item.classYear }}
-        </div>
-        <!-- クチコミの内容 -->
-        <v-card-text class="d-flex pa-2">
-          {{ item.content }}
-        </v-card-text>
-      </v-card>
+
+          <!-- タイトル＋レーティング -->
+          <div class="d-flex px-1">
+            <v-rating
+              :value="item.rating"
+              small
+              dense
+              readonly
+              half-increments
+              color="warning"
+              background-color="grey lighten-1"
+            />
+            <div class="text-subtitle-2 font-weight-bold px-2">
+              {{ item.title }}
+            </div>
+          </div>
+          <!-- 受講年 -->
+          <div class="text-caption text--disabled px-2">
+            受講年: {{ item.year }} 年
+          </div>
+          <!-- クチコミの内容 -->
+          <v-card-text class="d-flex pa-2">
+            {{ item.content }}
+          </v-card-text>
+        </v-card>
+      </div>
     </div>
   </div>
 </template>
@@ -93,10 +95,28 @@ export default defineComponent({
 .card {
   margin: 8px auto;
 }
-/* 画面幅が800px以下の時 */
-@media (max-width: 800px) {
+
+/* カードのレスポンシブ */
+@media (min-width: 600px) {
+  .flex {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
   .card {
-    margin: 8px;
+    width: 49%;
+  }
+}
+@media (min-width: 1200px) {
+  .flex {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .card {
+    width: 24%;
   }
 }
 

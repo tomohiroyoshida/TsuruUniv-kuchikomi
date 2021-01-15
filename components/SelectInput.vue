@@ -8,7 +8,6 @@
     flat
     solo
     dense
-    rounded
     outlined
     clearable
     color="primary"

@@ -21,6 +21,10 @@
             </div>
           </v-card-text>
         </v-col>
+
+        <v-col cols="12">
+          <v-divider />
+        </v-col>
         <!-- ボタン -->
         <v-col cols="12" class="d-flex justify-center py-3">
           <AppBtn

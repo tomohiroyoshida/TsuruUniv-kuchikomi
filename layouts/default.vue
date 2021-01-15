@@ -17,7 +17,7 @@
       </v-list-item>
       <v-divider />
       <!-- リスト -->
-      <v-list shaped>
+      <v-list nav>
         <v-list-item-group v-model="selectedItem" active-class="primary--text">
           <!-- 使い方 -->
           <v-list-item nuxt link to="/">
@@ -55,13 +55,12 @@
             v-if="!isLoggedIn"
             block
             depressed
-            rounded
             color="primary"
             @click="login"
           >
             <span class="white--text"> ログイン </span>
           </v-btn>
-          <v-btn v-else text block rounded color="primary" @click="logout">
+          <v-btn v-else text block color="primary" @click="logout">
             ログアウト
           </v-btn>
         </div>

@@ -62,9 +62,9 @@
                 :placeholder="isTermShort ? '入力不要' : ''"
               />
             </v-col>
-            <!-- 限目 -->
+            <!-- 時限 -->
             <v-col cols="6">
-              <RequiredCaption title="限目" />
+              <RequiredCaption title="時限" />
               <SelectInput
                 v-model="period"
                 :items="PERIODS"
@@ -190,7 +190,7 @@ export default defineComponent({
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
     const isFormValid = ref(true)
 
-    // 開講期が「時間外授業」の場合は「曜日・限目」を null にする
+    // 開講期が「時間外授業」の場合は「曜日・時限」を null にする
     const isTermShort = computed(() => term.value === '時間外授業')
     watch(isTermShort, () => {
       if (term.value === '時間外授業') {
@@ -226,14 +226,16 @@ export default defineComponent({
             isOpenDuplicatedSnackbar.value = true
           } else {
             // 授業の情報を追加
-            db.collection('classes').doc(title.value).set({
-              title: title.value,
-              teacher: teacher.value,
-              term: term.value,
-              dayOfWeek: dayOfWeek.value,
-              period: period.value,
-              createdAt
-            })
+            db.collection('classes')
+              .doc(title.value)
+              .set({
+                title: title.value,
+                teacher: teacher.value,
+                term: term.value,
+                dayOfWeek: dayOfWeek.value ? dayOfWeek.value : '',
+                period: period.value ? period.value : '',
+                createdAt
+              })
             // クチコミの情報追加
             db.collection('classes')
               .doc(title.value)

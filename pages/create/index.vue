@@ -18,7 +18,6 @@
               flat
               solo
               dense
-              rounded
               outlined
               clearable
               cache-items
@@ -35,15 +34,9 @@
               <span class="red--text">* </span>
               講師名
             </div>
-            <v-text-field
+            <TextInput
               v-model="teacher"
               :rules="RULES.teacher"
-              flat
-              dense
-              solo
-              rounded
-              outlined
-              clearable
               color="primary"
             />
           </v-col>

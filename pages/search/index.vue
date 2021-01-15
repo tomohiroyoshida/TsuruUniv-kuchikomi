@@ -3,59 +3,59 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <!-- 検索ボックス -->
-        <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
         <div class="search-field">
-          <v-text-field
+          <TextInput
             v-model="searchingTitle"
-            flat
-            solo
-            dense
-            rounded
-            outlined
-            clearable
             color="primary"
-            prepend-inner-icon="mdi-magnify"
             placeholder="授業名を入力 検索"
+            prepend-inner-icon="mdi-magnify"
           />
         </div>
 
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
-          <title class="text-h6 d-flex justify-center mb-3">
-            登録されている授業一覧
-          </title>
-          <v-card
-            v-for="item in fetchedClasses"
-            :key="item.id"
-            class="card my-2"
-            rounded
-            outlined
-            max-width="50rem"
-          >
-            <v-card-title>{{ item.title }}</v-card-title>
-            <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
-            <v-card-text class="d-flex card-text">
-              <AppBtn
-                class="btn"
-                color="primary"
-                @click="goToKuchikomi(item.title)"
+          <div class="text-subtitle-1 mb-3">登録されている授業一覧</div>
+          <v-row no-gutters>
+            <v-col cols="12" class="flex">
+              <v-card
+                v-for="item in fetchedClasses"
+                :key="item.id"
+                class="card my-1 mx-1"
+                rounded
+                outlined
               >
-                クチコミを見る
-              </AppBtn>
-            </v-card-text>
-          </v-card>
+                <v-card-title>{{ item.title }}</v-card-title>
+                <v-card-subtitle class="d-flex py-0">
+                  <div class="mr-3">講師: {{ item.teacher }}</div>
+                </v-card-subtitle>
+                <v-card-subtitle class="py-0">
+                  <div class="mr-3">開講期: {{ item.term }}</div>
+                  曜日時限: {{ item.dayOfWeek }}曜 {{ item.period }}限
+                </v-card-subtitle>
+                <v-card-text>
+                  <AppBtn
+                    class="btn"
+                    color="primary"
+                    @click="goToKuchikomi(item.title)"
+                  >
+                    クチコミを見る
+                  </AppBtn>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </section>
 
         <!-- 検索結果のコメント -->
-        <title
+        <div
           v-if="!filteredClasses.length && searchingTitle"
           class="text-h6 d-flex justify-center mb-3"
         >
           {{ RESULT_COMMENT.NO }}
-        </title>
+        </div>
         <!-- 授業カード一覧 -->
-        <section v-if="filteredClasses.length">
+        <section v-if="filteredClasses.length" class="flex">
           <!-- プログレスサークル -->
           <div v-if="isSearching" class="d-flex justify-center mt-10">
             <v-progress-circular
@@ -68,23 +68,16 @@
           <v-card
             v-for="item in filteredClasses"
             :key="item.id"
-            class="card my-2"
-            rounded
+            class="card my-1 mx-1"
             outlined
-            max-width="50rem"
           >
             <v-card-title>{{ item.title }}</v-card-title>
             <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
             <v-card-text class="d-flex card-text">
               <v-card-actions class="btn">
-                <v-btn
-                  color="primary"
-                  rounded
-                  outlined
-                  @click="goToKuchikomi(item.title)"
-                >
-                  詳細を見る
-                </v-btn>
+                <AppBtn color="primary" @click="goToKuchikomi(item.title)">
+                  クチコミを見る
+                </AppBtn>
               </v-card-actions>
             </v-card-text>
           </v-card>
@@ -166,27 +159,53 @@ export default defineComponent({
   margin-top: 3rem;
 }
 
+.divider {
+  width: 100px;
+}
+
 /* アイテムを真ん中に置く */
 .search-field {
-  margin: 0 auto;
-  margin-top: 8px;
+  margin: 2rem auto 0;
 }
-/* 画面幅が1440px以上の時 */
-@media (min-width: 1440px) {
+/* 画面幅が700px以上の時 */
+@media (min-width: 700px) {
   .search-field {
-    width: 40rem;
+    width: 30rem;
+  }
+}
+
+/* カードのレスポンシブ */
+@media (min-width: 600px) {
+  .flex {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .card {
+    width: 49%;
+  }
+}
+@media (min-width: 1200px) {
+  .flex {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  .card {
+    width: 24%;
   }
 }
 
 /* ボタンの位置をタイトルの右側に置く */
 .card {
-  margin: 0 auto;
   position: relative;
 }
 .btn {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
 }
 
 /* 検索欄の虫眼鏡アイコンが持つデフォルトのマージンを消す */
