@@ -2,11 +2,11 @@
   <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
       <v-col cols="12">
-        <div class="text-h6 d-flex justify-center my-3">クチコミを作成</div>
+        <div class="text-h6 d-flex justify-center my-3">クチコミ作成</div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="10" class="px-1">
+            <v-col cols="6" class="px-1">
               <RequiredCaption class="my-1">
                 授業名 (見つからない場合は
                 <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link
@@ -43,10 +43,10 @@
               </v-card>
             </v-col>
           </v-row>
-          <!--  -->
+
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="6">
               <RequiredCaption title="受講した年" />
               <SelectInput
                 v-model="year"
@@ -56,7 +56,7 @@
             </v-col>
           </v-row>
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="6">
               <RequiredCaption title="評価(0.5~5)" />
               <div class="ml-2 my-2 d-flex justify-start">
                 <v-rating
@@ -71,7 +71,7 @@
           </v-row>
           <!-- タイトル -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="6">
               <RequiredCaption title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
@@ -83,7 +83,7 @@
           </v-row>
           <!-- クチコミ -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="6">
               <RequiredCaption title="クチコミの内容" />
               <TextareaInput
                 v-model="kuchikomi"

@@ -3,12 +3,12 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-3">
-          新しい授業とクチコミを作成
+          新しい授業＋クチコミ作成
         </div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="10" class="mx-1">
+            <v-col cols="10" md="5" class="mx-1">
               <RequiredCaption title="授業名" />
               <TextInput
                 v-model="title"
@@ -18,7 +18,7 @@
               />
             </v-col>
             <!-- 講師名 -->
-            <v-col cols="10" class="mx-1">
+            <v-col cols="10" md="5" class="mx-1">
               <RequiredCaption title="講師名" />
               <TextInput
                 v-model="teacher"
@@ -79,7 +79,7 @@
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <RequiredCaption title="評価(0.5~5)" />
-              <div class="ml-2 my-2 d-flex justify-start">
+              <div class="my-2 d-flex justify-start">
                 <v-rating
                   v-model="rating"
                   half-increments
@@ -118,7 +118,7 @@
 
         <!-- 送信・キャンセルボタン -->
         <div class="d-flex justify-center py-3">
-          <AppBtn color="grey darken-2" class="mr-2" @click="openResetConfirm">
+          <AppBtn color="grey darken-2" class="mr-1" @click="openResetConfirm">
             リセット
           </AppBtn>
           <AppBtn
@@ -156,7 +156,7 @@
       />
       <SnackBar
         v-model="isOpenErrorSnackbar"
-        text="エラーが起こりました。ページをリロードしてもう一度試してください。"
+        text="エラーが起こりました。ページをリロード6もう一度試してください。"
         color="error"
       />
     </v-row>
