@@ -1,6 +1,7 @@
 <template>
   <div class="required-caption text-caption my-1 ml-3">
     <span class="red--text">* </span>
+    <slot />
     {{ title }}
   </div>
 </template>
@@ -11,8 +12,7 @@ export default defineComponent({
   name: 'RequiredCaption',
   props: {
     title: {
-      type: String,
-      required: true
+      type: String
     }
   },
   setup() {}
