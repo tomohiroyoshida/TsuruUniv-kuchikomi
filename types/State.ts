@@ -7,12 +7,11 @@ export interface User {
 
 // 授業の情報
 export interface Class {
-  id: string
   title: string
   teacher: string
   dayOfWeek: string
   period: string
-  createdAt: Date
+  createdAt: Date | null
 }
 
 // クチコミ
@@ -22,5 +21,5 @@ export interface Kuchikomi {
   rating: number
   content: string
   user: string
-  createdAt: Date
+  createdAt: Date | null
 }
