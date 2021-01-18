@@ -4,19 +4,27 @@
     <v-app-bar app flat color="grey lighten-5">
       <div class="text-subtitle-1">つるコミ</div>
       <!-- TODO:タブにするかも -->
-      <v-btn text :small="width < 700" to="/" class="mx-1" color="primary">
-        <v-icon>mdi-magnify</v-icon>
+      <v-btn
+        text
+        :small="width < 700"
+        class="mx-1"
+        color="primary"
+        exact
+        @click="goToSearch"
+      >
+        <v-icon small>mdi-magnify</v-icon>
         <div>検索</div>
       </v-btn>
       <v-divider vertical />
       <v-btn
         text
         :small="width < 700"
-        to="/create"
         class="mx-1"
         color="primary"
+        exact
+        @click="goToCreate"
       >
-        <v-icon> mdi-pencil-plus-outline </v-icon>
+        <v-icon small> mdi-pencil-plus-outline </v-icon>
         <div>作成</div>
       </v-btn>
       <v-spacer />
@@ -45,7 +53,7 @@ import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'default',
-  setup() {
+  setup(_, { root }) {
     const width = ref()
     width.value = window.innerWidth
     const isOpenDrawer = ref(false)
@@ -59,6 +67,12 @@ export default defineComponent({
     const logout = () => {
       isLoggedIn.value = false
     }
+    const goToSearch = () => {
+      root.$router.push('/')
+    }
+    const goToCreate = () => {
+      root.$router.push('/create')
+    }
     // リストのアイテムが選択されたらドロワーをとじる
     watch(selectedItem, () => (isOpenDrawer.value = false))
 
@@ -68,7 +82,9 @@ export default defineComponent({
       selectedItem,
       isLoggedIn,
       login,
-      logout
+      logout,
+      goToSearch,
+      goToCreate
     }
   }
 })
