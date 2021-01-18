@@ -2,7 +2,7 @@
   <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
       <v-col cols="12">
-        <div class="text-h6 d-flex justify-center mt-2 mb-6">
+        <div class="text-h6 d-flex justify-center mt-2 mb-6 font-weight-bold">
           新しい授業＋クチコミを新規作成
         </div>
         <v-form ref="form" v-model="isFormValid">

@@ -2,7 +2,9 @@
   <v-container id="search" fluid>
     <v-row no-gutters justify="center">
       <v-col cols="12">
-        <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
+        <div class="text-h6 d-flex justify-center my-3 font-weight-bold">
+          クチコミ検索
+        </div>
         <!-- 検索ボックス -->
         <div class="search-field">
           <TextInput
