@@ -9,8 +9,8 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: '%s - TsuruUniv-kuchikomi',
-    title: 'TsuruUniv-kuchikomi',
+    titleTemplate: '',
+    title: 'つるコミ',
     meta: [
       { charset: 'utf-8' },
       {
