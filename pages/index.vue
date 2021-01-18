@@ -2,6 +2,7 @@
   <v-container id="search" fluid>
     <v-row no-gutters justify="center">
       <v-col cols="12">
+        <div class="text-h6 d-flex justify-center my-3">クチコミ検索</div>
         <!-- 検索ボックス -->
         <div class="search-field">
           <TextInput
@@ -16,7 +17,7 @@
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
-          <div class="text-subtitle-1 mb-3 ml-1">登録されている授業一覧</div>
+          <div class="text-h6 mb-3 ml-1">登録されている授業一覧</div>
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
@@ -40,7 +41,7 @@
                     color="primary"
                     @click="goToKuchikomi(item.title)"
                   >
-                    クチコミを見る
+                    クチコミをみる
                   </AppBtn>
                 </v-card-text>
               </v-card>
@@ -77,7 +78,7 @@
             <v-card-text class="d-flex card-text">
               <v-card-actions class="btn">
                 <AppBtn color="primary" @click="goToKuchikomi(item.title)">
-                  クチコミを見る
+                  クチコミみる
                 </AppBtn>
               </v-card-actions>
             </v-card-text>
@@ -183,7 +184,7 @@ export default defineComponent({
     flex-wrap: wrap;
   }
   .card {
-    width: 49.5%;
+    width: 49.4%;
   }
 }
 @media (min-width: 1200px) {
@@ -194,7 +195,7 @@ export default defineComponent({
     flex-wrap: wrap;
   }
   .card {
-    width: 24.5%;
+    width: 24.6%;
   }
 }
 

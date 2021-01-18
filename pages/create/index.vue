@@ -2,11 +2,11 @@
   <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
       <v-col cols="12">
-        <div class="text-h6 d-flex justify-center my-3">クチコミ作成</div>
+        <div class="text-h6 d-flex justify-center my-5">クチコミを新規作成</div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="6" class="px-1">
+            <v-col cols="10" class="px-1">
               <RequiredCaption class="my-1">
                 授業名 (見つからない場合は
                 <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link
@@ -25,28 +25,34 @@
                 hide-no-data
                 item-color="primary"
                 color="primary"
-                label="「全角」で入力"
+                label="授業名を全角で入力 選択"
                 persistent-hint
+                @input="showCard($event)"
               />
             </v-col>
           </v-row>
 
-          <!-- TODO授業の情報 -->
+          <!-- TODO: 授業の情報 -->
           <v-row v-if="title" no-gutters justify="center">
             <v-col cols="10">
               <div class="required-caption text-caption my-1 ml-3">
                 授業の情報
               </div>
-              <v-card rounded outlined>
+              <v-card v-if="hasCardInfo" rounded outlined>
                 <v-card-title>{{ title }}</v-card-title>
-                <v-card-subtitle> 情報がくる </v-card-subtitle>
+                <v-card-subtitle>
+                  講師: {{ classCardInfo.teacher }}
+                </v-card-subtitle>
+                <v-card-text>
+                  {{ classCardInfo.dayOfWeek }}曜 {{ classCardInfo.period }}限
+                </v-card-text>
               </v-card>
             </v-col>
           </v-row>
 
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
-            <v-col cols="6">
+            <v-col cols="10">
               <RequiredCaption title="受講した年" />
               <SelectInput
                 v-model="year"
@@ -56,9 +62,9 @@
             </v-col>
           </v-row>
           <v-row no-gutters justify="center">
-            <v-col cols="6">
+            <v-col cols="10">
               <RequiredCaption title="評価(0.5~5)" />
-              <div class="ml-2 my-2 d-flex justify-start">
+              <div class="my-2 d-flex justify-start">
                 <v-rating
                   v-model="rating"
                   half-increments
@@ -71,7 +77,7 @@
           </v-row>
           <!-- タイトル -->
           <v-row no-gutters justify="center">
-            <v-col cols="6">
+            <v-col cols="10">
               <RequiredCaption title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
@@ -83,7 +89,7 @@
           </v-row>
           <!-- クチコミ -->
           <v-row no-gutters justify="center">
-            <v-col cols="6">
+            <v-col cols="10">
               <RequiredCaption title="クチコミの内容" />
               <TextareaInput
                 v-model="kuchikomi"
@@ -96,7 +102,7 @@
 
         <!-- 送信・キャンセルボタン -->
         <div class="d-flex justify-center py-3">
-          <AppBtn color="grey darken-2" class="mr-2" @click="openResetConfirm">
+          <AppBtn color="grey darken-2" class="mr-1" @click="openResetConfirm">
             リセット
           </AppBtn>
           <AppBtn
@@ -138,7 +144,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, reactive, ref } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 
@@ -167,8 +173,29 @@ export default defineComponent({
     const kuchikomi = ref('')
     const year = ref(null)
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
-
     const isOpenSuccessSnackbar = ref(false)
+
+    // カード
+    const hasCardInfo = ref(false)
+    let classCardInfo = reactive<Class>({
+      title: '',
+      teacher: '',
+      dayOfWeek: '',
+      period: '',
+      createdAt: null
+    })
+    const showCard = async (title: String) => {
+      await fetchedClasses.value.filter((item) => {
+        if (item.title === title) {
+          classCardInfo = item
+          hasCardInfo.value = true
+        } else {
+          hasCardInfo.value = false
+        }
+      })
+    }
+
+    // 作成
     const isOpenCreateConfirm = ref(false)
     const openCreateConfirm = () => {
       isOpenCreateConfirm.value = true
@@ -191,12 +218,11 @@ export default defineComponent({
             username: root.$store.getters.user.username, // TODO: ログインしているユーザー名にする
             createdAt
           })
+        isOpenSuccessSnackbar.value = true
+        resetInput()
       } catch {
         isOpenErrorSnackbar.value = true
       }
-      isOpenSuccessSnackbar.value = true
-      resetInput()
-      root.$router.push('/create/')
     }
     const isOpenErrorSnackbar = ref(false)
 
@@ -221,13 +247,11 @@ export default defineComponent({
     const classTitles = ref<String[]>([])
     const fetchedClasses = ref<Class[]>([])
     fetchedClasses.value = root.$store.getters.classes
-    console.debug('fetchedClasses: ', fetchedClasses.value)
 
     // 授業のタイトルの配列を作成
     fetchedClasses.value.forEach((item) => {
       classTitles.value.push(item.title)
     })
-    console.debug('titles:', classTitles.value)
 
     return {
       RULES,
@@ -248,7 +272,10 @@ export default defineComponent({
       openCreateConfirm,
       createKuchikomi,
       isOpenCreateConfirm,
-      isOpenResetConfirm
+      isOpenResetConfirm,
+      showCard,
+      hasCardInfo,
+      classCardInfo
     }
   }
 })

@@ -2,8 +2,8 @@
   <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
       <v-col cols="12">
-        <div class="text-h6 d-flex justify-center my-3">
-          新しい授業＋クチコミ作成
+        <div class="text-h6 d-flex justify-center mt-2 mb-6">
+          新しい授業＋クチコミを新規作成
         </div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
@@ -261,14 +261,14 @@ export default defineComponent({
                   content: kuchikomi.value,
                   rating: rating.value,
                   year: year.value,
-                  username: root.$store.getters.user.username, // TODO: ログインしているユーザー名にする
+                  username: root.$store.getters.user.username,
                   createdAt
                 })
-              isOpenSuccessSnackbar.value = true
-              resetInput()
-              root.$router.push('/create/')
             }
           })
+        isOpenSuccessSnackbar.value = true
+        resetInput()
+        root.$router.push('/create/')
       } catch {
         isOpenErrorSnackbar.value = true
         resetInput()
@@ -300,13 +300,11 @@ export default defineComponent({
     const classTitles = ref<String[]>([])
     const fetchedClasses = ref<Class[]>([])
     fetchedClasses.value = root.$store.getters.classes
-    console.debug('fetchedClasses: ', fetchedClasses.value)
 
     // 授業のタイトルの配列を作成
     fetchedClasses.value.forEach((item) => {
       classTitles.value.push(item.title)
     })
-    console.debug('titles:', classTitles.value)
 
     return {
       RULES,

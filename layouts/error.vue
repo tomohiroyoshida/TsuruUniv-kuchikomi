@@ -12,7 +12,7 @@
         <div class="text-subtitle-1 mb-3">URLが正しいか確認してください。</div>
         <NuxtLink to="/" class="text-h6"> ホーム画面へ戻る</NuxtLink>
       </v-card>
-      <v-img contain max-height="500" src="/cat_PC.jpeg" />
+      <v-img contain max-height="500" src="/cat_PC.png" />
       <div class="text-caption text-center">
         illustrated by
         <a href="https://twitter.com/sgrn4902" target="_blank" class="ml-1"
