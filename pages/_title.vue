@@ -23,7 +23,7 @@
             <v-card
               v-for="item in kuchikomis"
               :key="item.createdAt"
-              class="card my-1 mx-1"
+              class="card my-1 ml-1"
               rounded
               outlined
             >

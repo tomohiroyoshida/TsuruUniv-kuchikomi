@@ -21,8 +21,8 @@
             <v-col cols="12" class="flex">
               <v-card
                 v-for="item in fetchedClasses"
-                :key="item.id"
-                class="card my-1 mx-1"
+                :key="item.title"
+                class="card my-1 ml-1"
                 rounded
                 outlined
               >
@@ -56,7 +56,7 @@
           {{ RESULT_COMMENT.NO }}
         </div>
         <!-- 授業カード一覧 -->
-        <section v-if="filteredClasses.length" class="flex">
+        <section v-if="filteredClasses.length && searchingTitle" class="flex">
           <!-- プログレスサークル -->
           <div v-if="isSearching" class="d-flex justify-center mt-10">
             <v-progress-circular
@@ -69,7 +69,7 @@
           <v-card
             v-for="item in filteredClasses"
             :key="item.id"
-            class="card my-1 mx-1"
+            class="card my-1 ml-1"
             outlined
           >
             <v-card-title>{{ item.title }}</v-card-title>
@@ -105,6 +105,7 @@ export default defineComponent({
     // 検索欄に文字が入力されるたびにマッチする授業を探す
     watch(searchingTitle, (title: string) => {
       isSearching.value = true
+      // フィルタリングされた結果が空配列でなければ一度filteredClassesを空にしてから
       if (filteredClasses.value.length) filteredClasses.value = []
       // 全ての授業リストから、検索欄にある文字列が含まれる授業を取得
       filteredClasses.value = fetchedClasses.value.filter((item) =>
@@ -116,7 +117,6 @@ export default defineComponent({
       root.$store.dispatch('setFilteredClasses', [])
 
       isSearching.value = false
-      console.debug('検索した結果:', filteredClasses.value)
     })
 
     // クチコミのページへ飛ぶ
@@ -131,7 +131,6 @@ export default defineComponent({
     // storeから全ての授業リストをフェッチ
     const fetchedClasses = ref<Class[]>([])
     fetchedClasses.value = root.$store.getters.classes
-    console.debug('fetchedClasses', fetchedClasses.value)
 
     // Storeに 'searchingTitle' があればその授業の一覧を表示する
     const storeSearchingTitle = root.$store.getters.searchingTitle
@@ -184,7 +183,7 @@ export default defineComponent({
     flex-wrap: wrap;
   }
   .card {
-    width: 48%;
+    width: 49.5%;
   }
 }
 @media (min-width: 1200px) {
@@ -195,7 +194,7 @@ export default defineComponent({
     flex-wrap: wrap;
   }
   .card {
-    width: 24%;
+    width: 24.5%;
   }
 }
 
