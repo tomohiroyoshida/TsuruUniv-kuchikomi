@@ -1,5 +1,5 @@
 <template>
-  <v-container id="create" fluid class="pa-1">
+  <v-container id="create" fluid class="pa-2">
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-5 font-weight-bold">
@@ -9,11 +9,11 @@
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
             <v-col cols="10" class="px-1">
-              <RequiredCaption class="my-1">
+              <TextCaption required class="my-1">
                 授業名 (見つからない場合は
                 <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link
                 >)
-              </RequiredCaption>
+              </TextCaption>
               <v-autocomplete
                 v-model="title"
                 :items="classTitles"
@@ -27,7 +27,7 @@
                 hide-no-data
                 item-color="primary"
                 color="primary"
-                label="授業名を全角で入力 選択"
+                label="授業名を入力 選択"
                 persistent-hint
                 @input="showCard($event)"
               />
@@ -55,7 +55,7 @@
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="受講した年" />
+              <TextCaption required title="受講した年" />
               <SelectInput
                 v-model="year"
                 :items="years"
@@ -65,7 +65,7 @@
           </v-row>
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="評価(0.5~5)" />
+              <TextCaption required title="評価(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
                   v-model="rating"
@@ -80,7 +80,7 @@
           <!-- タイトル -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="クチコミのタイトル" />
+              <TextCaption required title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
                 :rules="RULES.requiredWith20"
@@ -92,7 +92,7 @@
           <!-- クチコミ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="クチコミの内容" />
+              <TextCaption required title="クチコミの内容" />
               <TextareaInput
                 v-model="kuchikomi"
                 :rules="RULES.kuchikomi"
@@ -138,7 +138,7 @@
       />
       <SnackBar
         v-model="isOpenErrorSnackbar"
-        text="この授業名はすでに存在します。メニュー「クチコミを作成」からクチコミを作成してください。"
+        text="エラーが発生しました。画面をリロードしてもう一度試してください。"
         color="error"
       />
     </v-row>
@@ -175,7 +175,6 @@ export default defineComponent({
     const kuchikomi = ref('')
     const year = ref(null)
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
-    const isOpenSuccessSnackbar = ref(false)
 
     // カード
     const hasCardInfo = ref(false)
@@ -202,8 +201,12 @@ export default defineComponent({
     const openCreateConfirm = () => {
       isOpenCreateConfirm.value = true
     }
+    const isOpenSuccessSnackbar = ref(false)
+    const isOpenErrorSnackbar = ref(false)
     const createKuchikomi = async () => {
       isOpenCreateConfirm.value = false
+      isOpenSuccessSnackbar.value = false
+      isOpenSuccessSnackbar.value = false
       const createdAt = new Date().toLocaleString()
       //  Firestoreにクチコミの情報追加
       try {
@@ -226,7 +229,6 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
       }
     }
-    const isOpenErrorSnackbar = ref(false)
 
     // キャンセル
     const isOpenResetConfirm = ref(false)
