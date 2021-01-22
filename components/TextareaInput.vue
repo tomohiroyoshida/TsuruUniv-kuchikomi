@@ -31,8 +31,7 @@ export default defineComponent({
       type: String
     },
     rules: {
-      type: Array,
-      required: true
+      type: Array
     }
   },
   setup() {}
