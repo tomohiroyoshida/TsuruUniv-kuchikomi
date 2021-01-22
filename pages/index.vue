@@ -1,218 +1,82 @@
 <template>
-  <v-container id="search" fluid>
+  <v-container id="about" class="pa-1">
+    <v-row no-gutters justify="center" align="center" class="mt-15">
+      <v-col cols="12" class="text-center">
+        <h1 class="mt-3 font-weight-bold">Learn it. Share it all.</h1>
+        <div class="text-subtitle-1 mt-3 px-5">
+          「つるコミ」は都留文科大学の授業に関するクチコミを自由に閲覧・作成・共有できるアプリです
+        </div>
+      </v-col>
+      <v-col cols="12" class="my-3">
+        <v-img max-height="250" src="/people.png"></v-img>
+      </v-col>
+      <v-col cols="8" class="text-center mt-5">
+        <h2>機能説明</h2>
+      </v-col>
+    </v-row>
+    <!-- 機能説明 -->
     <v-row no-gutters justify="center">
-      <v-col cols="12">
-        <div class="text-h6 d-flex justify-center my-3 font-weight-bold">
-          クチコミ検索
+      <v-col cols="11" class="mt-5">
+        <div class="text-h6">
+          <v-icon color="primary">mdi-magnify</v-icon>検索(ログイン不要)
         </div>
-        <!-- 検索ボックス -->
-        <div class="search-field">
-          <TextInput
-            v-model="searchingTitle"
-            color="primary"
-            placeholder="授業名を入力 検索"
-            prepend-inner-icon="mdi-magnify"
-            class="mx-1"
-          />
+        <div class="ml-5 mt-2">
+          検索ボックスに知りたい授業名を入力し、「クチコミをみる」ボタンを押すとクチコミを閲覧することができます。
         </div>
-
-        <!-- 検索結果一覧 -->
-        <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
-        <section v-if="searchingTitle === '' || searchingTitle === null">
-          <div class="text-h6 mb-3 ml-1">登録されている授業一覧</div>
-          <v-row no-gutters>
-            <v-col cols="12" class="flex">
-              <v-card
-                v-for="item in fetchedClasses"
-                :key="item.title"
-                class="card my-1 ml-1"
-                rounded
-                outlined
-              >
-                <v-card-title>{{ item.title }}</v-card-title>
-                <v-card-subtitle class="py-0">
-                  <div class="mr-3">講師: {{ item.teacher }}</div>
-                  <div class="mr-3">
-                    開講期: {{ item.term }} 曜日時限: {{ item.dayOfWeek }}曜
-                    {{ item.period }}限
-                  </div>
-                </v-card-subtitle>
-                <v-card-text>
-                  <AppBtn
-                    class="btn"
-                    color="primary"
-                    @click="goToKuchikomi(item.title)"
-                  >
-                    クチコミをみる
-                  </AppBtn>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </section>
-
-        <!-- 検索結果のコメント -->
-        <div
-          v-if="!filteredClasses.length && searchingTitle"
-          class="text-h6 d-flex justify-center mb-3"
-        >
-          {{ RESULT_COMMENT.NO }}
+      </v-col>
+    </v-row>
+    <v-row no-gutters justify="center">
+      <v-col cols="11" class="mt-6">
+        <div class="text-h6">
+          <v-icon color="primary">mdi-pencil-plus-outline</v-icon
+          >作成(ログイン必須)
         </div>
-        <!-- 授業カード一覧 -->
-        <section v-if="filteredClasses.length && searchingTitle" class="flex">
-          <!-- プログレスサークル -->
-          <div v-if="isSearching" class="d-flex justify-center mt-10">
-            <v-progress-circular
-              indeterminate
-              size="70"
-              width="6"
-              color="primary lighten-3"
-            />
-          </div>
-          <v-card
-            v-for="item in filteredClasses"
-            :key="item.id"
-            class="card my-1 ml-1"
-            outlined
-          >
-            <v-card-title>{{ item.title }}</v-card-title>
-            <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
-            <v-card-text class="d-flex card-text">
-              <v-card-actions class="btn">
-                <AppBtn color="primary" @click="goToKuchikomi(item.title)">
-                  クチコミみる
-                </AppBtn>
-              </v-card-actions>
-            </v-card-text>
-          </v-card>
-        </section>
+        <div class="ml-5 mt-2">
+          「授業名」の検索ボックスに知りたい授業名を入力し、候補から授業を一つ選択します。
+          必要事項を入力して作成ボタンを押せばクチコミの作成が行われます。
+        </div>
+        <div class="ml-5 mt-2">
+          もし「授業名」の検索ボックスに知りたい授業名がない場合は「こちらから新規作成」のリンクから必要事項を入力し、作成ボタンを押せば授業とクチコミの両方が作成されます。
+        </div>
+      </v-col>
+    </v-row>
+    <!-- 目的 -->
+    <v-row no-gutters justify="center">
+      <v-col cols="8" class="text-center mt-6 mb-3">
+        <h2>ユーザーの皆様へ</h2>
+      </v-col>
+    </v-row>
+    <v-row no-gutters justify="center" class="mb-5">
+      <v-col cols="11" class="mt-5">
+        <div class="ml-5">
+          このアプリは、「COVID-19の影響でリモート授業が中心となった結果、特に新入生にとって授業に関する情報共有が難しくなっている現状を改善したい」という思いから開発しました。
+        </div>
+        <div class="ml-5 mt-2">
+          あなたの１つのクチコミが同じ都留文科大学生の助けになります。ぜひ積極的な投稿をよろしくお願いいたします🙇‍♂️
+        </div>
+        <div class="ml-5 mt-2">
+          また、このアプリは皆様の善意の上で成り立っています。誹謗中傷や荒らし行為といった迷惑行為はお控えください。
+        </div>
+        <div class="ml-5 mt-2">
+          もしバグ、改善/追加して欲しい機能、アプリに関する感想などがありましたら
+          <a href="https://google.com" target="_blank">こちらのGoogleフォーム</a
+          >からお気軽にお知らせください。開発のモチベーションになります！
+        </div>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
-import { Class } from '@/types/State'
-
-const RESULT_COMMENT = {
-  YES: '検索結果',
-  NO: 'まだクチコミが作成されていない、または授業名が正しくありません'
-}
+import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
-  name: 'search',
-  setup(_, { root }) {
-    const isSearching = ref(false)
-    const searchingTitle = ref('')
-    const filteredClasses = ref<Class[]>([])
-    // 検索欄に文字が入力されるたびにマッチする授業を探す
-    watch(searchingTitle, (title: string) => {
-      isSearching.value = true
-      // フィルタリングされた結果が空配列でなければ一度filteredClassesを空にしてから
-      if (filteredClasses.value.length) filteredClasses.value = []
-      // 全ての授業リストから、検索欄にある文字列が含まれる授業を取得
-      filteredClasses.value = fetchedClasses.value.filter((item) =>
-        item.title.includes(title)
-      )
-
-      // Storeを綺麗にする
-      root.$store.dispatch('setSearchingTitle', '')
-      root.$store.dispatch('setFilteredClasses', [])
-
-      isSearching.value = false
-    })
-
-    // クチコミのページへ飛ぶ
-    const goToKuchikomi = (title: string) => {
-      root.$store.dispatch('setSearchingTitle', searchingTitle.value)
-      root.$router.push(`/${title}`)
-    }
-
-    /**
-     * init
-     */
-    // storeから全ての授業リストをフェッチ
-    const fetchedClasses = ref<Class[]>([])
-    fetchedClasses.value = root.$store.getters.classes
-
-    // Storeに 'searchingTitle' があればその授業の一覧を表示する
-    const storeSearchingTitle = root.$store.getters.searchingTitle
-    if (storeSearchingTitle) {
-      searchingTitle.value = storeSearchingTitle
-      filteredClasses.value = fetchedClasses.value.filter((item) =>
-        item.title.includes(searchingTitle.value)
-      )
-    }
-
-    return {
-      RESULT_COMMENT,
-      isSearching,
-      searchingTitle,
-      filteredClasses,
-      fetchedClasses,
-      goToKuchikomi,
-      storeSearchingTitle
-    }
-  }
+  name: 'about',
+  setup() {}
 })
 </script>
 
 <style scoped>
-#search {
-  margin-top: 3rem;
-}
-
-.divider {
-  width: 100px;
-}
-
-/* 検索ボックスを真ん中に置く */
-.search-field {
-  margin: 2rem auto 0;
-}
-/* 画面幅が700px以上の時 */
-@media (min-width: 700px) {
-  .search-field {
-    width: 30rem;
-  }
-}
-
-/* カードのレスポンシブ */
-@media (min-width: 700px) {
-  .flex {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-  .card {
-    width: 49.4%;
-  }
-}
-@media (min-width: 1200px) {
-  .flex {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-  .card {
-    width: 24.6%;
-  }
-}
-
-/* ボタンの位置をタイトルの右側に置く */
-.card {
-  position: relative;
-}
-.btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-}
-
-/* 検索欄の虫眼鏡アイコンが持つデフォルトのマージンを消す */
-.v-input >>> .v-input__append-outer {
-  margin: 0;
+h1 {
+  font-size: 40px;
 }
 </style>
