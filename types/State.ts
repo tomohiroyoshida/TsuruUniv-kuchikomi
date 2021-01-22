@@ -1,8 +1,11 @@
 // ユーザーの情報
 export interface User {
-  userId: string
-  username: string
-  loggedIn: boolean
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  photoURL: string
+  createdAt?: Date
 }
 
 // 授業の情報
