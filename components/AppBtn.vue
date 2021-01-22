@@ -2,7 +2,7 @@
   <v-btn
     v-bind="$attrs"
     text
-    width="10rem"
+    :width="$attrs.width || '10rem'"
     class="app-btn white--text"
     @click="$emit('click', $event)"
   >
