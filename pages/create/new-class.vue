@@ -9,7 +9,7 @@
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
             <v-col cols="10" md="5" class="mx-1">
-              <RequiredCaption title="授業名" />
+              <TextCaption required title="授業名" />
               <TextInput
                 v-model="title"
                 :rules="RULES.requiredWith30"
@@ -19,7 +19,7 @@
             </v-col>
             <!-- 講師名 -->
             <v-col cols="10" md="5" class="mx-1">
-              <RequiredCaption title="講師名" />
+              <TextCaption required title="講師名" />
               <TextInput
                 v-model="teacher"
                 :rules="RULES.requiredWith20"
@@ -32,7 +32,7 @@
           <v-row no-gutters justify="center">
             <!-- 開講期 -->
             <v-col cols="5" class="mx-1">
-              <RequiredCaption title="開講期" />
+              <TextCaption required title="開講期" />
               <SelectInput
                 v-model="term"
                 :items="TERMS"
@@ -41,7 +41,7 @@
             </v-col>
             <!-- 受講した年 -->
             <v-col cols="5" class="mx-1">
-              <RequiredCaption title="受講した年" />
+              <TextCaption required title="受講した年" />
               <SelectInput
                 v-model="year"
                 :items="years"
@@ -53,7 +53,7 @@
           <v-row no-gutters justify="center">
             <!-- 曜日 -->
             <v-col cols="5" class="mx-1">
-              <RequiredCaption title="曜日" />
+              <TextCaption required title="曜日" />
               <SelectInput
                 v-model="dayOfWeek"
                 :items="DAYS"
@@ -64,7 +64,7 @@
             </v-col>
             <!-- 時限 -->
             <v-col cols="5" class="mx-1">
-              <RequiredCaption title="時限" />
+              <TextCaption required title="時限" />
               <SelectInput
                 v-model="period"
                 :items="PERIODS"
@@ -78,7 +78,7 @@
           <!-- 評価 -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="評価(0.5~5)" />
+              <TextCaption required title="評価(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
                   v-model="rating"
@@ -94,7 +94,7 @@
           <!-- タイトル -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="クチコミのタイトル" />
+              <TextCaption required title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
                 :rules="RULES.requiredWith20"
@@ -106,7 +106,7 @@
           <!-- クチコミ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <RequiredCaption title="クチコミの内容" />
+              <TextCaption required title="クチコミの内容" />
               <TextareaInput
                 v-model="kuchikomi"
                 :rules="RULES.kuchikomi"
@@ -146,17 +146,17 @@
       <!-- スナックバー -->
       <SnackBar
         v-model="isOpenSuccessSnackbar"
-        text="作成に成功しました"
+        text="【成功】クチコミの作成ありがとうございます！"
         color="success"
       />
       <SnackBar
         v-model="isOpenDuplicatedSnackbar"
-        text="この授業名はすでに存在します。メニュー「クチコミを作成」からクチコミを作成してください。"
+        text="【エラー】この授業はすでに存在します。メニュー「作成」からクチコミを作成してください。"
         color="error"
       />
       <SnackBar
         v-model="isOpenErrorSnackbar"
-        text="エラーが起こりました。ページをリロード6もう一度試してください。"
+        text="【エラー】予期せぬエラーが起きました。ページをリロードしてもう一度試してください。"
         color="error"
       />
     </v-row>
@@ -217,17 +217,20 @@ export default defineComponent({
         term.value === '時間外授業' ? false : !!v || 'この欄の入力は必須です'
     ]
 
-    // 新規作成
     const isOpenCreateConfirm = ref(false)
     const openCreateConfirm = () => {
       isOpenCreateConfirm.value = true
     }
+
+    // 新規作成
     const isOpenSuccessSnackbar = ref(false)
     const isOpenDuplicatedSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
-
     const createKuchikomi = async () => {
       isOpenCreateConfirm.value = false
+      isOpenSuccessSnackbar.value = false
+      isOpenDuplicatedSnackbar.value = false
+      isOpenErrorSnackbar.value = false
       const createdAt = new Date().toLocaleString()
       //  Firestoreに追加
       try {
@@ -237,7 +240,10 @@ export default defineComponent({
           .get()
           .then((doc) => {
             // もしすでに入力されたタイトルの授業が存在していたら処理を中止してエラーを出す
-            if (doc.exists) {
+            const data = doc.data()
+            const docTeacher = data?.teacher
+            // 授業がすでに登録されている && 登録されている授業の講師名が入力されたものと同じならエラー
+            if (doc.exists && teacher === docTeacher) {
               isOpenDuplicatedSnackbar.value = true
             } else {
               // 授業の情報を追加
@@ -264,14 +270,12 @@ export default defineComponent({
                   username: root.$store.getters.user.username,
                   createdAt
                 })
+              isOpenSuccessSnackbar.value = true
+              resetInput()
             }
           })
-        isOpenSuccessSnackbar.value = true
-        resetInput()
-        root.$router.push('/create/')
       } catch {
         isOpenErrorSnackbar.value = true
-        resetInput()
       }
     }
 
