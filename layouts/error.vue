@@ -10,22 +10,35 @@
       >
         <div class="mb-3">お探しのページが見つかりません。</div>
         <div class="text-subtitle-1 mb-3">URLが正しいか確認してください。</div>
-        <NuxtLink to="/" class="text-h6"> ホーム画面へ戻る</NuxtLink>
+        <NuxtLink to="/" class="text-subtitle-1"> ホーム画面へ戻る</NuxtLink>
       </v-card>
       <v-img contain max-height="500" src="/cat_PC.png" />
       <div class="text-caption text-center">
         illustrated by
-        <a href="https://twitter.com/sgrn4902" target="_blank" class="ml-1"
+        <a href="https://shigureni.com/" target="_blank" class="ml-1"
           >shigureni</a
         >
       </div>
     </h1>
 
     <h1 v-else>
-      <v-img contain max-height="400" src="/cat_PC.jpeg" />
-      <div class="text-center">
-        エラーが起きました。
-        <NuxtLink to="/" class="text-subtitle-1"> ホーム画面へ戻る</NuxtLink>
+      <v-card
+        outlined
+        color="#F5F5F5"
+        height="200"
+        rounded="30"
+        class="px-4 py-8 text-center"
+      >
+        <div class="mb-3">エラーが発生しました。</div>
+        <div class="text-subtitle-1 mb-3">ページをリロードしてください。</div>
+        <NuxtLink to="/" class="text-h6"> ホーム画面へ戻る</NuxtLink>
+      </v-card>
+      <v-img contain max-height="500" src="/cat_PC.png" />
+      <div class="text-caption text-center">
+        illustrated by
+        <a href="https://shigureni.com/" target="_blank" class="ml-1"
+          >shigureni</a
+        >
       </div>
     </h1>
   </v-app>
