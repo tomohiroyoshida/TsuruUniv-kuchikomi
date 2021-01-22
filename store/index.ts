@@ -50,7 +50,7 @@ export const actions = {
   setUser({ commit }: NuxtAppOptions, user: User) {
     commit('setUser', user)
   },
-  // TODO: 授業リストの一覧を保存 いらない？
+  // 授業リストの一覧を保存 いらない？
   setClasses({ commit }: NuxtAppOptions, classes: Class[]) {
     commit('setClasses', classes)
   },
