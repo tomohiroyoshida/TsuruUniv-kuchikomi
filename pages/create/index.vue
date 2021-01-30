@@ -1,5 +1,5 @@
 <template>
-  <v-container id="create" fluid class="pa-2">
+  <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-5 font-weight-bold">
@@ -8,7 +8,7 @@
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="10" class="px-1">
+            <v-col cols="10">
               <TextCaption required class="my-1">
                 授業名 (見つからない場合は
                 <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link
