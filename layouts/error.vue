@@ -21,7 +21,7 @@
       </div>
     </h1>
 
-    <h1 v-else>
+    <h1 v-else class="mt-14">
       <v-card
         outlined
         color="#F5F5F5"
