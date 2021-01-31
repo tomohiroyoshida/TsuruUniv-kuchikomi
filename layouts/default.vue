@@ -5,7 +5,6 @@
       <div v-if="width > 700" class="text-subtitle-1 font-weight-bold">
         つるコミ
       </div>
-      <!-- タブにするかも -->
       <v-btn
         text
         :small="width < 700"
@@ -43,7 +42,7 @@
       </v-btn>
       <v-spacer />
       <v-btn
-        v-if="!isLoggedIn"
+        v-if="!loggedIn"
         to="/login"
         depressed
         :small="width < 700"
@@ -52,8 +51,12 @@
       >
         ログイン
       </v-btn>
-      <v-btn v-else fab outlined :small="width < 700" color="primary">
-        <v-icon>mdi-account</v-icon>
+      <v-btn v-else text :small="width < 700" color="primary" max-width="30">
+        <v-img
+          max-height="35"
+          max-width="35"
+          :src="loginUser.photoURL ? loginUser.photoURL : '/cat_PC.png'"
+        />
       </v-btn>
     </v-app-bar>
 
@@ -63,24 +66,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 
 export default defineComponent({
   name: 'default',
   setup(_, { root }) {
     const width = ref()
     width.value = window.innerWidth
-    const isOpenDrawer = ref(false)
-    const selectedItem = ref(null)
-    const isLoggedIn = ref(false)
-    // TODO
-    const login = () => {
-      isLoggedIn.value = true
-    }
-    // TODO
-    const logout = () => {
-      isLoggedIn.value = false
-    }
+    const loginUser = computed(() => root.$store.getters.user)
+    const loggedIn = computed(() => root.$store.getters.user.uid)
+
     const goToSearch = () => {
       root.$router.push('/search')
     }
@@ -90,16 +85,11 @@ export default defineComponent({
     const goToAbout = () => {
       root.$router.push('/')
     }
-    // リストのアイテムが選択されたらドロワーをとじる
-    watch(selectedItem, () => (isOpenDrawer.value = false))
 
     return {
       width,
-      isOpenDrawer,
-      selectedItem,
-      isLoggedIn,
-      login,
-      logout,
+      loginUser,
+      loggedIn,
       goToSearch,
       goToCreate,
       goToAbout
