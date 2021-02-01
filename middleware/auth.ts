@@ -1,8 +1,20 @@
-import { NuxtAppOptions } from '@nuxt/types'
 import firebase from 'firebase'
+import { defineNuxtMiddleware } from '@nuxtjs/composition-api'
 
-const auth = (context: NuxtAppOptions) => {
-  // context を使用します
-}
-
-export default auth
+export default defineNuxtMiddleware(({ store }) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      const userInfo = {
+        uid: user.uid,
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        loggedIn: true
+      }
+      store.dispatch('setUser', userInfo)
+      console.debug('login user: ', userInfo)
+    } else {
+      console.debug('no signing user')
+    }
+  })
+})

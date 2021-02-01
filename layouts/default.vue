@@ -47,16 +47,11 @@
         depressed
         :small="width < 700"
         color="primary"
-        class="text-button"
       >
         ログイン
       </v-btn>
-      <v-btn v-else text :small="width < 700" color="primary" max-width="30">
-        <v-img
-          max-height="35"
-          max-width="35"
-          :src="loginUser.photoURL ? loginUser.photoURL : '/cat_PC.png'"
-        />
+      <v-btn v-else text :small="width < 700" color="primary" @click="signOut">
+        ログアウト
       </v-btn>
     </v-app-bar>
 
@@ -67,6 +62,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
+import firebase from 'firebase'
 
 export default defineComponent({
   name: 'default',
@@ -74,7 +70,7 @@ export default defineComponent({
     const width = ref()
     width.value = window.innerWidth
     const loginUser = computed(() => root.$store.getters.user)
-    const loggedIn = computed(() => root.$store.getters.user.uid)
+    const loggedIn = computed(() => root.$store.getters.user.loggedIn)
 
     const goToSearch = () => {
       root.$router.push('/search')
@@ -85,6 +81,25 @@ export default defineComponent({
     const goToAbout = () => {
       root.$router.push('/')
     }
+    const signOut = () => {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          const emptyUser = {
+            uid: '',
+            name: '',
+            email: '',
+            photoURL: '',
+            loggedIn: false
+          }
+          root.$store.dispatch('setUser', emptyUser)
+          console.debug('signout')
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    }
 
     return {
       width,
@@ -92,7 +107,8 @@ export default defineComponent({
       loggedIn,
       goToSearch,
       goToCreate,
-      goToAbout
+      goToAbout,
+      signOut
     }
   }
 })

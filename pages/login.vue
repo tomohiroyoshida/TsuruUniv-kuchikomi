@@ -59,20 +59,9 @@ export default defineComponent({
         await firebase
           .auth()
           .signInWithPopup(provider)
-          .then((result) => {
-            const userObj = result.user
-            if (!userObj) return
-            const user = {
-              uid: userObj.uid,
-              name: userObj.displayName,
-              email: userObj.email,
-              emailVerified: userObj.emailVerified,
-              photoURL: userObj.photoURL
-            }
-            root.$store.dispatch('setUser', user)
-            console.debug('user: ', user)
+          .then(() => {
+            root.$router.push('/search')
           })
-        root.$router.push('/search')
       } catch (e) {
         console.error(e)
       }

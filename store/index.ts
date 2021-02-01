@@ -4,8 +4,10 @@ import { User, Class } from '@/types/State'
 export const state = () => ({
   // ユーザーの情報
   user: {
-    userId: 'user0001',
-    username: 'Tomo',
+    uid: '',
+    name: '',
+    email: '',
+    photoURL: '',
     loggedIn: false
   },
   //  授業のリスト
