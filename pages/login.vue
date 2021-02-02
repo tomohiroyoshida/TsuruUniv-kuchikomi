@@ -3,13 +3,14 @@
     <v-row no-gutters justify="center" class="mt-15">
       <v-col cols="12">
         <div class="text-h6 text-center font-weight-bold mt-5">
-          SNSでログイン
+          クチコミの作成にはログインが必要です
         </div>
       </v-col>
       <!-- ボタン -->
-      <div class="d-flex justify-center mt-3">
+      <div class="d-flex justify-center mt-5 mb-2">
         <AppBtn color="red lighten-1 mr-2" depressed @click="loginWithGoogle">
-          <v-icon small left>mdi-google</v-icon> Google
+          <v-icon small left>mdi-google</v-icon>
+          <div class="text-caption">Googleでログイン</div>
         </AppBtn>
         <!-- <AppBtn
           color="light-blue lighten-1"
@@ -60,7 +61,7 @@ export default defineComponent({
           .auth()
           .signInWithPopup(provider)
           .then(() => {
-            root.$router.push('/search')
+            root.$router.push('/create')
           })
       } catch (e) {
         console.error(e)
