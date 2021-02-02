@@ -33,29 +33,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 import firebase from 'firebase'
-
-const RULES = {
-  email: [
-    (v: string) =>
-      (!!v &&
-        !!v.match(
-          /^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/
-        )) ||
-      '有効なメールアドレスを入力してください。'
-  ]
-}
 
 export default defineComponent({
   name: 'login',
   setup(_, { root }) {
-    const email = ref('')
-    const password = ref('')
-    const isFormValid = ref(true)
     // Googleでログイン
     const loginWithGoogle = async () => {
       const provider = new firebase.auth.GoogleAuthProvider()
+      try {
+        await firebase
+          .auth()
+          .signInWithPopup(provider)
+          .then(() => {
+            root.$router.replace('/create')
+          })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    // TODO: Twitterでログイン
+    const loginWithTwitter = async () => {
+      const provider = new firebase.auth.TwitterAuthProvider()
       try {
         await firebase
           .auth()
@@ -67,35 +67,7 @@ export default defineComponent({
         console.error(e)
       }
     }
-    const loginWithTwitter = async () => {
-      const provider = new firebase.auth.TwitterAuthProvider()
-      try {
-        await firebase
-          .auth()
-          .signInWithPopup(provider)
-          .then((result) => {
-            const userObj = result.user
-            if (!userObj) return
-            const user = {
-              uid: userObj.uid,
-              username: userObj.displayName,
-              email: userObj.email,
-              emailVerified: userObj.emailVerified,
-              photoURL: userObj.photoURL
-            }
-            root.$store.dispatch('setUser', user)
-            console.debug('user: ', user)
-          })
-        root.$router.push('/search')
-      } catch (e) {
-        console.error(e)
-      }
-    }
     return {
-      RULES,
-      email,
-      password,
-      isFormValid,
       loginWithGoogle,
       loginWithTwitter
     }
