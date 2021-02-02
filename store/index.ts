@@ -5,7 +5,7 @@ export const state = () => ({
   // ユーザーの情報
   user: {
     uid: '',
-    name: '',
+    username: '',
     email: '',
     photoURL: '',
     loggedIn: false
@@ -52,7 +52,7 @@ export const actions = {
   setUser({ commit }: NuxtAppOptions, user: User) {
     commit('setUser', user)
   },
-  // 授業リストの一覧を保存 いらない？
+  // 授業リストの一覧を保存
   setClasses({ commit }: NuxtAppOptions, classes: Class[]) {
     commit('setClasses', classes)
   },
