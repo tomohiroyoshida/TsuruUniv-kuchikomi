@@ -11,7 +11,8 @@
         class="mx-1"
         color="primary"
         exact
-        @click="goToAbout"
+        link
+        to="/"
       >
         <v-icon small>mdi-home-outline</v-icon>
         <div>ホーム</div>
@@ -23,7 +24,8 @@
         class="mx-1"
         color="primary"
         exact
-        @click="goToSearch"
+        link
+        to="/search"
       >
         <v-icon small>mdi-magnify</v-icon>
         <div>検索</div>
@@ -35,7 +37,8 @@
         class="mx-1"
         color="primary"
         exact
-        @click="goToCreate"
+        link
+        to="/create"
       >
         <v-icon small> mdi-pencil-plus-outline </v-icon>
         <div>作成</div>
@@ -72,15 +75,6 @@ export default defineComponent({
     const loginUser = computed(() => root.$store.getters.user)
     const loggedIn = computed(() => root.$store.getters.user.loggedIn)
 
-    const goToSearch = () => {
-      root.$router.push('/search')
-    }
-    const goToCreate = () => {
-      root.$router.push('/create')
-    }
-    const goToAbout = () => {
-      root.$router.push('/')
-    }
     const signOut = () => {
       firebase
         .auth()
@@ -105,9 +99,6 @@ export default defineComponent({
       width,
       loginUser,
       loggedIn,
-      goToSearch,
-      goToCreate,
-      goToAbout,
       signOut
     }
   }
