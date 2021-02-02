@@ -19,7 +19,7 @@
           <div class="mt-3 mx-1 text-h6 d-flex justify-center">
             クチコミ一覧
           </div>
-          <v-col cols="12" class="flex">
+          <v-col cols="12">
             <v-card
               v-for="item in kuchikomis"
               :key="item.createdAt"
@@ -105,31 +105,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* 編集＋削除ボタンの位置調整 */
 .card {
   position: relative;
-}
-/* カードのレスポンシブ */
-@media (min-width: 700px) {
-  .flex {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-  .card {
-    width: 49.4%;
-  }
-}
-@media (min-width: 1200px) {
-  .flex {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-  .card {
-    width: 24.6%;
-  }
 }
 .buttons {
   position: absolute;
@@ -137,6 +115,7 @@ export default defineComponent({
   right: 20px;
 }
 
+/* ローディングアイコンを中央揃え */
 .loading {
   margin: auto;
 }
