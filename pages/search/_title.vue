@@ -28,13 +28,13 @@
               outlined
             >
               <!-- アイコン＋ユーザー名 -->
-              <div class="d-flex px-1 pt-1">
+              <div class="d-flex mx-1 mt-2">
                 <v-icon color="primary"> mdi-account-circle </v-icon>
                 <div class="text-body-2 pa-1">{{ item.username }}</div>
               </div>
 
               <!-- タイトル＋レーティング -->
-              <div class="d-flex px-1">
+              <div class="d-flex px-1 pt-3">
                 <v-rating
                   :value="item.rating"
                   small
@@ -49,13 +49,21 @@
                 </div>
               </div>
               <!-- 受講年 -->
-              <div class="text-caption text--disabled px-2">
+              <div class="text-caption text--disabled mx-2">
                 受講年: {{ item.year }} 年
               </div>
               <!-- クチコミの内容 -->
               <v-card-text class="d-flex pa-2">
                 {{ item.content }}
               </v-card-text>
+              <div v-if="isAuthor" class="buttons">
+                <v-btn fab icon small>
+                  <v-icon color="info">mdi-pencil-outline</v-icon>
+                </v-btn>
+                <v-btn fab icon small>
+                  <v-icon color="error">mdi-trash-can-outline</v-icon>
+                </v-btn>
+              </div>
             </v-card>
           </v-col>
         </v-row>
@@ -73,6 +81,7 @@ export default defineComponent({
   name: 'search-title',
   setup(_, { root }) {
     const kuchikomis = ref<Kuchikomi[]>([])
+    const isAuthor = ref(true)
     /**
      * init
      * クチコミ一覧を取得
@@ -90,12 +99,15 @@ export default defineComponent({
         })
     })
 
-    return { kuchikomis }
+    return { kuchikomis, isAuthor }
   }
 })
 </script>
 
 <style scoped>
+.card {
+  position: relative;
+}
 /* カードのレスポンシブ */
 @media (min-width: 700px) {
   .flex {
@@ -118,6 +130,11 @@ export default defineComponent({
   .card {
     width: 24.6%;
   }
+}
+.buttons {
+  position: absolute;
+  top: 0;
+  right: 20px;
 }
 
 .loading {
