@@ -1,20 +1,47 @@
-# TsuruUniv-kuchikomi
+# つるコミ
 
-## Build Setup
+### 概要
 
-```bash
-# install dependencies
-$ npm install
+- 「つるコミ」は都留文科大学の授業に関するクチコミを自由に閲覧・作成・共有できるアプリです。
+- リンクは[こちら](https://tsuruuniv-kuchikomi.web.app/)
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+### 作った理由
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+- このアプリは、「COVID-19 の影響でリモート授業が中心となった結果、特に新入生にとって授業に関する情報共有が難しくなっている現状を改善したい」という思いから開発した。
 
-# generate static project
-$ npm run generate
-```
+### 機能
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+- クチコミの検索
+  - 検索ボックスに知りたい授業名を入力し、「クチコミをみる」ボタンを押すとクチコミを閲覧することができる。
+- クチコミの作成
+  - 「授業名」の検索ボックスに知りたい授業名を入力し、候補から授業を一つ選択。
+    必要事項を入力して作成ボタンを押せばクチコミの作成が行われる。
+  - もし「授業名」の検索ボックスに知りたい授業名がない場合は「こちらから新規作成」のリンクから必要事項を入力し、作成ボタンを押せば授業とクチコミの両方が作成される。
+
+### 使用技術
+
+- フロントエンド
+  - TypeScript
+  - Nuxt.js(Nuxt-CompositionAPI)
+  - Vuetify
+- バックエンド
+  - Firebase
+    - Authentication
+    - Firestore
+    - Hosting
+- その他ツール
+  - git / GitHub / GitHubActions
+    - main ブランチにプッシュ/マージされた時に自動で GitHubActions が走る
+  - Prettier / ESLint
+  - dotenv
+
+### 工夫した点
+
+- UI/UX 面
+  - ユーザーが操作に迷わないよう、シンプルかつわかりやすいデザインに仕上げた。
+  - エラーが起きたときに、ユーザーにわかりやすく伝え、何をすれば良いのかを明確に示す工夫をした。
+  - デザインは[Zenn](https://zenn.dev/)さんを参考にさせていただきました。
+- 技術面
+  - コンポーネント志向で作りました。また、メンテナンスのしやすさや使い回しのしやすさ、開発者が意図しない挙動をしないように開発安全性も意識しながらコンポーネントを作った。
+  - TypeScript を使い、型安全性に配慮した。
+  - リーダブルなコードを意識した。CompositionAPI を生かし、機能ごとにコードブロックを記述した。
