@@ -75,10 +75,10 @@
             </v-col>
           </v-row>
 
-          <!-- 評価 -->
+          <!-- おすすめ度 -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <TextCaption required title="評価(0.5~5)" />
+              <TextCaption required title="おすすめ度(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
                   v-model="rating"
@@ -247,34 +247,45 @@ export default defineComponent({
               isOpenDuplicatedSnackbar.value = true
             } else {
               // 授業の情報を追加
-              db.collection('classes')
-                .doc(title.value)
-                .set({
-                  title: title.value,
-                  teacher: teacher.value,
-                  term: term.value,
-                  dayOfWeek: dayOfWeek.value ? dayOfWeek.value : '',
-                  period: period.value ? period.value : '',
-                  createdAt
-                })
+              try {
+                db.collection('classes')
+                  .doc(title.value)
+                  .set({
+                    title: title.value,
+                    teacher: teacher.value,
+                    term: term.value,
+                    dayOfWeek: dayOfWeek.value ? dayOfWeek.value : '',
+                    period: period.value ? period.value : '',
+                    createdAt
+                  })
+              } catch (e) {
+                console.error(e)
+              }
               // クチコミの情報追加
-              db.collection('classes')
-                .doc(title.value)
-                .collection('kuchikomis')
-                .doc()
-                .set({
-                  title: kuchikomiTitle.value,
-                  content: kuchikomi.value,
-                  rating: rating.value,
-                  year: year.value,
-                  username: root.$store.getters.user.username,
-                  createdAt
-                })
-              isOpenSuccessSnackbar.value = true
-              resetInput()
+              try {
+                db.collection('classes')
+                  .doc(title.value)
+                  .collection('kuchikomis')
+                  .doc()
+                  .set({
+                    title: kuchikomiTitle.value,
+                    content: kuchikomi.value,
+                    rating: rating.value,
+                    year: year.value,
+                    createdAt,
+                    uid: root.$store.getters.user.uid,
+                    username: root.$store.getters.user.name,
+                    email: root.$store.getters.user.email
+                  })
+                isOpenSuccessSnackbar.value = true
+                resetInput()
+              } catch (e) {
+                console.error(e)
+              }
             }
           })
-      } catch {
+      } catch (e) {
+        console.error(e)
         isOpenErrorSnackbar.value = true
       }
     }
