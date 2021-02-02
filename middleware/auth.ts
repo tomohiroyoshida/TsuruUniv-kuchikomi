@@ -3,7 +3,12 @@ import { defineNuxtMiddleware } from '@nuxtjs/composition-api'
 
 export default defineNuxtMiddleware(({ store, route, redirect }) => {
   // ログインしていないとアクセスできないパス
-  const loggedInPaths = ['/create', '/create/new-class']
+  const loggedInPaths = [
+    '/create',
+    '/create/',
+    '/create/new-class',
+    '/create/new-class/'
+  ]
   // 認証状態の監視
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
