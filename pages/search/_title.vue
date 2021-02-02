@@ -8,8 +8,8 @@
       <v-col cols="12">
         <!-- クチコミが存在しない場合 -->
         <div v-if="!kuchikomis.length">
-          <div class="text-h6 my-3 mx-14">クチコミはまだありません😭</div>
-          <div class="text-h6 mx-14">
+          <div class="text-h6 my-3 px-3">クチコミはまだありません😭</div>
+          <div class="text-h6 px-3">
             もしこの授業を受けたことがあれば、ぜひクチコミの作成をよろしくお願いいたします🙇‍♂️
           </div>
         </div>
