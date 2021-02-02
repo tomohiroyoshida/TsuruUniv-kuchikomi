@@ -1,5 +1,5 @@
 <template>
-  <v-container id="create" fluid class="pa-1">
+  <v-container id="create" fluid class="pa-0">
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-5 font-weight-bold">
@@ -34,7 +34,7 @@
             </v-col>
           </v-row>
 
-          <!-- TODO: 授業の情報 -->
+          <!--  授業の情報 -->
           <v-row v-if="title" no-gutters justify="center">
             <v-col cols="10">
               <div class="required-caption text-caption my-1 ml-3">
@@ -63,9 +63,10 @@
               />
             </v-col>
           </v-row>
+          <!-- おすすめ度 -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <TextCaption required title="評価(0.5~5)" />
+              <TextCaption required title="おすすめ度(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
                   v-model="rating"
@@ -220,12 +221,15 @@ export default defineComponent({
             content: kuchikomi.value,
             rating: rating.value,
             year: year.value,
-            username: root.$store.getters.user.username, // TODO: ログインしているユーザー名にする
-            createdAt
+            createdAt,
+            uid: root.$store.getters.user.uid,
+            username: root.$store.getters.user.name,
+            email: root.$store.getters.user.email
           })
         isOpenSuccessSnackbar.value = true
         resetInput()
-      } catch {
+      } catch (e) {
+        console.error(e)
         isOpenErrorSnackbar.value = true
       }
     }
