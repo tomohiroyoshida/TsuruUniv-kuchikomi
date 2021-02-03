@@ -210,22 +210,23 @@ export default defineComponent({
       isOpenSuccessSnackbar.value = false
       const createdAt = new Date().toLocaleString()
       //  Firestoreにクチコミの情報追加
+      const docRef = db
+        .collection('classes')
+        .doc(title.value)
+        .collection('kuchikomis')
+        .doc()
       try {
-        await db
-          .collection('classes')
-          .doc(title.value)
-          .collection('kuchikomis')
-          .doc()
-          .set({
-            title: kuchikomiTitle.value,
-            content: kuchikomi.value,
-            rating: rating.value,
-            year: year.value,
-            createdAt,
-            uid: root.$store.getters.user.uid,
-            username: root.$store.getters.user.name,
-            email: root.$store.getters.user.email
-          })
+        await docRef.set({
+          title: kuchikomiTitle.value,
+          content: kuchikomi.value,
+          rating: rating.value,
+          year: year.value,
+          createdAt,
+          uid: root.$store.getters.user.uid,
+          username: root.$store.getters.user.name,
+          email: root.$store.getters.user.email,
+          docId: docRef.id
+        })
         isOpenSuccessSnackbar.value = true
         resetInput()
       } catch (e) {
@@ -260,6 +261,13 @@ export default defineComponent({
     fetchedClasses.value.forEach((item) => {
       classTitles.value.push(item.title)
     })
+    db.collection('classes')
+      .doc('哲学Ⅰ')
+      .collection('kuchikomis')
+      .get()
+      .then((snap) => {
+        console.debug('id', snap.docs)
+      })
 
     return {
       RULES,

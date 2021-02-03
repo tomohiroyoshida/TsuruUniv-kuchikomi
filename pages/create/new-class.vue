@@ -256,27 +256,30 @@ export default defineComponent({
                     term: term.value,
                     dayOfWeek: dayOfWeek.value ? dayOfWeek.value : '',
                     period: period.value ? period.value : '',
-                    createdAt
+                    createdAt,
+                    docId: db.collection('classes').doc().id
                   })
               } catch (e) {
                 console.error(e)
               }
               // クチコミの情報追加
               try {
-                db.collection('classes')
+                const docRef = db
+                  .collection('classes')
                   .doc(title.value)
                   .collection('kuchikomis')
                   .doc()
-                  .set({
-                    title: kuchikomiTitle.value,
-                    content: kuchikomi.value,
-                    rating: rating.value,
-                    year: year.value,
-                    createdAt,
-                    uid: root.$store.getters.user.uid,
-                    username: root.$store.getters.user.name,
-                    email: root.$store.getters.user.email
-                  })
+                docRef.set({
+                  title: kuchikomiTitle.value,
+                  content: kuchikomi.value,
+                  rating: rating.value,
+                  year: year.value,
+                  createdAt,
+                  uid: root.$store.getters.user.uid,
+                  docId: docRef.id,
+                  username: root.$store.getters.user.name,
+                  email: root.$store.getters.user.email
+                })
                 isOpenSuccessSnackbar.value = true
                 resetInput()
               } catch (e) {
