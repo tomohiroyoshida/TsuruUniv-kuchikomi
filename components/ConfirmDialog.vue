@@ -15,8 +15,16 @@
                 入力した内容で授業とクチコミを新規作成します。よろしいですか？
               </div>
             </div>
-            <div v-else>
+            <div v-else-if="text == 'リセット'">
               <div>入力した内容をリセットします。</div>
+              <div>よろしいですか？</div>
+            </div>
+            <div v-else-if="text === '削除'">
+              <div>
+                このクチコミを削除します。この操作は<span class="red--text"
+                  >取り消せません。</span
+                >
+              </div>
               <div>よろしいですか？</div>
             </div>
           </v-card-text>
