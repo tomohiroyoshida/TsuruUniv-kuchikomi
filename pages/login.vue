@@ -3,7 +3,7 @@
     <v-row no-gutters justify="center" class="mt-15">
       <v-col cols="12">
         <div class="text-h6 text-center font-weight-bold mt-5">
-          クチコミの作成にはログインが必要です
+          クチコミ閲覧・作成にはログインが必要です
         </div>
       </v-col>
       <!-- ボタン -->
