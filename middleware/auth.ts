@@ -1,5 +1,6 @@
 import firebase from 'firebase'
 import { defineNuxtMiddleware } from '@nuxtjs/composition-api'
+import { User } from 'types/State'
 
 export default defineNuxtMiddleware(({ store, route, redirect }) => {
   // ログインしていないとアクセスできないパス
@@ -7,37 +8,28 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
     '/create',
     '/create/',
     '/create/new-class',
-    '/create/new-class/'
+    '/create/new-class/',
+    '/search',
+    '/search/'
   ]
   // 認証状態の監視
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      const userInfo = {
+      // TODO: ユーザ名は自由に変えられるようにする
+      const userInfo: User = {
         uid: user.uid,
-        name: user.displayName,
-        email: user.email,
+        username: user.displayName || '匿名ユーザー',
         photoURL: user.photoURL,
         loggedIn: true
       }
       store.dispatch('setUser', userInfo)
-      console.debug('login user: ', userInfo)
     } else {
       const currentPath = route.path
-      console.debug('path', currentPath)
       if (loggedInPaths.includes(currentPath)) {
         redirect('/login')
       }
-      console.debug('no signing user')
     }
   })
   // 永続性
-  firebase
-    .auth()
-    .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-    .then(() => {})
-    .catch((error) => {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.error('ERROR: ', errorCode, errorMessage)
-    })
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 })
