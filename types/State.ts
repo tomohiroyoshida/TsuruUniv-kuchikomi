@@ -1,28 +1,30 @@
 // ユーザーの情報
 export interface User {
-  id: string
-  name: string
-  email: string
-  emailVerified: boolean
-  photoURL: string
-  createdAt?: Date
+  uid: string
+  username: string
+  photoURL: string | null
+  loggedIn: boolean
 }
 
-// 授業の情報
+// 授業
 export interface Class {
+  docId: string
   title: string
-  teacher: string
+  teacherName: string
+  term: string
   dayOfWeek: string
   period: string
-  createdAt: Date | null
+  createdAt: Date
 }
 
 // クチコミ
 export interface Kuchikomi {
+  docId: string
   title: String
   classYear: string
   rating: number
+  uid: string
+  username: string
   content: string
-  user: string
-  createdAt: Date | null
+  createdAt: Date
 }
