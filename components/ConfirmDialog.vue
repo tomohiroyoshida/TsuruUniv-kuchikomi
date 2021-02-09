@@ -42,7 +42,12 @@
           >
             いいえ
           </AppBtn>
-          <AppBtn color="primary" class="mr-1" @click.stop="$emit('ok')">
+          <AppBtn
+            color="primary"
+            class="mr-1"
+            :disabled="disabled"
+            @click.stop="ok"
+          >
             はい
           </AppBtn>
         </v-col>
@@ -52,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'ConfirmDialog',
   props: {
@@ -65,7 +70,14 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {}
+  setup(_, { emit }) {
+    const disabled = ref(false)
+    const ok = () => {
+      disabled.value = true
+      emit('ok')
+    }
+    return { disabled, ok }
+  }
 })
 </script>
 

@@ -176,7 +176,7 @@ export default defineComponent({
     const kuchikomi = ref('')
     const year = ref(null)
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
-
+    const form = ref(null)
     // カード
     const hasCardInfo = ref(false)
     let classCardInfo = reactive<Class>({
@@ -198,6 +198,7 @@ export default defineComponent({
     }
 
     // 作成
+    const disabledSubmit = ref(true)
     const isOpenCreateConfirm = ref(false)
     const openCreateConfirm = () => {
       isOpenCreateConfirm.value = true
@@ -205,9 +206,9 @@ export default defineComponent({
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
     const createKuchikomi = async () => {
+      disabledSubmit.value = false
       isOpenCreateConfirm.value = false
-      isOpenSuccessSnackbar.value = false
-      isOpenSuccessSnackbar.value = false
+
       const createdAt = new Date().toLocaleString()
       //  Firestoreにクチコミの情報追加
       const docRef = db
@@ -228,6 +229,7 @@ export default defineComponent({
           docId: docRef.id
         })
         isOpenSuccessSnackbar.value = true
+        disabledSubmit.value = false
         resetInput()
       } catch (e) {
         console.error(e)
@@ -248,6 +250,8 @@ export default defineComponent({
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
+      form?.value.resetValidation()
+      console.debug('ref', root.$refs)
     }
 
     /**
@@ -261,13 +265,6 @@ export default defineComponent({
     fetchedClasses.value.forEach((item) => {
       classTitles.value.push(item.title)
     })
-    db.collection('classes')
-      .doc('哲学Ⅰ')
-      .collection('kuchikomis')
-      .get()
-      .then((snap) => {
-        console.debug('id', snap.docs)
-      })
 
     return {
       RULES,
@@ -291,7 +288,9 @@ export default defineComponent({
       isOpenResetConfirm,
       showCard,
       hasCardInfo,
-      classCardInfo
+      classCardInfo,
+      disabledSubmit,
+      form
     }
   }
 })
