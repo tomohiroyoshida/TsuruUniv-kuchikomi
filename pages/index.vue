@@ -18,7 +18,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="11" class="mt-5">
         <div class="text-h6">
-          <v-icon color="primary">mdi-magnify</v-icon>検索(ログイン不要)
+          <v-icon color="primary">mdi-magnify</v-icon>検索
         </div>
         <div class="ml-5 mt-2">
           検索ボックスに知りたい授業名を入力し、「クチコミをみる」ボタンを押すとクチコミを閲覧することができます。
@@ -28,8 +28,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="11" class="mt-6">
         <div class="text-h6">
-          <v-icon color="primary">mdi-pencil-plus-outline</v-icon
-          >作成(ログイン必須)
+          <v-icon color="primary">mdi-pencil-plus-outline</v-icon>作成
         </div>
         <div class="ml-5 mt-2">
           「授業名」の検索ボックスに知りたい授業名を入力し、候補から授業を一つ選択します。
