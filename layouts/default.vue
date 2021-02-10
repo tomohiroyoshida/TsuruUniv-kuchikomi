@@ -5,6 +5,7 @@
       <div v-if="width > 700" class="text-subtitle-1 font-weight-bold">
         つるコミ
       </div>
+      <v-divider class="py-2" vertical />
       <v-btn
         text
         :small="width < 700"
@@ -17,7 +18,7 @@
         <v-icon small>mdi-home-outline</v-icon>
         <div>ホーム</div>
       </v-btn>
-      <v-divider vertical />
+      <v-divider class="py-2" vertical />
       <v-btn
         text
         :small="width < 700"
@@ -30,7 +31,7 @@
         <v-icon small>mdi-magnify</v-icon>
         <div>検索</div>
       </v-btn>
-      <v-divider vertical />
+      <v-divider class="py-2" vertical />
       <v-btn
         text
         :small="width < 700"
@@ -43,6 +44,7 @@
         <v-icon small> mdi-pencil-plus-outline </v-icon>
         <div>作成</div>
       </v-btn>
+      <v-divider class="py-2" vertical />
       <v-spacer />
       <v-btn
         v-if="!loggedIn"
@@ -66,6 +68,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from '@nuxtjs/composition-api'
 import firebase from 'firebase'
+import { User } from 'types/State'
 
 export default defineComponent({
   name: 'default',
@@ -80,15 +83,13 @@ export default defineComponent({
         .auth()
         .signOut()
         .then(() => {
-          const emptyUser = {
+          const emptyUser: User = {
             uid: '',
-            name: '',
-            email: '',
+            username: '',
             photoURL: '',
             loggedIn: false
           }
           root.$store.dispatch('setUser', emptyUser)
-          console.debug('signout')
         })
         .catch((e) => {
           console.error(e)
