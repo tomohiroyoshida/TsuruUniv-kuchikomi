@@ -39,6 +39,9 @@ export const mutations = {
   setClasses(state: NuxtState, classes: Class[]) {
     state.classes = classes
   },
+  pushClass(state: NuxtState, newClass: Class) {
+    state.classes.push(newClass)
+  },
   setSearchingTitle(state: NuxtState, searchingTitle: string) {
     state.searchingTitle = searchingTitle
   },
@@ -55,6 +58,10 @@ export const actions = {
   // 授業リストの一覧を保存
   setClasses({ commit }: NuxtAppOptions, classes: Class[]) {
     commit('setClasses', classes)
+  },
+  // 新しい授業を追加
+  pushClass({ commit }: NuxtAppOptions, newClass: Class) {
+    commit('pushClass', newClass)
   },
   // 検索ページで検索欄に入力された授業名を保存
   setSearchingTitle({ commit }: NuxtAppOptions, searchingTitle: string) {

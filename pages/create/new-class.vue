@@ -242,6 +242,7 @@ export default defineComponent({
         createdAt: new Date().toLocaleString()
       }
       docRef.set(data)
+      root.$store.dispatch('pushClass', data)
     }
     // クチコミを追加
     const addKuchikomi = (
