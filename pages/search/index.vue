@@ -1,5 +1,5 @@
 <template>
-  <v-container id="search" fluid>
+  <v-container id="search">
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-3 font-weight-bold">
@@ -104,8 +104,8 @@ export default defineComponent({
   name: 'search',
   setup(_, { root }) {
     const isSearching = ref(false)
-    const searchingTitle = ref('')
     const filteredClasses = ref<Class[]>([])
+    const searchingTitle = ref('')
     // 検索欄に文字が入力されるたびにマッチする授業を探す
     watch(searchingTitle, (title: string) => {
       isSearching.value = true
