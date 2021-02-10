@@ -42,7 +42,7 @@
                   <AppBtn
                     class="btn"
                     color="primary"
-                    @click="goToKuchikomi(item.title)"
+                    @click="goToKuchikomi(item.docId)"
                   >
                     クチコミをみる
                   </AppBtn>
@@ -124,9 +124,9 @@ export default defineComponent({
     })
 
     // クチコミのページへ飛ぶ
-    const goToKuchikomi = (title: string) => {
+    const goToKuchikomi = (id: string) => {
       root.$store.dispatch('setSearchingTitle', searchingTitle.value)
-      root.$router.push(`/search/${title}`)
+      root.$router.push(`/search/${id}`)
     }
 
     /**

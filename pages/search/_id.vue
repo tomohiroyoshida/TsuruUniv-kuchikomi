@@ -106,7 +106,7 @@ import { Kuchikomi } from '@/types/State'
 export default defineComponent({
   name: 'search-title',
   setup(_, { root }) {
-    const subjectTitle = root.$route.params.title
+    const classId = root.$route.params.id
     const kuchikomis = ref<Kuchikomi[]>([])
     const uid = root.$store.getters.user.uid
 
@@ -134,7 +134,7 @@ export default defineComponent({
         // 削除処理
         await db
           .collection('classes')
-          .doc(subjectTitle)
+          .doc(classId)
           .collection('kuchikomis')
           .doc(docId)
           .delete()
@@ -142,7 +142,7 @@ export default defineComponent({
         const newKuchikoims: Kuchikomi[] = []
         await db
           .collection('classes')
-          .doc(subjectTitle)
+          .doc(classId)
           .collection('kuchikomis')
           .get()
           .then((querysnapshot) => {
@@ -167,7 +167,7 @@ export default defineComponent({
       try {
         await db
           .collection('classes')
-          .doc(subjectTitle)
+          .doc(classId)
           .collection('kuchikomis')
           .get()
           .then((querySnapshot) => {
@@ -182,7 +182,7 @@ export default defineComponent({
     })
 
     return {
-      subjectTitle,
+      classId,
       kuchikomis,
       uid,
       isOpenErrorSnackbar,
