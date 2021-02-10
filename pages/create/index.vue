@@ -15,8 +15,8 @@
                 >)
               </TextCaption>
               <v-autocomplete
-                v-model="title"
-                :items="classTitles"
+                v-model="selectedClass"
+                :items="autoCompleteClasses"
                 :rules="RULES.required"
                 flat
                 solo
@@ -29,19 +29,18 @@
                 color="primary"
                 label="授業名を入力 選択"
                 persistent-hint
-                @input="showCard($event)"
               />
             </v-col>
           </v-row>
 
-          <!--  授業の情報 -->
-          <v-row v-if="title" no-gutters justify="center">
+          <!--  TODO: 授業の情報の書かれたカード -->
+          <!-- <v-row v-if="selectedClass" no-gutters justify="center">
             <v-col cols="10">
               <div class="required-caption text-caption my-1 ml-3">
                 授業の情報
               </div>
-              <v-card v-if="hasCardInfo" rounded outlined>
-                <v-card-title>{{ title }}</v-card-title>
+              <v-card rounded outlined>
+                <v-card-title>{{ selectedClass }}</v-card-title>
                 <v-card-subtitle>
                   講師: {{ classCardInfo.teacher }}
                 </v-card-subtitle>
@@ -50,7 +49,7 @@
                 </v-card-text>
               </v-card>
             </v-col>
-          </v-row>
+          </v-row> -->
 
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
@@ -105,14 +104,18 @@
 
         <!-- 送信・キャンセルボタン -->
         <div class="d-flex justify-center py-3">
-          <AppBtn color="grey darken-2" class="mr-1" @click="openResetConfirm">
+          <AppBtn
+            color="grey darken-2"
+            class="mr-1"
+            @click="isOpenResetConfirm = true"
+          >
             リセット
           </AppBtn>
           <AppBtn
             color="primary"
             depressed
             :disabled="!isFormValid"
-            @click="openCreateConfirm"
+            @click="isOpenCreateConfirm = true"
           >
             作成
           </AppBtn>
@@ -134,12 +137,12 @@
       <!-- スナックバー -->
       <SnackBar
         v-model="isOpenSuccessSnackbar"
-        text="作成に成功しました"
+        text="【成功】クチコミを作成しました。ご協力ありがとうございます😊"
         color="success"
       />
       <SnackBar
         v-model="isOpenErrorSnackbar"
-        text="エラーが発生しました。画面をリロードしてもう一度試してください。"
+        text="【エラー】エラーが起きました。画面をリロードしてもう一度試してください😢"
         color="error"
       />
     </v-row>
@@ -147,90 +150,94 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from '@nuxtjs/composition-api'
+import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
+import { Kuchikomi } from 'types/State'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
-  teacher: [(v: string) => !!v || '講師名は必須です'],
   kuchikomi: [
     (v: string) => !!v || 'この欄の入力は必須です',
     (v: string) =>
-      (v && v.length < 1000) || 'クチコミ内容は1000文字以下で記入してください'
+      (v && v.length <= 1000) || 'クチコミ内容は1000文字以下で記入してください'
   ],
   requiredWith20: [
     (v: string) => !!v || 'この欄の入力は必須です',
-    (v: string) => (v && v.length < 20) || '20文字以下で記入してください'
+    (v: string) => (v && v.length <= 20) || '20文字以下で記入してください'
   ]
 }
 
 export default defineComponent({
   name: 'create',
   setup(_, { root }) {
-    const title = ref('')
+    const selectedClass = ref('')
     const teacher = ref('')
     const isFormValid = ref(true)
-    const rating = ref<Number>(0.5)
+    const rating = ref(0.5)
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
-    const year = ref(null)
+    const year = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
-    const form = ref(null)
-    // カード
-    const hasCardInfo = ref(false)
-    let classCardInfo = reactive<Class>({
-      title: '',
-      teacher: '',
-      dayOfWeek: '',
-      period: '',
-      createdAt: null
-    })
-    const showCard = async (title: String) => {
-      await fetchedClasses.value.filter((item) => {
-        if (item.title === title) {
-          classCardInfo = item
-          hasCardInfo.value = true
-        } else {
-          hasCardInfo.value = false
-        }
-      })
-    }
+
+    // TODO: カード
+    // const hasCardInfo = ref(false)
+    // let classCardInfo = reactive<Class>({
+    //   docId: '',
+    //   title: '',
+    //   teacher: '',
+    //   dayOfWeek: '',
+    //   period: '',
+    //   term: '',
+    //   createdAt: ''
+    // })
+    // const showCard = async (title: String) => {
+    //   await classList.value.filter((item) => {
+    //     if (item.title === title) {
+    //       classCardInfo = item
+    //       hasCardInfo.value = true
+    //     } else {
+    //       hasCardInfo.value = false
+    //     }
+    //   })
+    // }
 
     // 作成
-    const disabledSubmit = ref(true)
+    // const disabledSubmit = ref(true) 必要？
+    // 選択された授業のidを格納
+    const targetClassId = ref('')
+    watch(selectedClass, (id: string): void => {
+      targetClassId.value = id
+    })
+
     const isOpenCreateConfirm = ref(false)
-    const openCreateConfirm = () => {
-      isOpenCreateConfirm.value = true
-    }
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
-    const createKuchikomi = async () => {
-      disabledSubmit.value = false
-      isOpenCreateConfirm.value = false
 
-      const createdAt = new Date().toLocaleString()
+    const createKuchikomi = async (): Promise<void> => {
+      // disabledSubmit.value = false
+      isOpenCreateConfirm.value = false
       //  Firestoreにクチコミの情報追加
       const docRef = db
         .collection('classes')
-        .doc(title.value)
+        .doc(targetClassId.value)
         .collection('kuchikomis')
         .doc()
       try {
-        await docRef.set({
+        const data: Kuchikomi = {
+          docId: docRef.id,
           title: kuchikomiTitle.value,
-          content: kuchikomi.value,
+          kuchikomi: kuchikomi.value,
+          kuchikomiTitle: kuchikomiTitle.value,
           rating: rating.value,
-          year: year.value,
-          createdAt,
+          classYear: year.value,
           uid: root.$store.getters.user.uid,
-          username: root.$store.getters.user.name,
-          email: root.$store.getters.user.email,
-          docId: docRef.id
-        })
-        isOpenSuccessSnackbar.value = true
-        disabledSubmit.value = false
+          username: root.$store.getters.user.username,
+          createdAt: new Date().toLocaleString()
+        }
+        await docRef.set(data)
         resetInput()
+        isOpenSuccessSnackbar.value = true
       } catch (e) {
         console.error(e)
         isOpenErrorSnackbar.value = true
@@ -239,31 +246,38 @@ export default defineComponent({
 
     // キャンセル
     const isOpenResetConfirm = ref(false)
-    const openResetConfirm = () => {
-      isOpenResetConfirm.value = true
-    }
+
     // 記入内容を全てリセット
-    const resetInput = () => {
+    const form = ref(null)
+    const resetInput = (): void => {
       isOpenResetConfirm.value = false
-      title.value = ''
-      year.value = null
+      selectedClass.value = ''
+      year.value = ''
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
-      form?.value.resetValidation()
-      console.debug('ref', root.$refs)
+      // @ts-ignore "Object is possibly null" エラーをignore
+      form.value.resetValidation()
     }
 
     /**
      * init
      */
-    const classTitles = ref<String[]>([])
-    const fetchedClasses = ref<Class[]>([])
-    fetchedClasses.value = root.$store.getters.classes
+    // 授業のリスト
+    const classList = ref<Class[]>([])
+    classList.value = root.$store.getters.classes
 
     // 授業のタイトルの配列を作成
-    fetchedClasses.value.forEach((item) => {
-      classTitles.value.push(item.title)
+    interface AutocompleteClasses {
+      text: string
+      value: string
+    }
+    const autoCompleteClasses = ref<AutocompleteClasses[]>([])
+    classList.value.forEach((item) => {
+      autoCompleteClasses.value.push({
+        text: item.title,
+        value: item.docId
+      })
     })
 
     return {
@@ -274,23 +288,21 @@ export default defineComponent({
       kuchikomi,
       year,
       years,
-      fetchedClasses,
-      title,
-      classTitles,
+      classList,
+      selectedClass,
+      autoCompleteClasses,
       teacher,
       isOpenSuccessSnackbar,
       isOpenErrorSnackbar,
-      openResetConfirm,
       resetInput,
-      openCreateConfirm,
       createKuchikomi,
       isOpenCreateConfirm,
       isOpenResetConfirm,
-      showCard,
-      hasCardInfo,
-      classCardInfo,
-      disabledSubmit,
-      form
+      form,
+      // showCard,
+      // hasCardInfo,
+      // classCardInfo,
+      targetClassId
     }
   }
 })

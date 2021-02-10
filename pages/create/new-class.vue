@@ -21,7 +21,7 @@
             <v-col cols="10" md="5" class="mx-1">
               <TextCaption required title="講師名" />
               <TextInput
-                v-model="teacher"
+                v-model="teacherName"
                 :rules="RULES.requiredWith20"
                 :counter="20"
                 placeholder="例： 都留 太郎"
@@ -118,14 +118,18 @@
 
         <!-- 送信・キャンセルボタン -->
         <div class="d-flex justify-center py-3">
-          <AppBtn color="grey darken-2" class="mr-1" @click="openResetConfirm">
+          <AppBtn
+            color="grey darken-2"
+            class="mr-1"
+            @click="isOpenResetConfirm = true"
+          >
             リセット
           </AppBtn>
           <AppBtn
             color="primary"
             depressed
             :disabled="!isFormValid"
-            @click="openCreateConfirm"
+            @click="isOpenCreateConfirm = true"
           >
             作成
           </AppBtn>
@@ -135,7 +139,7 @@
       <ConfirmDialog
         v-model="isOpenCreateConfirm"
         text="作成"
-        @ok="createKuchikomi"
+        @ok="createClassAndKuchikomi"
       />
       <ConfirmDialog
         v-model="isOpenResetConfirm"
@@ -146,17 +150,17 @@
       <!-- スナックバー -->
       <SnackBar
         v-model="isOpenSuccessSnackbar"
-        text="【成功】クチコミの作成ありがとうございます！"
+        text="【成功】クチコミを作成しました。ご協力ありがとうございます😊"
         color="success"
       />
       <SnackBar
         v-model="isOpenDuplicatedSnackbar"
-        text="【エラー】この授業はすでに存在します。メニュー「作成」からクチコミを作成してください。"
+        text="【エラー】この授業はすでに存在します。メニューの「作成」からクチコミを作成してください🙇‍♂️"
         color="error"
       />
       <SnackBar
         v-model="isOpenErrorSnackbar"
-        text="【エラー】予期せぬエラーが起きました。ページをリロードしてもう一度試してください。"
+        text="【エラー】エラーが起きました。画面をリロードしてもう一度試してください😢"
         color="error"
       />
     </v-row>
@@ -165,23 +169,24 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
-import { Class } from '@/types/State'
+import { Class, Kuchikomi } from '@/types/State'
 import db from '@/plugins/firebase'
+import firebase from 'firebase'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
   requiredWith20: [
     (v: string) => !!v || 'この欄の入力は必須です',
-    (v: string) => (v && v.length < 20) || '20文字以下で記入してください'
+    (v: string) => (v && v.length <= 20) || '20文字以下で記入してください'
   ],
   requiredWith30: [
     (v: string) => !!v || 'この欄の入力は必須です',
-    (v: string) => (v && v.length < 30) || '30文字以下で記入してください'
+    (v: string) => (v && v.length <= 30) || '30文字以下で記入してください'
   ],
   kuchikomi: [
     (v: string) => !!v || 'この欄の入力は必須です',
     (v: string) =>
-      (v && v.length < 1000) || 'クチコミ内容は1000文字以下で記入してください'
+      (v && v.length <= 1000) || 'クチコミ内容は1000文字以下で記入してください'
   ]
 } as const
 const DAYS = ['月', '火', '水', '木', '金', '土', '日'] as const
@@ -192,14 +197,14 @@ export default defineComponent({
   name: 'create',
   setup(_, { root }) {
     const title = ref('')
-    const teacher = ref('')
-    const term = ref(null)
-    const dayOfWeek = ref(null)
-    const period = ref(null)
-    const rating = ref<Number>(0.5)
+    const teacherName = ref('')
+    const term = ref('')
+    const dayOfWeek = ref('')
+    const period = ref('')
+    const rating = ref(0.5)
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
-    const year = ref(null)
+    const year = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
     const isFormValid = ref(true)
 
@@ -207,8 +212,8 @@ export default defineComponent({
     const isTermShort = computed(() => term.value === '時間外授業')
     watch(isTermShort, () => {
       if (term.value === '時間外授業') {
-        dayOfWeek.value = null
-        period.value = null
+        dayOfWeek.value = ''
+        period.value = ''
       }
     })
     // 開講期が「時間外授業」の場合はルールを無くす
@@ -218,111 +223,109 @@ export default defineComponent({
     ]
 
     const isOpenCreateConfirm = ref(false)
-    const openCreateConfirm = () => {
-      isOpenCreateConfirm.value = true
-    }
-
-    // 新規作成
     const isOpenSuccessSnackbar = ref(false)
     const isOpenDuplicatedSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
-    const createKuchikomi = async () => {
-      isOpenCreateConfirm.value = false
-      isOpenSuccessSnackbar.value = false
-      isOpenDuplicatedSnackbar.value = false
-      isOpenErrorSnackbar.value = false
-      const createdAt = new Date().toLocaleString()
-      //  Firestoreに追加
-      try {
-        await db
-          .collection('classes')
-          .doc(title.value)
-          .get()
-          .then((doc) => {
-            // もしすでに入力されたタイトルの授業が存在していたら処理を中止してエラーを出す
-            const data = doc.data()
-            const docTeacher = data?.teacher
-            // 授業がすでに登録されている && 登録されている授業の講師名が入力されたものと同じならエラー
-            if (doc.exists && teacher === docTeacher) {
-              isOpenDuplicatedSnackbar.value = true
-            } else {
-              // 授業の情報を追加
-              try {
-                db.collection('classes')
-                  .doc(title.value)
-                  .set({
-                    title: title.value,
-                    teacher: teacher.value,
-                    term: term.value,
-                    dayOfWeek: dayOfWeek.value ? dayOfWeek.value : '',
-                    period: period.value ? period.value : '',
-                    createdAt,
-                    docId: db.collection('classes').doc().id
-                  })
-              } catch (e) {
-                console.error(e)
-              }
-              // クチコミの情報追加
-              try {
-                const docRef = db
-                  .collection('classes')
-                  .doc(title.value)
-                  .collection('kuchikomis')
-                  .doc()
-                docRef.set({
-                  title: kuchikomiTitle.value,
-                  content: kuchikomi.value,
-                  rating: rating.value,
-                  year: year.value,
-                  createdAt,
-                  uid: root.$store.getters.user.uid,
-                  docId: docRef.id,
-                  username: root.$store.getters.user.name,
-                  email: root.$store.getters.user.email
-                })
-                isOpenSuccessSnackbar.value = true
-                resetInput()
-              } catch (e) {
-                console.error(e)
-              }
-            }
-          })
-      } catch (e) {
-        console.error(e)
+
+    // 講義を追加
+    const addClass = (
+      docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+    ): void => {
+      const data: Class = {
+        docId: docRef.id,
+        title: title.value,
+        teacherName: teacherName.value,
+        term: term.value,
+        dayOfWeek: dayOfWeek.value,
+        period: period.value,
+        createdBy: root.$store.getters.user.uid,
+        createdAt: new Date().toLocaleString()
+      }
+      docRef.set(data)
+    }
+    // クチコミを追加
+    const addKuchikomi = (
+      docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+    ): void => {
+      console.debug('kuchikomi id', docRef)
+      const kuchikomiRef = db
+        .collection('classes')
+        .doc(docRef.id)
+        .collection('kuchikomis')
+        .doc()
+      const data: Kuchikomi = {
+        docId: kuchikomiRef.id,
+        title: title.value,
+        classYear: year.value,
+        rating: rating.value,
+        kuchikomi: kuchikomi.value,
+        kuchikomiTitle: kuchikomiTitle.value,
+        uid: root.$store.getters.user.uid,
+        username: root.$store.getters.user.username,
+        createdAt: new Date().toLocaleString()
+      }
+      kuchikomiRef.set(data)
+      console.debug('kuchikomi')
+    }
+    // 授業＋クチコミ作成
+    const createClassAndKuchikomi = (): void => {
+      // 入力した授業と同じ授業名かつ講師名が存在するかのフラグ
+      const isTitleAndTeacherNameSame = classList.value.find(
+        (item) =>
+          item.title === title.value && item.teacherName === teacherName.value
+      )
+
+      if (!isTitleAndTeacherNameSame) {
+        const docRef = db.collection('classes').doc()
+        try {
+          Promise.all([addClass(docRef), addKuchikomi(docRef)])
+          resetInput()
+          isOpenCreateConfirm.value = false
+          isOpenSuccessSnackbar.value = true
+        } catch (e) {
+          console.error(e)
+          isOpenErrorSnackbar.value = true
+          isOpenCreateConfirm.value = false
+        }
+      } else if (isTitleAndTeacherNameSame) {
+        isOpenCreateConfirm.value = false
+        isOpenDuplicatedSnackbar.value = true
+      } else {
+        isOpenCreateConfirm.value = false
         isOpenErrorSnackbar.value = true
       }
     }
 
-    // キャンセル
+    // リセット
+    const form = ref(null)
     const isOpenResetConfirm = ref(false)
-    const openResetConfirm = () => {
-      isOpenResetConfirm.value = true
-    }
-    // 記入内容を全てリセット
-    const resetInput = () => {
-      isOpenResetConfirm.value = false
+    const resetInput = (): void => {
       title.value = ''
-      teacher.value = ''
-      dayOfWeek.value = null
-      period.value = null
-      year.value = null
-      term.value = null
+      teacherName.value = ''
+      dayOfWeek.value = ''
+      period.value = ''
+      year.value = ''
+      term.value = ''
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
+      isOpenResetConfirm.value = false
+      // @ts-ignore "Object is possibly null" エラーをignore
+      form.value.resetValidation()
     }
 
     /**
      * init
      */
-    const classTitles = ref<String[]>([])
-    const fetchedClasses = ref<Class[]>([])
-    fetchedClasses.value = root.$store.getters.classes
-
     // 授業のタイトルの配列を作成
-    fetchedClasses.value.forEach((item) => {
+    const classList = ref<Class[]>([])
+    classList.value = root.$store.getters.classes
+    console.debug('class', classList.value)
+    const classTitles = ref<String[]>([])
+    classList.value.forEach((item) => {
       classTitles.value.push(item.title)
     })
+    console.debug('name', classList.value)
 
     return {
       RULES,
@@ -330,10 +333,10 @@ export default defineComponent({
       DAYS,
       PERIODS,
       TERMS,
-      fetchedClasses,
+      classList,
       title,
       classTitles,
-      teacher,
+      teacherName,
       dayOfWeek,
       period,
       term,
@@ -344,15 +347,15 @@ export default defineComponent({
       rating,
       isTermShort,
       isOpenCreateConfirm,
-      openCreateConfirm,
       isFormValid,
-      createKuchikomi,
+      createClassAndKuchikomi,
       isOpenSuccessSnackbar,
       isOpenDuplicatedSnackbar,
       isOpenErrorSnackbar,
       isOpenResetConfirm,
-      openResetConfirm,
-      resetInput
+      resetInput,
+      form,
+      addClass
     }
   }
 })
