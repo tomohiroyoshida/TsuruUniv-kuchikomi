@@ -1,7 +1,7 @@
 <template>
   <v-btn
     v-bind="$attrs"
-    text
+    :text="$attrs.text || 'text'"
     :width="$attrs.width || '10rem'"
     class="app-btn white--text"
     @click="$emit('click', $event)"
