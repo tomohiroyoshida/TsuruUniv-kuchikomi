@@ -247,7 +247,6 @@ export default defineComponent({
     const addKuchikomi = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ): void => {
-      console.debug('kuchikomi id', docRef)
       const kuchikomiRef = db
         .collection('classes')
         .doc(docRef.id)
@@ -265,7 +264,6 @@ export default defineComponent({
         createdAt: new Date().toLocaleString()
       }
       kuchikomiRef.set(data)
-      console.debug('kuchikomi')
     }
     // 授業＋クチコミ作成
     const createClassAndKuchikomi = (): void => {
@@ -309,9 +307,9 @@ export default defineComponent({
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
-      isOpenResetConfirm.value = false
       // @ts-ignore "Object is possibly null" エラーをignore
       form.value.resetValidation()
+      isOpenResetConfirm.value = false
     }
 
     /**
@@ -320,12 +318,10 @@ export default defineComponent({
     // 授業のタイトルの配列を作成
     const classList = ref<Class[]>([])
     classList.value = root.$store.getters.classes
-    console.debug('class', classList.value)
     const classTitles = ref<String[]>([])
     classList.value.forEach((item) => {
       classTitles.value.push(item.title)
     })
-    console.debug('name', classList.value)
 
     return {
       RULES,
