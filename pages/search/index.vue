@@ -20,7 +20,9 @@
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
-          <div class="text-h6 mb-3 ml-1">登録されている授業一覧</div>
+          <div class="text-h6 text-center mb-3 ml-1">
+            登録されている授業一覧
+          </div>
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
@@ -32,19 +34,21 @@
               >
                 <v-card-title>{{ item.title }}</v-card-title>
                 <v-card-subtitle class="py-0">
-                  <div class="mr-3">講師: {{ item.teacherName }}</div>
-                  <div class="mr-3">
-                    開講期: {{ item.term }} 曜日時限: {{ item.dayOfWeek }}曜
-                    {{ item.period }}限
+                  <div class="mr-3">講師： {{ item.teacherName }}</div>
+                  <div class="mr-3">開講期： {{ item.term }}</div>
+                  <div v-if="item.dayOfWeek && item.period" class="mr-3">
+                    曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
                   </div>
                 </v-card-subtitle>
                 <v-card-text>
                   <AppBtn
                     class="btn"
                     color="primary"
+                    width="6rem"
+                    depressed
                     @click="goToKuchikomi(item.docId)"
                   >
-                    クチコミをみる
+                    <div class="text-caption">クチコミ閲覧</div>
                   </AppBtn>
                 </v-card-text>
               </v-card>
@@ -77,13 +81,23 @@
             outlined
           >
             <v-card-title>{{ item.title }}</v-card-title>
-            <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
-            <v-card-text class="d-flex card-text">
-              <v-card-actions class="btn">
-                <AppBtn color="primary" @click="goToKuchikomi(item.docId)">
-                  クチコミをみる
-                </AppBtn>
-              </v-card-actions>
+            <v-card-subtitle class="py-0">
+              <div class="mr-3">講師： {{ item.teacherName }}</div>
+              <div class="mr-3">開講期： {{ item.term }}</div>
+              <div v-if="item.dayOfWeek && item.period" class="mr-3">
+                曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
+              </div>
+            </v-card-subtitle>
+            <v-card-text>
+              <AppBtn
+                class="btn"
+                color="primary"
+                width="6rem"
+                depressed
+                @click="goToKuchikomi(item.docId)"
+              >
+                <div class="text-caption">クチコミ閲覧</div>
+              </AppBtn>
             </v-card-text>
           </v-card>
         </section>
@@ -208,8 +222,8 @@ export default defineComponent({
 }
 .btn {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  bottom: 28px;
+  right: 16px;
 }
 
 /* 検索欄の虫眼鏡アイコンが持つデフォルトのマージンを消す */
