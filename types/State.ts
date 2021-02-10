@@ -14,7 +14,8 @@ export interface Class {
   term: string
   dayOfWeek: string
   period: string
-  createdAt: Date
+  createdBy: string
+  createdAt: string
 }
 
 // クチコミ
@@ -23,8 +24,9 @@ export interface Kuchikomi {
   title: String
   classYear: string
   rating: number
+  kuchikomi: string
+  kuchikomiTitle: string
   uid: string
   username: string
-  content: string
-  createdAt: Date
+  createdAt: string
 }
