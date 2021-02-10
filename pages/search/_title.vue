@@ -16,9 +16,11 @@
 
         <!-- クチコミが存在する場合 -->
         <v-row v-else-if="kuchikomis.length" no-gutters>
-          <div class="mt-3 mx-1 text-h6 d-flex justify-center">
-            クチコミ一覧
-          </div>
+          <v-col cols="12">
+            <div class="my-3 mx-1 text-h6 d-flex justify-center">
+              クチコミ一覧
+            </div>
+          </v-col>
           <v-col cols="12">
             <v-card
               v-for="item in kuchikomis"
@@ -56,17 +58,41 @@
               <v-card-text class="d-flex pa-2">
                 {{ item.content }}
               </v-card-text>
-              <div v-if="isAuthor" class="buttons">
-                <v-btn fab icon small>
+              <!-- 編集・削除ボタン -->
+              <div v-if="uid === item.uid" class="buttons">
+                <v-btn fab icon small @click="openUpdateDialog">
                   <v-icon color="info">mdi-pencil-outline</v-icon>
                 </v-btn>
-                <v-btn fab icon small>
+                <v-btn fab icon small @click="openDeleteConfirm(item.docId)">
                   <v-icon color="error">mdi-trash-can-outline</v-icon>
                 </v-btn>
               </div>
             </v-card>
           </v-col>
         </v-row>
+        <!-- ダイアログ -->
+        <EditDialog v-model="isOpenUpdateDialog" />
+        <ConfirmDialog
+          v-model="isOpenDeleteConfirm"
+          text="削除"
+          @ok="deleteKuchikomi"
+        />
+        <!-- スナックバー -->
+        <SnackBar
+          v-model="isOpenSuccessUpdateSnackbar"
+          text="【成功】クチコミの編集に成功しました💡"
+          color="success"
+        />
+        <SnackBar
+          v-model="isOpenSuccessDeleteSnackbar"
+          text="【成功】クチコミの削除に成功しました🍙"
+          color="success"
+        />
+        <SnackBar
+          v-model="isOpenErrorSnackbar"
+          text="【エラー】エラーが起きました。ページをリロードしてもう一度試してください😢"
+          color="error"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -80,26 +106,95 @@ import { Kuchikomi } from '@/types/State'
 export default defineComponent({
   name: 'search-title',
   setup(_, { root }) {
+    const subjectTitle = root.$route.params.title
     const kuchikomis = ref<Kuchikomi[]>([])
-    const isAuthor = ref(true)
+    const uid = root.$store.getters.user.uid
+
+    const isOpenSuccessUpdateSnackbar = ref(false)
+    const isOpenSuccessDeleteSnackbar = ref(false)
+    const isOpenErrorSnackbar = ref(false)
+    const isOpenUpdateDialog = ref(false)
+    const isOpenDeleteConfirm = ref(false)
+
+    // 編集
+    const updateTargetId = ref('')
+    const openUpdateDialog = (docId: string) => {
+      updateTargetId.value = docId
+      isOpenUpdateDialog.value = true
+    }
+    // 削除
+    const deleteTargetId = ref('')
+    const openDeleteConfirm = (docId: string) => {
+      deleteTargetId.value = docId
+      isOpenDeleteConfirm.value = true
+    }
+    const deleteKuchikomi = async (): Promise<void> => {
+      try {
+        const docId = deleteTargetId.value
+        // 削除処理
+        await db
+          .collection('classes')
+          .doc(subjectTitle)
+          .collection('kuchikomis')
+          .doc(docId)
+          .delete()
+        // 削除後クチコミ一覧のデータを更新
+        const newKuchikoims: Kuchikomi[] = []
+        await db
+          .collection('classes')
+          .doc(subjectTitle)
+          .collection('kuchikomis')
+          .get()
+          .then((querysnapshot) => {
+            querysnapshot.forEach((doc) => {
+              newKuchikoims.push(doc.data() as Kuchikomi)
+            })
+          })
+        kuchikomis.value = newKuchikoims
+        isOpenDeleteConfirm.value = false
+        isOpenSuccessDeleteSnackbar.value = true
+      } catch (e) {
+        console.error(e)
+        isOpenErrorSnackbar.value = true
+      }
+    }
+
     /**
      * init
      * クチコミ一覧を取得
      */
     useFetch(async () => {
-      await db
-        .collection('classes')
-        .doc(root.$route.params.title)
-        .collection('kuchikomis')
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            kuchikomis.value.push(doc.data() as Kuchikomi)
+      try {
+        await db
+          .collection('classes')
+          .doc(subjectTitle)
+          .collection('kuchikomis')
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              kuchikomis.value.push(doc.data() as Kuchikomi)
+            })
           })
-        })
+      } catch (e) {
+        console.error(e)
+        isOpenErrorSnackbar.value = true
+      }
     })
 
-    return { kuchikomis, isAuthor }
+    return {
+      subjectTitle,
+      kuchikomis,
+      uid,
+      isOpenErrorSnackbar,
+      isOpenUpdateDialog,
+      openUpdateDialog,
+      updateTargetId,
+      isOpenDeleteConfirm,
+      openDeleteConfirm,
+      deleteKuchikomi,
+      isOpenSuccessUpdateSnackbar,
+      isOpenSuccessDeleteSnackbar
+    }
   }
 })
 </script>
