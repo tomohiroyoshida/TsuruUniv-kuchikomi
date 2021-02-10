@@ -115,7 +115,7 @@
             color="primary"
             depressed
             :disabled="!isFormValid"
-            @click="isOpenCreateConfirm = true"
+            @click="openCreateConfirm"
           >
             作成
           </AppBtn>
@@ -214,6 +214,11 @@ export default defineComponent({
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
 
+    const openCreateConfirm = () => {
+      isOpenCreateConfirm.value = true
+      isOpenSuccessSnackbar.value = false
+      isOpenErrorSnackbar.value = false
+    }
     const createKuchikomi = async (): Promise<void> => {
       // disabledSubmit.value = false
       isOpenCreateConfirm.value = false
@@ -302,7 +307,8 @@ export default defineComponent({
       // showCard,
       // hasCardInfo,
       // classCardInfo,
-      targetClassId
+      targetClassId,
+      openCreateConfirm
     }
   }
 })

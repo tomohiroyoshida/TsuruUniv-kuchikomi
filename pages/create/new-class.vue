@@ -129,7 +129,7 @@
             color="primary"
             depressed
             :disabled="!isFormValid"
-            @click="isOpenCreateConfirm = true"
+            @click="openCreateConfirm"
           >
             作成
           </AppBtn>
@@ -155,7 +155,7 @@
       />
       <SnackBar
         v-model="isOpenDuplicatedSnackbar"
-        text="【エラー】この授業はすでに存在します。メニューの「作成」からクチコミを作成してください🙇‍♂️"
+        text="【エラー】この授業はすでに存在します。「作成」メニューの授業名の欄から探してください🙇‍♂️"
         color="error"
       />
       <SnackBar
@@ -194,7 +194,7 @@ const PERIODS = ['1', '2', '3', '4', '5', '6'] as const
 const TERMS = ['前期', '後期', '通年', '時間外授業'] as const
 
 export default defineComponent({
-  name: 'create',
+  name: 'create-new-class',
   setup(_, { root }) {
     const title = ref('')
     const teacherName = ref('')
@@ -227,6 +227,12 @@ export default defineComponent({
     const isOpenDuplicatedSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
 
+    const openCreateConfirm = () => {
+      isOpenCreateConfirm.value = true
+      isOpenSuccessSnackbar.value = false
+      isOpenDuplicatedSnackbar.value = false
+      isOpenErrorSnackbar.value = false
+    }
     // 講義を追加
     const addClass = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
@@ -352,7 +358,8 @@ export default defineComponent({
       isOpenResetConfirm,
       resetInput,
       form,
-      addClass
+      addClass,
+      openCreateConfirm
     }
   }
 })

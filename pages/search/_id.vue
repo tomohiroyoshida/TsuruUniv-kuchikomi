@@ -118,14 +118,20 @@ export default defineComponent({
     // 編集
     const updateTargetId = ref('')
     const openUpdateDialog = (docId: string): void => {
-      updateTargetId.value = docId
       isOpenUpdateDialog.value = true
+      isOpenSuccessUpdateSnackbar.value = false
+      isOpenSuccessDeleteSnackbar.value = false
+      isOpenErrorSnackbar.value = false
+      updateTargetId.value = docId
     }
     // 削除
     const deleteTargetId = ref('')
     const openDeleteConfirm = (docId: string): void => {
-      deleteTargetId.value = docId
       isOpenDeleteConfirm.value = true
+      isOpenSuccessUpdateSnackbar.value = false
+      isOpenSuccessDeleteSnackbar.value = false
+      isOpenErrorSnackbar.value = false
+      deleteTargetId.value = docId
     }
     const deleteKuchikomi = async (): Promise<void> => {
       try {
