@@ -118,13 +118,13 @@ export default defineComponent({
 
     // 編集
     const updateTargetId = ref('')
-    const openUpdateDialog = (docId: string) => {
+    const openUpdateDialog = (docId: string): void => {
       updateTargetId.value = docId
       isOpenUpdateDialog.value = true
     }
     // 削除
     const deleteTargetId = ref('')
-    const openDeleteConfirm = (docId: string) => {
+    const openDeleteConfirm = (docId: string): void => {
       deleteTargetId.value = docId
       isOpenDeleteConfirm.value = true
     }
@@ -145,7 +145,7 @@ export default defineComponent({
           .doc(classId)
           .collection('kuchikomis')
           .get()
-          .then((querysnapshot) => {
+          .then((querysnapshot): void => {
             querysnapshot.forEach((doc) => {
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
@@ -163,23 +163,25 @@ export default defineComponent({
      * init
      * クチコミ一覧を取得
      */
-    useFetch(async () => {
-      try {
-        await db
-          .collection('classes')
-          .doc(classId)
-          .collection('kuchikomis')
-          .get()
-          .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              kuchikomis.value.push(doc.data() as Kuchikomi)
+    useFetch(
+      async (): Promise<void> => {
+        try {
+          await db
+            .collection('classes')
+            .doc(classId)
+            .collection('kuchikomis')
+            .get()
+            .then((querySnapshot): void => {
+              querySnapshot.forEach((doc) => {
+                kuchikomis.value.push(doc.data() as Kuchikomi)
+              })
             })
-          })
-      } catch (e) {
-        console.error(e)
-        isOpenErrorSnackbar.value = true
+        } catch (e) {
+          console.error(e)
+          isOpenErrorSnackbar.value = true
+        }
       }
-    })
+    )
 
     return {
       classId,
