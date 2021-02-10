@@ -7,7 +7,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <!-- クチコミが存在しない場合 -->
-        <div v-if="!kuchikomis.length">
+        <div v-if="!kuchikomiList.length">
           <div class="text-h6 my-3 px-3">クチコミはまだありません😭</div>
           <div class="text-h6 px-3">
             もしこの授業を受けたことがあれば、ぜひクチコミの作成をよろしくお願いいたします🙇‍♂️
@@ -15,7 +15,7 @@
         </div>
 
         <!-- クチコミが存在する場合 -->
-        <v-row v-else-if="kuchikomis.length" no-gutters>
+        <v-row v-else-if="kuchikomiList.length" no-gutters>
           <v-col cols="12">
             <div class="my-3 mx-1 text-h6 d-flex justify-center">
               クチコミ一覧
@@ -23,8 +23,8 @@
           </v-col>
           <v-col cols="12">
             <v-card
-              v-for="item in kuchikomis"
-              :key="item.createdAt"
+              v-for="item in kuchikomiList"
+              :key="item.docId"
               class="card my-1 ml-1"
               rounded
               outlined
@@ -47,16 +47,16 @@
                   background-color="grey lighten-1"
                 />
                 <div class="text-subtitle-2 font-weight-bold px-2">
-                  {{ item.title }}
+                  {{ item.kuchikomiTitle }}
                 </div>
               </div>
               <!-- 受講年 -->
               <div class="text-caption text--disabled mx-2">
-                受講年: {{ item.year }} 年
+                受講年: {{ item.classYear }} 年
               </div>
               <!-- クチコミの内容 -->
               <v-card-text class="d-flex pa-2">
-                {{ item.content }}
+                {{ item.kuchikomi }}
               </v-card-text>
               <!-- 編集・削除ボタン -->
               <div v-if="uid === item.uid" class="buttons">
@@ -107,7 +107,6 @@ export default defineComponent({
   name: 'search-title',
   setup(_, { root }) {
     const classId = root.$route.params.id
-    const kuchikomis = ref<Kuchikomi[]>([])
     const uid = root.$store.getters.user.uid
 
     const isOpenSuccessUpdateSnackbar = ref(false)
@@ -150,7 +149,7 @@ export default defineComponent({
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
           })
-        kuchikomis.value = newKuchikoims
+        kuchikomiList.value = newKuchikoims
         isOpenDeleteConfirm.value = false
         isOpenSuccessDeleteSnackbar.value = true
       } catch (e) {
@@ -163,6 +162,7 @@ export default defineComponent({
      * init
      * クチコミ一覧を取得
      */
+    const kuchikomiList = ref<Kuchikomi[]>([])
     useFetch(
       async (): Promise<void> => {
         try {
@@ -173,7 +173,7 @@ export default defineComponent({
             .get()
             .then((querySnapshot): void => {
               querySnapshot.forEach((doc) => {
-                kuchikomis.value.push(doc.data() as Kuchikomi)
+                kuchikomiList.value.push(doc.data() as Kuchikomi)
               })
             })
         } catch (e) {
@@ -185,7 +185,7 @@ export default defineComponent({
 
     return {
       classId,
-      kuchikomis,
+      kuchikomiList,
       uid,
       isOpenErrorSnackbar,
       isOpenUpdateDialog,

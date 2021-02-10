@@ -24,7 +24,7 @@
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
-                v-for="item in fetchedClasses"
+                v-for="item in classList"
                 :key="item.docId"
                 class="card my-1 ml-1"
                 rounded
@@ -32,7 +32,7 @@
               >
                 <v-card-title>{{ item.title }}</v-card-title>
                 <v-card-subtitle class="py-0">
-                  <div class="mr-3">講師: {{ item.teacher }}</div>
+                  <div class="mr-3">講師: {{ item.teacherName }}</div>
                   <div class="mr-3">
                     開講期: {{ item.term }} 曜日時限: {{ item.dayOfWeek }}曜
                     {{ item.period }}限
@@ -112,7 +112,7 @@ export default defineComponent({
       // フィルタリングされた結果が空配列でなければ一度filteredClassesを空にしてから
       if (filteredClasses.value.length) filteredClasses.value = []
       // 全ての授業リストから、検索欄にある文字列が含まれる授業を取得
-      filteredClasses.value = fetchedClasses.value.filter((item) =>
+      filteredClasses.value = classList.value.filter((item) =>
         item.title.includes(title)
       )
 
@@ -133,14 +133,14 @@ export default defineComponent({
      * init
      */
     // storeから全ての授業リストをフェッチ
-    const fetchedClasses = ref<Class[]>([])
-    fetchedClasses.value = root.$store.getters.classes
+    const classList = ref<Class[]>([])
+    classList.value = root.$store.getters.classes
 
     // Storeに 'searchingTitle' があればその授業の一覧を表示する
     const storeSearchingTitle = root.$store.getters.searchingTitle
     if (storeSearchingTitle) {
       searchingTitle.value = storeSearchingTitle
-      filteredClasses.value = fetchedClasses.value.filter((item) =>
+      filteredClasses.value = classList.value.filter((item) =>
         item.title.includes(searchingTitle.value)
       )
     }
@@ -150,7 +150,7 @@ export default defineComponent({
       isSearching,
       searchingTitle,
       filteredClasses,
-      fetchedClasses,
+      classList,
       goToKuchikomi,
       storeSearchingTitle
     }
