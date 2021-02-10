@@ -3,7 +3,7 @@
     <v-progress-circular indeterminate size="100" width="6" color="primary" />
   </div>
   <!-- クチコミ一覧 -->
-  <v-container v-else fluid class="pt-15">
+  <v-container v-else class="pt-15">
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <!-- クチコミが存在しない場合 -->
