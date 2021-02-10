@@ -25,7 +25,7 @@
             <v-col cols="12" class="flex">
               <v-card
                 v-for="item in fetchedClasses"
-                :key="item.title"
+                :key="item.docId"
                 class="card my-1 ml-1"
                 rounded
                 outlined
@@ -72,7 +72,7 @@
           </div>
           <v-card
             v-for="item in filteredClasses"
-            :key="item.id"
+            :key="item.docId"
             class="card my-1 ml-1"
             outlined
           >
@@ -80,7 +80,7 @@
             <v-card-subtitle>講師: {{ item.teacher }}</v-card-subtitle>
             <v-card-text class="d-flex card-text">
               <v-card-actions class="btn">
-                <AppBtn color="primary" @click="goToKuchikomi(item.title)">
+                <AppBtn color="primary" @click="goToKuchikomi(item.docId)">
                   クチコミをみる
                 </AppBtn>
               </v-card-actions>
