@@ -107,7 +107,7 @@ export default defineComponent({
     const filteredClasses = ref<Class[]>([])
     const searchingTitle = ref('')
     // 検索欄に文字が入力されるたびにマッチする授業を探す
-    watch(searchingTitle, (title: string) => {
+    watch(searchingTitle, (title: string): void => {
       isSearching.value = true
       // フィルタリングされた結果が空配列でなければ一度filteredClassesを空にしてから
       if (filteredClasses.value.length) filteredClasses.value = []
@@ -124,7 +124,7 @@ export default defineComponent({
     })
 
     // クチコミのページへ飛ぶ
-    const goToKuchikomi = (id: string) => {
+    const goToKuchikomi = (id: string): void => {
       root.$store.dispatch('setSearchingTitle', searchingTitle.value)
       root.$router.push(`/search/${id}`)
     }
