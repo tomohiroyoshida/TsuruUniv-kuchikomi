@@ -60,7 +60,7 @@
               </v-card-text>
               <!-- 編集・削除ボタン -->
               <div v-if="uid === item.uid" class="buttons">
-                <v-btn fab icon small @click="openUpdateDialog">
+                <v-btn fab icon small @click="openUpdateDialog(item)">
                   <v-icon color="info">mdi-pencil-outline</v-icon>
                 </v-btn>
                 <v-btn fab icon small @click="openDeleteConfirm(item.docId)">
@@ -71,7 +71,10 @@
           </v-col>
         </v-row>
         <!-- ダイアログ -->
-        <EditDialog v-model="isOpenUpdateDialog" />
+        <EditDialog
+          v-model="isOpenUpdateDialog"
+          :update-kuchikomi="updateKuchikomi"
+        />
         <ConfirmDialog
           v-model="isOpenDeleteConfirm"
           text="削除"
@@ -116,13 +119,13 @@ export default defineComponent({
     const isOpenDeleteConfirm = ref(false)
 
     // 編集
-    const updateTargetId = ref('')
-    const openUpdateDialog = (docId: string): void => {
+    const updateKuchikomi = ref({})
+    const openUpdateDialog = (item: Kuchikomi): void => {
+      updateKuchikomi.value = item
       isOpenUpdateDialog.value = true
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false
       isOpenErrorSnackbar.value = false
-      updateTargetId.value = docId
     }
     // 削除
     const deleteTargetId = ref('')
@@ -196,7 +199,7 @@ export default defineComponent({
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
       openUpdateDialog,
-      updateTargetId,
+      updateKuchikomi,
       isOpenDeleteConfirm,
       openDeleteConfirm,
       deleteKuchikomi,
