@@ -9,7 +9,7 @@ export interface User {
 // 授業
 export interface Class {
   docId: string
-  title: string
+  classTitle: string
   teacherName: string
   term: string
   dayOfWeek: string
@@ -21,11 +21,10 @@ export interface Class {
 // クチコミ
 export interface Kuchikomi {
   docId: string
-  title: String
+  kuchikomiTitle: String
   classYear: string
   rating: number
   kuchikomi: string
-  kuchikomiTitle: string
   uid: string
   username: string
   createdAt: string
