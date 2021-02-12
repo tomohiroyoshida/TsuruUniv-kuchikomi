@@ -73,7 +73,9 @@
         <!-- ダイアログ -->
         <EditDialog
           v-model="isOpenUpdateDialog"
-          :update-kuchikomi="updateKuchikomi"
+          :updating-kuchikomi="updatingKuchikomi"
+          @updated="updateKuchikomi($event)"
+          @cancel="cancelUpdate"
         />
         <ConfirmDialog
           v-model="isOpenDeleteConfirm"
@@ -107,7 +109,7 @@ import db from '@/plugins/firebase'
 import { Kuchikomi } from '@/types/State'
 
 export default defineComponent({
-  name: 'search-title',
+  name: 'search-id',
   setup(_, { root }) {
     const classId = root.$route.params.id
     const uid = root.$store.getters.user.uid
@@ -119,13 +121,33 @@ export default defineComponent({
     const isOpenDeleteConfirm = ref(false)
 
     // 編集
-    const updateKuchikomi = ref({})
+    const updatingKuchikomi = ref({})
+    const originalKuchikomi = ref({})
     const openUpdateDialog = (item: Kuchikomi): void => {
-      updateKuchikomi.value = item
+      originalKuchikomi.value = Object.assign({}, item)
+      updatingKuchikomi.value = Object.assign({}, item)
+      console.debug('original', originalKuchikomi.value)
+      console.debug('updating', updatingKuchikomi.value)
       isOpenUpdateDialog.value = true
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false
       isOpenErrorSnackbar.value = false
+    }
+    const updateKuchikomi = (updatedKuchikomi: Kuchikomi): void => {
+      console.debug('datra', updatedKuchikomi)
+      isOpenUpdateDialog.value = false
+      const docId = updatedKuchikomi.docId
+      const targetIndex = kuchikomiList.value.findIndex(
+        (item) => item.docId === docId
+      )
+      console.debug('index: ', targetIndex)
+      kuchikomiList.value[0] = updatedKuchikomi
+    }
+    const cancelUpdate = (): void => {
+      updatingKuchikomi.value = originalKuchikomi.value
+      console.debug('original', originalKuchikomi.value)
+      console.debug('updating', updatingKuchikomi.value)
+      isOpenUpdateDialog.value = false
     }
     // 削除
     const deleteTargetId = ref('')
@@ -138,13 +160,12 @@ export default defineComponent({
     }
     const deleteKuchikomi = async (): Promise<void> => {
       try {
-        const docId = deleteTargetId.value
         // 削除処理
         await db
           .collection('classes')
           .doc(classId)
           .collection('kuchikomis')
-          .doc(docId)
+          .doc(deleteTargetId.value)
           .delete()
         // 削除後クチコミ一覧のデータを更新
         const newKuchikoims: Kuchikomi[] = []
@@ -199,12 +220,15 @@ export default defineComponent({
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
       openUpdateDialog,
-      updateKuchikomi,
+      cancelUpdate,
+      updatingKuchikomi,
       isOpenDeleteConfirm,
       openDeleteConfirm,
       deleteKuchikomi,
       isOpenSuccessUpdateSnackbar,
-      isOpenSuccessDeleteSnackbar
+      isOpenSuccessDeleteSnackbar,
+      originalKuchikomi,
+      updateKuchikomi
     }
   }
 })

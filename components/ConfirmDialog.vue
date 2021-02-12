@@ -15,8 +15,12 @@
                 入力した内容で授業とクチコミを新規作成します。よろしいですか？
               </div>
             </div>
-            <div v-else-if="text == 'リセット'">
-              <div>入力した内容をリセットします。</div>
+            <div v-else-if="text == 'クリア'">
+              <div>入力した内容を全て削除します。</div>
+              <div>よろしいですか？</div>
+            </div>
+            <div v-else-if="text == '編集'">
+              <div>入力した内容で編集します。</div>
               <div>よろしいですか？</div>
             </div>
             <div v-else-if="text === '削除'">
