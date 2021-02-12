@@ -44,7 +44,7 @@
         <div>作成</div>
       </v-btn>
       <v-spacer />
-      <!-- ログイン・プロフィールボタン -->
+      <!-- ログインボタン -->
       <v-btn
         v-if="!loggedIn"
         :small="width < 700"
@@ -54,7 +54,8 @@
       >
         ログイン
       </v-btn>
-      <v-tooltip v-else bottom>
+      <!-- アイコンボタン -->
+      <v-menu v-else open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             text
@@ -64,7 +65,6 @@
             x-large
             v-bind="attrs"
             v-on="on"
-            @click="openEditModal"
           >
             <v-img
               class="image"
@@ -74,8 +74,24 @@
             ></v-img>
           </v-btn>
         </template>
-        <span>設定</span>
-      </v-tooltip>
+        <v-list>
+          <v-list-item-group color="transparent">
+            <v-list-item two-line @click="toProfile">
+              <v-list-item-title>
+                <v-icon>mdi-account-cog-outline</v-icon>
+                プロフィール設定
+              </v-list-item-title>
+            </v-list-item>
+            <v-divider />
+            <v-list-item two-line @click="signOut">
+              <v-list-item-title>
+                <v-icon>mdi-logout</v-icon>
+                ログアウト
+              </v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <!-- 中身 -->
@@ -95,7 +111,9 @@ export default defineComponent({
     width.value = window.innerWidth
     const loggedinUser = computed(() => root.$store.getters.user)
     const loggedIn = computed(() => root.$store.getters.user.loggedIn)
-    const openEditModal = () => {}
+    const toProfile = () => {
+      root.$router.push('/profile')
+    }
 
     const signOut = () => {
       firebase
@@ -120,7 +138,7 @@ export default defineComponent({
       loggedinUser,
       loggedIn,
       signOut,
-      openEditModal
+      toProfile
     }
   }
 })
