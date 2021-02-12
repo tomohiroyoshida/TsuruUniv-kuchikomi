@@ -1,6 +1,7 @@
 <template>
   <div class="required-caption text-caption my-1 ml-3">
     <span v-if="required" class="red--text">* </span>
+    <!-- TODO: これslotでいい -->
     <slot />
     {{ title }}
   </div>
