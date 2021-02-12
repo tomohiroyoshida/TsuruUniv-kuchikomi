@@ -5,7 +5,7 @@
         <v-spacer />
         <v-toolbar-title class="white--text">クチコミを編集</v-toolbar-title>
         <v-spacer />
-        <v-btn text fab small :disabled="disabled" @click="cancelUpdate">
+        <v-btn text fab small :disabled="disabled" @click="$emit('cancel')">
           <v-icon color="white">mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -79,7 +79,7 @@
               <AppBtn
                 color="primary"
                 depressed
-                :disabled="!isFormValid || disabled"
+                :disabled="!isFormValid || !isFormChanged || disabled"
                 @click="openCreateConfirm"
               >
                 編集
@@ -117,7 +117,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  PropType,
+  ref
+} from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 
@@ -153,15 +158,16 @@ export default defineComponent({
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
 
+    // eslint-disable-next-line prefer-const
+    let originalKuchikomi = Object.assign({}, props.updatingKuchikomi)
+    const isFormChanged = computed(() => {
+      return originalKuchikomi !== props.updatingKuchikomi
+    })
+
     const openCreateConfirm = (): void => {
       isOpenUpdateConfirm.value = true
       isOpenSuccessSnackbar.value = false
       isOpenErrorSnackbar.value = false
-    }
-    const originalKuchikomi = ref({})
-    const cancelUpdate = (): void => {
-      // console.debug('dialog: ', originalKuchikomi.value)
-      emit('cancel')
     }
 
     // 更新
@@ -222,9 +228,8 @@ export default defineComponent({
       form,
       disabled,
       openCreateConfirm,
-      cancelUpdate,
-      originalKuchikomi
-      // editingKuchikomi
+      originalKuchikomi,
+      isFormChanged
     }
   }
 })

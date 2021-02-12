@@ -70,6 +70,7 @@
             </v-card>
           </v-col>
         </v-row>
+
         <!-- ダイアログ -->
         <EditDialog
           v-model="isOpenUpdateDialog"
@@ -124,29 +125,25 @@ export default defineComponent({
     const updatingKuchikomi = ref({})
     const originalKuchikomi = ref({})
     const openUpdateDialog = (item: Kuchikomi): void => {
+      // 編集するクチコミ情報のコピーを作成
       originalKuchikomi.value = Object.assign({}, item)
       updatingKuchikomi.value = Object.assign({}, item)
-      console.debug('original', originalKuchikomi.value)
-      console.debug('updating', updatingKuchikomi.value)
+
       isOpenUpdateDialog.value = true
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false
       isOpenErrorSnackbar.value = false
     }
     const updateKuchikomi = (updatedKuchikomi: Kuchikomi): void => {
-      console.debug('datra', updatedKuchikomi)
       isOpenUpdateDialog.value = false
       const docId = updatedKuchikomi.docId
       const targetIndex = kuchikomiList.value.findIndex(
         (item) => item.docId === docId
       )
-      console.debug('index: ', targetIndex)
-      kuchikomiList.value[0] = updatedKuchikomi
+      kuchikomiList.value[targetIndex] = updatedKuchikomi
     }
     const cancelUpdate = (): void => {
       updatingKuchikomi.value = originalKuchikomi.value
-      console.debug('original', originalKuchikomi.value)
-      console.debug('updating', updatingKuchikomi.value)
       isOpenUpdateDialog.value = false
     }
     // 削除
