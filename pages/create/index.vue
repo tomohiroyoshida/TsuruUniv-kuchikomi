@@ -130,7 +130,7 @@
       />
       <ConfirmDialog
         v-model="isOpenResetConfirm"
-        text="リセット"
+        text="クリア"
         @ok="resetInput"
       />
 
@@ -231,9 +231,8 @@ export default defineComponent({
       try {
         const data: Kuchikomi = {
           docId: docRef.id,
-          title: kuchikomiTitle.value,
-          kuchikomi: kuchikomi.value,
           kuchikomiTitle: kuchikomiTitle.value,
+          kuchikomi: kuchikomi.value,
           rating: rating.value,
           classYear: year.value,
           uid: root.$store.getters.user.uid,
@@ -280,7 +279,7 @@ export default defineComponent({
     const autoCompleteClasses = ref<AutocompleteClasses[]>([])
     classList.value.forEach((item) => {
       autoCompleteClasses.value.push({
-        text: item.title,
+        text: item.classTitle,
         value: item.docId
       })
     })
