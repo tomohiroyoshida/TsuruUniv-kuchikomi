@@ -5,7 +5,6 @@
       <div v-if="width > 700" class="text-subtitle-1 font-weight-bold">
         つるコミ
       </div>
-      <v-divider class="py-2" vertical />
       <v-btn
         text
         :small="width < 700"
@@ -44,20 +43,39 @@
         <v-icon small> mdi-pencil-plus-outline </v-icon>
         <div>作成</div>
       </v-btn>
-      <v-divider class="py-2" vertical />
       <v-spacer />
+      <!-- ログイン・プロフィールボタン -->
       <v-btn
         v-if="!loggedIn"
-        to="/login"
-        depressed
         :small="width < 700"
+        depressed
+        to="/login"
         color="primary"
       >
         ログイン
       </v-btn>
-      <v-btn v-else text :small="width < 700" color="primary" @click="signOut">
-        ログアウト
-      </v-btn>
+      <v-tooltip v-else bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            text
+            icon
+            color="primary"
+            class="pa-1 mr-1"
+            x-large
+            v-bind="attrs"
+            v-on="on"
+            @click="openEditModal"
+          >
+            <v-img
+              class="image"
+              :src="loggedinUser.photoURL"
+              max-height="52"
+              max-width="52"
+            ></v-img>
+          </v-btn>
+        </template>
+        <span>設定</span>
+      </v-tooltip>
     </v-app-bar>
 
     <!-- 中身 -->
@@ -75,8 +93,9 @@ export default defineComponent({
   setup(_, { root }) {
     const width = ref()
     width.value = window.innerWidth
-    const loginUser = computed(() => root.$store.getters.user)
+    const loggedinUser = computed(() => root.$store.getters.user)
     const loggedIn = computed(() => root.$store.getters.user.loggedIn)
+    const openEditModal = () => {}
 
     const signOut = () => {
       firebase
@@ -98,12 +117,17 @@ export default defineComponent({
 
     return {
       width,
-      loginUser,
+      loggedinUser,
       loggedIn,
-      signOut
+      signOut,
+      openEditModal
     }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.image {
+  border-radius: 50%;
+}
+</style>
