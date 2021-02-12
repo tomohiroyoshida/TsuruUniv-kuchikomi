@@ -5,7 +5,7 @@
         <v-spacer />
         <v-toolbar-title class="white--text">クチコミを編集</v-toolbar-title>
         <v-spacer />
-        <v-btn text fab small @click="cancelUpdate">
+        <v-btn text fab small :disabled="disabled" @click="cancelUpdate">
           <v-icon color="white">mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
