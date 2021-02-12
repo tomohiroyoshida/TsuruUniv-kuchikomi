@@ -11,7 +11,7 @@
             <v-col cols="10" md="5" class="mx-1">
               <TextCaption required title="授業名" />
               <TextInput
-                v-model="title"
+                v-model="classTitle"
                 :rules="RULES.requiredWith30"
                 :counter="30"
                 placeholder="例： 自然と生命Ⅵ"
@@ -91,7 +91,7 @@
             </v-col>
           </v-row>
 
-          <!-- タイトル -->
+          <!-- クチコミのタイトル -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption required title="クチコミのタイトル" />
@@ -143,7 +143,7 @@
       />
       <ConfirmDialog
         v-model="isOpenResetConfirm"
-        text="リセット"
+        text="クリア"
         @ok="resetInput"
       />
 
@@ -196,7 +196,7 @@ const TERMS = ['前期', '後期', '通年', '時間外授業'] as const
 export default defineComponent({
   name: 'create-new-class',
   setup(_, { root }) {
-    const title = ref('')
+    const classTitle = ref('')
     const teacherName = ref('')
     const term = ref('')
     const dayOfWeek = ref('')
@@ -239,7 +239,7 @@ export default defineComponent({
     ): void => {
       const data: Class = {
         docId: docRef.id,
-        title: title.value,
+        classTitle: classTitle.value,
         teacherName: teacherName.value,
         term: term.value,
         dayOfWeek: dayOfWeek.value,
@@ -261,11 +261,10 @@ export default defineComponent({
         .doc()
       const data: Kuchikomi = {
         docId: kuchikomiRef.id,
-        title: title.value,
+        kuchikomiTitle: kuchikomiTitle.value,
         classYear: year.value,
         rating: rating.value,
         kuchikomi: kuchikomi.value,
-        kuchikomiTitle: kuchikomiTitle.value,
         uid: root.$store.getters.user.uid,
         username: root.$store.getters.user.username,
         createdAt: new Date().toLocaleString()
@@ -277,7 +276,8 @@ export default defineComponent({
       // 入力した授業と同じ授業名かつ講師名が存在するかのフラグ
       const isTitleAndTeacherNameSame = classList.value.find(
         (item) =>
-          item.title === title.value && item.teacherName === teacherName.value
+          item.classTitle === classTitle.value &&
+          item.teacherName === teacherName.value
       )
 
       if (!isTitleAndTeacherNameSame) {
@@ -305,7 +305,7 @@ export default defineComponent({
     const form = ref(null)
     const isOpenResetConfirm = ref(false)
     const resetInput = (): void => {
-      title.value = ''
+      classTitle.value = ''
       teacherName.value = ''
       dayOfWeek.value = ''
       period.value = ''
@@ -327,7 +327,7 @@ export default defineComponent({
     classList.value = root.$store.getters.classes
     const classTitles = ref<String[]>([])
     classList.value.forEach((item) => {
-      classTitles.value.push(item.title)
+      classTitles.value.push(item.classTitle)
     })
 
     return {
@@ -337,7 +337,7 @@ export default defineComponent({
       PERIODS,
       TERMS,
       classList,
-      title,
+      classTitle,
       classTitles,
       teacherName,
       dayOfWeek,
