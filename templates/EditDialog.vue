@@ -5,7 +5,7 @@
         <v-spacer />
         <v-toolbar-title class="white--text">クチコミを編集</v-toolbar-title>
         <v-spacer />
-        <v-btn text fab small @click="closeDialog">
+        <v-btn text fab small @click="cancelUpdate">
           <v-icon color="white">mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -18,7 +18,7 @@
                 <v-col cols="10">
                   <TextCaption required title="受講した年" />
                   <SelectInput
-                    v-model="updateKuchikomi.classYear"
+                    v-model="updatingKuchikomi.classYear"
                     :items="years"
                     :rules="RULES.required"
                   />
@@ -30,12 +30,14 @@
                   <TextCaption required title="おすすめ度(0.5~5)" />
                   <div class="my-2 d-flex justify-start">
                     <v-rating
-                      v-model="updateKuchikomi.rating"
+                      v-model="updatingKuchikomi.rating"
                       half-increments
                       color="warning"
                       background-color="grey lighten-1"
                     />
-                    <div class="ml-5 my-2">({{ updateKuchikomi.rating }})</div>
+                    <div class="ml-5 my-2">
+                      ({{ updatingKuchikomi.rating }})
+                    </div>
                   </div>
                 </v-col>
               </v-row>
@@ -44,7 +46,7 @@
                 <v-col cols="10">
                   <TextCaption required title="クチコミのタイトル" />
                   <TextInput
-                    v-model="updateKuchikomi.kuchikomiTitle"
+                    v-model="updatingKuchikomi.kuchikomiTitle"
                     :rules="RULES.requiredWith20"
                     :counter="20"
                     placeholder="例： おすすめの授業です"
@@ -56,7 +58,7 @@
                 <v-col cols="10">
                   <TextCaption required title="クチコミの内容" />
                   <TextareaInput
-                    v-model="updateKuchikomi.kuchikomi"
+                    v-model="updatingKuchikomi.kuchikomi"
                     :rules="RULES.kuchikomi"
                     placeholder="例： 授業も面白いし先生も優しいです！ ただテストは難しいので要対策です！"
                   />
@@ -72,7 +74,7 @@
                 :disabled="disabled"
                 @click="isOpenResetConfirm = true"
               >
-                リセット
+                クリア
               </AppBtn>
               <AppBtn
                 color="primary"
@@ -80,7 +82,7 @@
                 :disabled="!isFormValid || disabled"
                 @click="openCreateConfirm"
               >
-                作成
+                編集
               </AppBtn>
             </div>
           </v-col>
@@ -88,12 +90,12 @@
           <!-- 確認ダイアログ -->
           <ConfirmDialog
             v-model="isOpenUpdateConfirm"
-            text="作成"
+            text="編集"
             @ok="update"
           />
           <ConfirmDialog
             v-model="isOpenResetConfirm"
-            text="リセット"
+            text="クリア"
             @ok="resetInput"
           />
 
@@ -138,7 +140,7 @@ export default defineComponent({
       type: Boolean,
       required: true
     },
-    updateKuchikomi: {
+    updatingKuchikomi: {
       type: Object as PropType<Kuchikomi>,
       required: true
     }
@@ -156,12 +158,10 @@ export default defineComponent({
       isOpenSuccessSnackbar.value = false
       isOpenErrorSnackbar.value = false
     }
-    const closeDialog = (): void => {
-      emit('input', false)
-      props.updateKuchikomi.kuchikomiTitle = originalKuchikomiTitle
-      props.updateKuchikomi.kuchikomi = originalKuchikomi
-      props.updateKuchikomi.classYear = originalYear
-      props.updateKuchikomi.rating = originalRating
+    const originalKuchikomi = ref({})
+    const cancelUpdate = (): void => {
+      // console.debug('dialog: ', originalKuchikomi.value)
+      emit('cancel')
     }
 
     // 更新
@@ -171,25 +171,24 @@ export default defineComponent({
         .collection('classes')
         .doc(root.$route.params.id)
         .collection('kuchikomis')
-        .doc(props.updateKuchikomi.docId)
+        .doc(props.updatingKuchikomi.docId)
       try {
         const data: Kuchikomi = {
-          docId: props.updateKuchikomi.docId,
-          kuchikomiTitle: props.updateKuchikomi.kuchikomiTitle,
-          rating: props.updateKuchikomi.rating,
-          classYear: props.updateKuchikomi.classYear,
-          kuchikomi: props.updateKuchikomi.kuchikomi,
+          docId: props.updatingKuchikomi.docId,
+          kuchikomiTitle: props.updatingKuchikomi.kuchikomiTitle,
+          rating: props.updatingKuchikomi.rating,
+          classYear: props.updatingKuchikomi.classYear,
+          kuchikomi: props.updatingKuchikomi.kuchikomi,
           uid: root.$store.getters.user.uid,
           username: root.$store.getters.user.username,
-          createdAt: new Date().toLocaleString()
+          createdAt: props.updatingKuchikomi.createdAt
         }
         await docRef.set(data, { merge: true })
-        resetInput()
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
         setTimeout(() => {
-          emit('input', false)
           disabled.value = false
+          emit('updated', data)
         }, 1500)
       } catch (e) {
         console.error(e)
@@ -202,30 +201,18 @@ export default defineComponent({
     const form = ref(null)
     const resetInput = (): void => {
       isOpenResetConfirm.value = false
-      props.updateKuchikomi.classYear = ''
-      props.updateKuchikomi.rating = 0.5
-      props.updateKuchikomi.kuchikomiTitle = ''
-      props.updateKuchikomi.kuchikomi = ''
+      props.updatingKuchikomi.classYear = ''
+      props.updatingKuchikomi.rating = 0.5
+      props.updatingKuchikomi.kuchikomiTitle = ''
+      props.updatingKuchikomi.kuchikomi = ''
       // @ts-ignore "Object is possibly null" エラーをignore
       form.value.resetValidation()
     }
-
-    /**
-     * init
-     */
-    const originalRating = props.updateKuchikomi.rating
-    const originalYear = props.updateKuchikomi.classYear
-    const originalKuchikomiTitle = props.updateKuchikomi.kuchikomiTitle
-    const originalKuchikomi = props.updateKuchikomi.kuchikomi
 
     return {
       RULES,
       isFormValid,
       years,
-      originalRating,
-      originalYear,
-      originalKuchikomiTitle,
-      originalKuchikomi,
       isOpenSuccessSnackbar,
       isOpenErrorSnackbar,
       resetInput,
@@ -235,7 +222,9 @@ export default defineComponent({
       form,
       disabled,
       openCreateConfirm,
-      closeDialog
+      cancelUpdate,
+      originalKuchikomi
+      // editingKuchikomi
     }
   }
 })
