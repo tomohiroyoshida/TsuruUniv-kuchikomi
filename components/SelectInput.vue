@@ -30,7 +30,7 @@ export default defineComponent({
     },
     rules: {
       type: Array,
-      required: true
+      required: false
     },
     disabled: {
       type: Boolean
