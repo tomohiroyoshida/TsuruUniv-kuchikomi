@@ -32,7 +32,7 @@
                 rounded
                 outlined
               >
-                <v-card-title>{{ item.title }}</v-card-title>
+                <v-card-title>{{ item.classTitle }}</v-card-title>
                 <v-card-subtitle class="py-0">
                   <div class="mr-3">講師： {{ item.teacherName }}</div>
                   <div class="mr-3">開講期： {{ item.term }}</div>
@@ -127,7 +127,7 @@ export default defineComponent({
       if (filteredClasses.value.length) filteredClasses.value = []
       // 全ての授業リストから、検索欄にある文字列が含まれる授業を取得
       filteredClasses.value = classList.value.filter((item) =>
-        item.title.includes(title)
+        item.classTitle.includes(title)
       )
 
       // Storeを綺麗にする
@@ -146,7 +146,7 @@ export default defineComponent({
     /**
      * init
      */
-    // storeから全ての授業リストをフェッチ
+    // storeから全ての授業リスト
     const classList = ref<Class[]>([])
     classList.value = root.$store.getters.classes
 
@@ -155,7 +155,7 @@ export default defineComponent({
     if (storeSearchingTitle) {
       searchingTitle.value = storeSearchingTitle
       filteredClasses.value = classList.value.filter((item) =>
-        item.title.includes(searchingTitle.value)
+        item.classTitle.includes(searchingTitle.value)
       )
     }
 
