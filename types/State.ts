@@ -2,8 +2,10 @@
 export interface User {
   uid: string
   username: string
-  photoURL: string | null
-  loggedIn: boolean
+  photoURL: string
+  department?: string
+  faculty?: string
+  isBlocked: boolean
 }
 
 // 授業
