@@ -1,5 +1,5 @@
 <template>
-  <v-container id="create" fluid class="pa-0">
+  <v-container id="create" class="pa-0">
     <v-row no-gutters justify="center">
       <v-col cols="12">
         <div class="text-h6 d-flex justify-center my-5 font-weight-bold">
