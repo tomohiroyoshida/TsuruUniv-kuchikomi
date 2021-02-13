@@ -7,6 +7,7 @@ export default defineNuxtPlugin(async ({ store }) => {
   if (store.getters.classes !== [])
     await db
       .collection('classes')
+      .orderBy('classTitle', 'asc')
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
