@@ -154,7 +154,6 @@ export default defineComponent({
         await docRef.set(updatedUser, { merge: true })
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
-        console.debug('updatedUser: ', updatedUser)
         root.$store.dispatch('setUser', updatedUser)
       } catch (e) {
         console.error(e)
