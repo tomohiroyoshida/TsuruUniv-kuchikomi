@@ -31,7 +31,8 @@
             >
               <!-- アイコン＋ユーザー名 -->
               <div class="d-flex mx-1 mt-2">
-                <v-icon color="primary"> mdi-account-circle </v-icon>
+                <!--TODO: プロフィール画像 <v-img v-if="item.photoURL" :src="item.photoURL" /> -->
+                <v-icon color="primary lighten-1"> mdi-account-circle </v-icon>
                 <div class="text-body-2 pa-1">{{ item.username }}</div>
               </div>
 
