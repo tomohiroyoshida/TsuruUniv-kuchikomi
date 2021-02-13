@@ -2,9 +2,9 @@
 export interface User {
   uid: string
   username: string
-  photoURL: ArrayBuffer | string
-  department: string
-  faculty: string
+  photoURL: string // TODO: 必要？
+  department?: string
+  faculty?: string
 }
 
 // 授業
