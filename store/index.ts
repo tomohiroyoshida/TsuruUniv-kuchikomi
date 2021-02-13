@@ -6,7 +6,6 @@ export const state = () => ({
   user: {
     uid: '',
     username: '',
-    email: '',
     photoURL: '',
     department: '',
     faculty: ''
