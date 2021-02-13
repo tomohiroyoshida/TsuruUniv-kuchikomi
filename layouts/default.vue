@@ -46,7 +46,7 @@
       <v-spacer />
       <!-- ログインボタン -->
       <v-btn
-        v-if="!loggedIn"
+        v-if="!loggedinUser.uid"
         :small="width < 700"
         depressed
         to="/login"
@@ -55,7 +55,7 @@
         ログイン
       </v-btn>
       <!-- アイコンボタン -->
-      <v-menu v-else open-on-hover bottom offset-y>
+      <v-menu v-else-if="loggedinUser.uid" open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             text
@@ -75,7 +75,7 @@
           </v-btn>
         </template>
         <v-list>
-          <v-list-item-group color="transparent">
+          <v-list-item-group color="grey darken-1">
             <v-list-item two-line @click="toProfile">
               <v-list-item-title>
                 <v-icon>mdi-account-cog-outline</v-icon>
@@ -112,7 +112,7 @@ export default defineComponent({
     const loggedinUser = computed(() => root.$store.getters.user)
     const loggedIn = computed(() => root.$store.getters.user.loggedIn)
     const toProfile = () => {
-      root.$router.push('/profile')
+      root.$router.push('/edit-profile')
     }
 
     const signOut = () => {
@@ -124,7 +124,8 @@ export default defineComponent({
             uid: '',
             username: '',
             photoURL: '',
-            loggedIn: false
+            department: '',
+            faculty: ''
           }
           root.$store.dispatch('setUser', emptyUser)
         })
