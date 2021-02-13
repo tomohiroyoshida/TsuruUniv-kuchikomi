@@ -8,7 +8,8 @@ export const state = () => ({
     username: '',
     email: '',
     photoURL: '',
-    loggedIn: false
+    department: '',
+    faculty: ''
   },
   //  授業のリスト
   classes: [],
