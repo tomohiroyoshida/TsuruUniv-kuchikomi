@@ -2,10 +2,9 @@
 export interface User {
   uid: string
   username: string
-  photoURL: string
-  department?: string
-  faculty?: string
-  isBlocked: boolean
+  photoURL: ArrayBuffer | string
+  department: string
+  faculty: string
 }
 
 // 授業
