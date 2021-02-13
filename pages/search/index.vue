@@ -80,7 +80,7 @@
             class="card my-1 ml-1"
             outlined
           >
-            <v-card-title>{{ item.title }}</v-card-title>
+            <v-card-title>{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
               <div class="mr-3">開講期： {{ item.term }}</div>
