@@ -22,9 +22,7 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
           username: fireUser.username
             ? fireUser.username
             : googleUser.displayName || '【匿名】',
-          photoURL: googleUser.photoURL || defaultImage,
-          faculty: fireUser.faculty ? fireUser.faculty : '',
-          department: fireUser.department ? fireUser.department : ''
+          photoURL: googleUser.photoURL || defaultImage
         }
         store.dispatch('setUser', userInfo)
         docRef.set(userInfo)
@@ -34,9 +32,7 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
         const userInfo: User = {
           uid: googleUser.uid,
           username: googleUser.displayName || '【匿名】',
-          photoURL: googleUser.photoURL || defaultImage,
-          faculty: '',
-          department: ''
+          photoURL: googleUser.photoURL || defaultImage
         }
         store.dispatch('setUser', userInfo)
         docRef.set(userInfo)

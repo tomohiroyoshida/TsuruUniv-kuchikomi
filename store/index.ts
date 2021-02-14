@@ -6,9 +6,7 @@ export const state = () => ({
   user: {
     uid: '',
     username: '',
-    photoURL: '',
-    department: '',
-    faculty: ''
+    photoURL: ''
   },
   //  授業のリスト
   classes: [],
