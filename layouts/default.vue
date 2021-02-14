@@ -55,7 +55,7 @@
         ログイン
       </v-btn>
       <!-- アイコンボタン -->
-      <v-menu v-else-if="loggedinUser.uid" open-on-hover bottom offset-y>
+      <v-menu v-else open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             text
