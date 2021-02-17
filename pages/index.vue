@@ -65,7 +65,7 @@
           </div>
           <div class="text-center mt-6">
             <a
-              href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+              href="https://twitter.com/share?https://tsuruuniv-kuchikomi.web.app/"
               class="twitter-share-button"
               data-text="「つるコミ」〜都留文の授業クチコミ共有アプリ〜"
               data-url="https://tsuruuniv-kuchikomi.web.app/"
