@@ -123,9 +123,7 @@ export default defineComponent({
           const emptyUser: User = {
             uid: '',
             username: '',
-            photoURL: '',
-            department: '',
-            faculty: ''
+            photoURL: ''
           }
           root.$store.dispatch('setUser', emptyUser)
         })
