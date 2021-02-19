@@ -2,7 +2,7 @@
 export interface User {
   uid: string
   username: string
-  photoURL: string // TODO: 必要？
+  photoURL: string | ArrayBuffer
 }
 
 // 授業
