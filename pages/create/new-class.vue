@@ -39,13 +39,15 @@
                 :rules="RULES.required"
               />
             </v-col>
-            <!-- 受講した年 -->
+            <!-- 時限 -->
             <v-col cols="5" class="mx-1">
-              <TextCaption required title="受講した年" />
+              <TextCaption required title="時限" />
               <SelectInput
-                v-model="year"
-                :items="years"
-                :rules="RULES.required"
+                v-model="period"
+                :items="PERIODS"
+                :rules="isTermShort ? [] : dayAndPeriodRule"
+                :disabled="isTermShort"
+                :placeholder="isTermShort ? '入力不要' : ''"
               />
             </v-col>
           </v-row>
@@ -62,15 +64,12 @@
                 :placeholder="isTermShort ? '入力不要' : ''"
               />
             </v-col>
-            <!-- 時限 -->
             <v-col cols="5" class="mx-1">
-              <TextCaption required title="時限" />
+              <TextCaption required title="受講した年" />
               <SelectInput
-                v-model="period"
-                :items="PERIODS"
-                :rules="isTermShort ? [] : dayAndPeriodRule"
-                :disabled="isTermShort"
-                :placeholder="isTermShort ? '入力不要' : ''"
+                v-model="year"
+                :items="years"
+                :rules="RULES.required"
               />
             </v-col>
           </v-row>
