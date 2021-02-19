@@ -35,6 +35,7 @@
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 import firebase from 'firebase'
+import { User } from '@/types/State'
 
 export default defineComponent({
   name: 'login',
@@ -46,8 +47,15 @@ export default defineComponent({
         await firebase
           .auth()
           .signInWithPopup(provider)
-          .then(() => {
-            root.$router.replace('/create')
+          .then((signedInUser) => {
+            const users: User[] = root.$store.getters.users
+
+            const isRegistered = users.find(
+              (user) => user.uid === signedInUser.user?.uid
+            )
+            isRegistered
+              ? root.$router.replace('/search')
+              : root.$router.replace('/edit-profile')
           })
       } catch (e) {
         console.error(e)
@@ -61,7 +69,7 @@ export default defineComponent({
           .auth()
           .signInWithPopup(provider)
           .then(() => {
-            root.$router.push('/create')
+            root.$router.push('/edit-profile')
           })
       } catch (e) {
         console.error(e)
