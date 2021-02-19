@@ -8,6 +8,7 @@ export const state = () => ({
     username: '',
     photoURL: ''
   },
+  users: [],
   //  授業のリスト
   classes: [],
   // 検索ページで検索欄に入力された授業名 + フィルタリングされた授業一覧
@@ -16,16 +17,19 @@ export const state = () => ({
 })
 
 export const getters = {
-  user: (state: NuxtState) => {
+  user: (state: NuxtState): User => {
     return state.user
   },
-  classes: (state: NuxtState) => {
+  users: (state: NuxtState): User[] => {
+    return state.users
+  },
+  classes: (state: NuxtState): Class[] => {
     return state.classes
   },
-  searchingTitle: (state: NuxtState) => {
+  searchingTitle: (state: NuxtState): string => {
     return state.searchingTitle
   },
-  filteredClasses: (state: NuxtState) => {
+  filteredClasses: (state: NuxtState): Class[] => {
     return state.filteredClasses
   }
 }
@@ -33,6 +37,9 @@ export const getters = {
 export const mutations = {
   setUser(state: NuxtState, user: User) {
     state.user = user
+  },
+  setUsers(state: NuxtState, users: User[]) {
+    state.users = users
   },
   setClasses(state: NuxtState, classes: Class[]) {
     state.classes = classes
@@ -52,6 +59,10 @@ export const actions = {
   // ログインしているユーザーを保存
   setUser({ commit }: NuxtAppOptions, user: User) {
     commit('setUser', user)
+  },
+  // ユーザーの一覧のリストを保存
+  setUsers({ commit }: NuxtAppOptions, users: User[]) {
+    commit('setUsers', users)
   },
   // 授業リストの一覧を保存
   setClasses({ commit }: NuxtAppOptions, classes: Class[]) {
