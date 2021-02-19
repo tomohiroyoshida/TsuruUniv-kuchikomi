@@ -166,7 +166,7 @@ const RULES = {
     (v: string) => !!v || 'この欄の入力は必須です',
     (v: string) => (v && v.length <= 20) || '20文字以下で記入してください'
   ]
-}
+} as const
 
 export default defineComponent({
   name: 'create',
