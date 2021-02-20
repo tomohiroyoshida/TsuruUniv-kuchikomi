@@ -31,9 +31,12 @@
             >
               <!-- アイコン＋ユーザー名 -->
               <div class="d-flex mx-1 mt-2">
-                <!--TODO: プロフィール画像 <v-img v-if="item.photoURL" :src="item.photoURL" /> -->
+                <!-- TODO: プロフィール画像  -->
+                <!-- <v-img :src="getUserPhotoURL" /> -->
                 <v-icon color="primary lighten-1"> mdi-account-circle </v-icon>
-                <div class="text-body-2 pa-1">{{ item.username }}</div>
+                <div class="text-body-2 pa-1">
+                  {{ getUsername(item.uid) }}
+                </div>
               </div>
 
               <!-- タイトル＋レーティング -->
@@ -108,7 +111,7 @@
 <script lang="ts">
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
-import { Kuchikomi } from '@/types/State'
+import { Kuchikomi, User } from '@/types/State'
 
 export default defineComponent({
   name: 'search-id',
@@ -190,6 +193,20 @@ export default defineComponent({
      * init
      * クチコミ一覧を取得
      */
+    const getUsername = (uid: string): string => {
+      const users: User[] = root.$store.getters.users
+      const username = users.find((user) => user.uid === uid)?.username
+      return username || '名無しのユーザー'
+    }
+    const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
+      const users: User[] = root.$store.getters.users
+      const photoURL = users.find((item) => item.uid === uid)?.photoURL
+      return (
+        photoURL ||
+        'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+      )
+    }
+
     const kuchikomiList = ref<Kuchikomi[]>([])
     useFetch(
       async (): Promise<void> => {
@@ -226,7 +243,9 @@ export default defineComponent({
       isOpenSuccessUpdateSnackbar,
       isOpenSuccessDeleteSnackbar,
       originalKuchikomi,
-      updateKuchikomi
+      updateKuchikomi,
+      getUsername,
+      getUserPhotoURL
     }
   }
 })
