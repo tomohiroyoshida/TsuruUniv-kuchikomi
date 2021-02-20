@@ -34,22 +34,23 @@
           </v-row>
 
           <!--  TODO: 授業の情報の書かれたカード -->
-          <!-- <v-row v-if="selectedClass" no-gutters justify="center">
+          <v-row no-gutters justify="center">
             <v-col cols="10">
               <div class="required-caption text-caption my-1 ml-3">
                 授業の情報
               </div>
               <v-card rounded outlined>
-                <v-card-title>{{ selectedClass }}</v-card-title>
+                <v-card-title>{{ classCardInfo.classTitle }}</v-card-title>
                 <v-card-subtitle>
-                  講師: {{ classCardInfo.teacher }}
+                  講師: {{ classCardInfo.teacherName }}
                 </v-card-subtitle>
                 <v-card-text>
+                  {{ classCardInfo.term }}<br />
                   {{ classCardInfo.dayOfWeek }}曜 {{ classCardInfo.period }}限
                 </v-card-text>
               </v-card>
             </v-col>
-          </v-row> -->
+          </v-row>
 
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
@@ -150,7 +151,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { defineComponent, ref, watch, reactive } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
@@ -180,33 +181,27 @@ export default defineComponent({
     const year = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
 
-    // TODO: カード
-    // const hasCardInfo = ref(false)
-    // let classCardInfo = reactive<Class>({
-    //   docId: '',
-    //   title: '',
-    //   teacher: '',
-    //   dayOfWeek: '',
-    //   period: '',
-    //   term: '',
-    //   createdAt: ''
-    // })
-    // const showCard = async (title: String) => {
-    //   await classList.value.filter((item) => {
-    //     if (item.title === title) {
-    //       classCardInfo = item
-    //       hasCardInfo.value = true
-    //     } else {
-    //       hasCardInfo.value = false
-    //     }
-    //   })
-    // }
+    // 授業情報のカード
+    const classCardInfo = ref({
+      docId: '',
+      classTitle: '',
+      teacherName: '',
+      dayOfWeek: '',
+      period: '',
+      term: '',
+      createdAt: '',
+      createdBy: ''
+    })
+    watch(selectedClass, (classId: string) => {
+      classList.value.find((item) =>
+        item.docId === classId ? (classCardInfo.value = item) : ''
+      )
+    })
 
-    // 作成
-    // const disabledSubmit = ref(true) 必要？
+    // クチコミ作成
     // 選択された授業のidを格納
     const targetClassId = ref('')
-    watch(selectedClass, (id: string): void => {
+    watch(selectedClass, (id: string) => {
       targetClassId.value = id
     })
 
@@ -303,9 +298,7 @@ export default defineComponent({
       isOpenCreateConfirm,
       isOpenResetConfirm,
       form,
-      // showCard,
-      // hasCardInfo,
-      // classCardInfo,
+      classCardInfo,
       targetClassId,
       openCreateConfirm
     }
