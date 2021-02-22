@@ -33,20 +33,20 @@
             </v-col>
           </v-row>
 
-          <!--  TODO: 授業の情報の書かれたカード -->
-          <v-row no-gutters justify="center">
+          <!--  授業の情報の書かれたカード -->
+          <v-row v-show="classCardInfo.docId" no-gutters justify="center">
             <v-col cols="10">
               <div class="required-caption text-caption my-1 ml-3">
                 授業の情報
               </div>
               <v-card rounded outlined>
                 <v-card-title>{{ classCardInfo.classTitle }}</v-card-title>
-                <v-card-subtitle>
-                  講師: {{ classCardInfo.teacherName }}
+                <v-card-subtitle class="py-0">
+                  {{ classCardInfo.teacherName }}
                 </v-card-subtitle>
                 <v-card-text>
-                  {{ classCardInfo.term }}<br />
-                  {{ classCardInfo.dayOfWeek }}曜 {{ classCardInfo.period }}限
+                  {{ classCardInfo.term }} ｜ {{ classCardInfo.dayOfWeek }}曜
+                  {{ classCardInfo.period }}限
                 </v-card-text>
               </v-card>
             </v-col>
@@ -151,7 +151,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, reactive } from '@nuxtjs/composition-api'
+import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
