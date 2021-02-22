@@ -16,12 +16,15 @@
             />
           </section>
 
-          <!-- 画像 -->
-          <TextCaption title="プロフィール画像" class="mb-1" />
+          <!-- TODO: 画像 -->
+          <!-- <TextCaption title="プロフィール画像" class="mb-1" />
           <v-file-input
             v-model="imageFile"
             outlined
             clearable
+            show-size
+            hint="画像サイズは1MBまで"
+            persistent-hint
             accept=".png, .jpeg"
             label="画像を選択"
             prepend-icon=""
@@ -30,19 +33,20 @@
           />
           <div class="d-flex justify-center">
             <v-img
+              class="image"
               :src="photoURL || originalPhotoURL"
               max-height="100"
               max-width="100"
             />
           </div>
-          <div class="text-center text-caption">プレビュー</div>
+          <div class="text-center text-caption">プレビュー</div> -->
 
           <!-- 送信・キャンセルボタン -->
           <div class="d-flex justify-center py-3 mt-5">
             <AppBtn
               color="primary"
               depressed
-              :disabled="!isFormValid"
+              :disabled="!isFormValid || disabled"
               @click="isOpenUpdateConfirm = true"
             >
               保存
@@ -60,6 +64,11 @@
           v-model="isOpenSuccessSnackbar"
           text="【成功】プロフィールの編集を完了しました🐱"
           color="success"
+        />
+        <SnackBar
+          v-model="isOpenFileSizeErrorSnackbar"
+          text="【エラー】画像の容量が大きすぎます。"
+          color="error"
         />
         <SnackBar
           v-model="isOpenErrorSnackbar"
@@ -89,19 +98,27 @@ export default defineComponent({
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
+    const isOpenFileSizeErrorSnackbar = ref(false)
 
     const imageFile = ref<File>()
     const photoURL = ref<ArrayBuffer | string>()
     const originalPhotoURL = Object.assign({}, user.photoURL)
 
     // 変更したプロフィールを全ての口コミに反映
-
+    const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
+      console.debug(file)
       if (file) {
+        if (file.size > 1048480) {
+          isOpenFileSizeErrorSnackbar.value = true
+          disabled.value = true
+          return
+        }
         const fr = new FileReader()
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
           if (fr.result) photoURL.value = fr.result
+          console.debug(photoURL.value)
         })
       }
     }
@@ -140,8 +157,17 @@ export default defineComponent({
       isOpenUpdateConfirm,
       isOpenSuccessSnackbar,
       isOpenErrorSnackbar,
-      makePhotoURL
+      isOpenFileSizeErrorSnackbar,
+      makePhotoURL,
+      disabled
     }
   }
 })
 </script>
+<style scoped>
+.image {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+</style>

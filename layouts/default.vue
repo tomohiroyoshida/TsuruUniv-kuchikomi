@@ -66,12 +66,13 @@
             v-bind="attrs"
             v-on="on"
           >
-            <v-img
+            <v-icon color="primary" size="60"> mdi-account-circle </v-icon>
+            <!-- <v-img
               class="image"
               :src="loggedinUser.photoURL"
               max-height="52"
               max-width="52"
-            ></v-img>
+            /> -->
           </v-btn>
         </template>
         <v-list>
@@ -146,5 +147,7 @@ export default defineComponent({
 <style scoped>
 .image {
   border-radius: 50%;
+  width: 100px;
+  height: 100px;
 }
 </style>
