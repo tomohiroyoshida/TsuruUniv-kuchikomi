@@ -107,7 +107,6 @@ export default defineComponent({
     // 変更したプロフィールを全ての口コミに反映
     const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
-      console.debug(file)
       if (file) {
         if (file.size > 1048480) {
           isOpenFileSizeErrorSnackbar.value = true
