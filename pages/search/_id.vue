@@ -56,7 +56,7 @@
               </div>
               <!-- 受講年 -->
               <div class="text-caption text--disabled mx-2">
-                受講年: {{ item.classYear }} 年
+                受講した年: {{ item.classYear }} 年
               </div>
               <!-- クチコミの内容 -->
               <v-card-text class="d-flex pa-2">
