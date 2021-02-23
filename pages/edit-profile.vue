@@ -117,7 +117,6 @@ export default defineComponent({
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
           if (fr.result) photoURL.value = fr.result
-          console.debug(photoURL.value)
         })
       }
     }

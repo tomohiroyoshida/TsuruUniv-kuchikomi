@@ -12,6 +12,5 @@ export default defineNuxtPlugin(async ({ store }) => {
         querySnapshot.forEach((doc) => users.push(doc.data() as User))
       })
   }
-  console.debug('users', users)
   store.dispatch('setUsers', users)
 })
