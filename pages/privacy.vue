@@ -1,10 +1,10 @@
 <template>
   <v-container id="privacy" class="pa-5">
     <v-row no-gutters justify="center" class="mt-15">
-      <v-col cols="6" class="text-center text-h5 font-weight-bold my-5">
+      <v-col cols="8" class="text-center text-h5 font-weight-bold my-5">
         プライバシーポリシー
       </v-col>
-      <v-col cols="10">
+      <v-col cols="12">
         <p>
           本サービスは、以下のプライバシーポリシーを定め、個人情報保護法を遵守すると共に、適切なプライバシー情報の保護に努めます。
         </p>
