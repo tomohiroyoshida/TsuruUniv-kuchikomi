@@ -8,13 +8,16 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
   const loggedInPaths = ['index', 'terms', 'privacy', 'login']
   const defaultImage =
     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+
   // 認証状態の監視
   firebase.auth().onAuthStateChanged(async (googleUser) => {
     if (googleUser) {
       const docRef = db.collection('users').doc(googleUser.uid)
+      // firestore/users に登録されているユーザー情報
       const fireUser: User = await docRef
         .get()
         .then((doc) => doc.data() as User)
+
       // 2回目以降のログイン
       if (fireUser) {
         const userInfo: User = {
@@ -47,6 +50,6 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
     }
   })
 
-  // ログイン状態の永続性
+  // ログイン状態の永続性(session)
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
 })
