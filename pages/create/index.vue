@@ -155,6 +155,7 @@ import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
+import { suid } from 'rand-token'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -215,7 +216,10 @@ export default defineComponent({
       isOpenErrorSnackbar.value = false
     }
     const createKuchikomi = async (): Promise<void> => {
-      // disabledSubmit.value = false
+      if (csrfToken !== storedCsrfToken) {
+        isOpenErrorSnackbar.value = true
+        return
+      }
       isOpenCreateConfirm.value = false
       //  Firestoreにクチコミの情報追加
       const docRef = db
@@ -263,6 +267,9 @@ export default defineComponent({
      * init
      */
     // 授業のリスト
+    const csrfToken = suid(16)
+    root.$store.dispatch('setCsrfToken', csrfToken)
+    const storedCsrfToken = root.$store.getters.csrfToken
     const classList = ref<Class[]>([])
     classList.value = root.$store.getters.classes
 
@@ -300,7 +307,9 @@ export default defineComponent({
       form,
       classCardInfo,
       targetClassId,
-      openCreateConfirm
+      openCreateConfirm,
+      csrfToken,
+      storedCsrfToken
     }
   }
 })

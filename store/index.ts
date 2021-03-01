@@ -8,6 +8,8 @@ export const state = () => ({
     username: '',
     photoURL: ''
   },
+  // CSRF対策のtoken
+  csrfToken: '',
   users: [],
   //  授業のリスト
   classes: [],
@@ -31,6 +33,9 @@ export const getters = {
   },
   filteredClasses: (state: NuxtState): Class[] => {
     return state.filteredClasses
+  },
+  csrfToken: (state: NuxtState): string => {
+    return state.csrfToken
   }
 }
 
@@ -52,6 +57,9 @@ export const mutations = {
   },
   setFilteredClasses(state: NuxtState, filteredClasses: string) {
     state.filteredClasses = filteredClasses
+  },
+  setCsrfToken(state: NuxtState, csrfToken: string) {
+    state.csrfToken = csrfToken
   }
 }
 
@@ -79,5 +87,9 @@ export const actions = {
   // 検索ページでフィルタリングされた授業一覧
   setFilteredClasses({ commit }: NuxtAppOptions, filteredClasses: string) {
     commit('setFilteredClasses', filteredClasses)
+  },
+  // CSRF対策のTokenを保存
+  setCsrfToken({ commit }: NuxtAppOptions, csrfToken: string) {
+    commit('setCsrfToken', csrfToken)
   }
 }

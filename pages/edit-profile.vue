@@ -84,6 +84,7 @@
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { User } from '@/types/State'
+import { suid } from 'rand-token'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です']
@@ -121,6 +122,10 @@ export default defineComponent({
       }
     }
     const updateProfile = async (): Promise<void> => {
+      if (csrfToken !== storedCsrfToken) {
+        isOpenErrorSnackbar.value = true
+        return
+      }
       isOpenErrorSnackbar.value = false
       isOpenSuccessSnackbar.value = false
       //  更新処理
@@ -143,6 +148,12 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
       }
     }
+    /**
+     * init
+     */
+    const csrfToken = suid(16)
+    root.$store.dispatch('setCsrfToken', csrfToken)
+    const storedCsrfToken = root.$store.getters.csrfToken
 
     return {
       RULES,
@@ -157,7 +168,9 @@ export default defineComponent({
       isOpenErrorSnackbar,
       isOpenFileSizeErrorSnackbar,
       makePhotoURL,
-      disabled
+      disabled,
+      csrfToken,
+      storedCsrfToken
     }
   }
 })

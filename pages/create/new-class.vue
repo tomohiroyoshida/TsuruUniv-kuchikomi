@@ -171,6 +171,7 @@ import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class, Kuchikomi } from '@/types/State'
 import db from '@/plugins/firebase'
 import firebase from 'firebase'
+import { suid } from 'rand-token'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -236,6 +237,10 @@ export default defineComponent({
     const addClass = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ): void => {
+      if (csrfToken !== storedCsrfToken) {
+        isOpenErrorSnackbar.value = true
+        return
+      }
       const data: Class = {
         docId: docRef.id,
         classTitle: classTitle.value,
@@ -253,6 +258,10 @@ export default defineComponent({
     const addKuchikomi = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ): void => {
+      if (csrfToken !== storedCsrfToken) {
+        isOpenErrorSnackbar.value = true
+        return
+      }
       const kuchikomiRef = db
         .collection('classes')
         .doc(docRef.id)
@@ -272,6 +281,10 @@ export default defineComponent({
     }
     // 授業＋クチコミ作成
     const createClassAndKuchikomi = (): void => {
+      if (csrfToken !== storedCsrfToken) {
+        isOpenErrorSnackbar.value = true
+        return
+      }
       // 入力した授業と同じ授業名かつ講師名が存在するかのフラグ
       const isTitleAndTeacherNameSame = classList.value.find(
         (item) =>
@@ -328,6 +341,9 @@ export default defineComponent({
     classList.value.forEach((item) => {
       classTitles.value.push(item.classTitle)
     })
+    const csrfToken = suid(16)
+    root.$store.dispatch('setCsrfToken', csrfToken)
+    const storedCsrfToken = root.$store.getters.csrfToken
 
     return {
       RULES,
@@ -358,7 +374,9 @@ export default defineComponent({
       resetInput,
       form,
       addClass,
-      openCreateConfirm
+      openCreateConfirm,
+      csrfToken,
+      storedCsrfToken
     }
   }
 })

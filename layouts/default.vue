@@ -124,7 +124,8 @@ export default defineComponent({
           const emptyUser: User = {
             uid: '',
             username: '',
-            photoURL: ''
+            photoURL: '',
+            csrfToken: ''
           }
           root.$store.dispatch('setUser', emptyUser)
         })
