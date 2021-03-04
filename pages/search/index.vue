@@ -56,7 +56,7 @@
           </v-row>
         </section>
 
-        <!-- 検索結果のコメント -->
+        <!-- 検索結果が無かったときのコメント -->
         <div
           v-if="!filteredClasses.length && searchingTitle"
           class="text-h6 d-flex justify-center mb-3"
