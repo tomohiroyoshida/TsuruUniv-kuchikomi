@@ -60,16 +60,4 @@ export default {
 h1 {
   font-size: 20px;
 }
-.card {
-  margin: auto 10px;
-}
-
-.img {
-  position: relative;
-}
-.name {
-  position: absolute;
-  right: 30%;
-  bottom: 20px;
-}
 </style>
