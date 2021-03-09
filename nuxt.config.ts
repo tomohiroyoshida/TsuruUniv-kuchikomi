@@ -28,7 +28,7 @@ export default {
       {
         rel: 'icon',
         type: 'image/webp',
-        href: '/cat_PC.webp'
+        href: '/cat.webp'
       }
     ]
   },
