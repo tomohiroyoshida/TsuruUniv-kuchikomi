@@ -17,7 +17,9 @@
         <!-- クチコミが存在する場合 -->
         <v-row v-else-if="kuchikomiList.length" no-gutters>
           <v-col cols="12">
-            <div class="my-3 mx-1 text-h6 d-flex justify-center">
+            <div
+              class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold"
+            >
               クチコミ一覧
             </div>
           </v-col>
