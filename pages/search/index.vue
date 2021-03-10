@@ -18,7 +18,7 @@
         </div>
 
         <!-- 検索結果一覧 -->
-        <!-- 検索欄に文字が入力されていない場合、全ての授業のリストを表示 -->
+        <!-- 検索欄に文字が入力されていない場合、授業のリストを20件表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
           <div class="text-h6 text-center mb-3 ml-1">
             登録されている授業一覧
@@ -26,7 +26,7 @@
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
-                v-for="item in classList"
+                v-for="item in classList.slice(0, 20)"
                 :key="item.docId"
                 class="card my-1 ml-1"
                 rounded
