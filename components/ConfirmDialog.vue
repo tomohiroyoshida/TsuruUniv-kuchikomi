@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="value" persistent width="30rem" class="confirm-dialog">
+  <v-dialog v-model="value" persistent width="30rem" class="confirm-dialog">
     <v-card rounded>
       <!-- タイトル -->
       <v-toolbar color="primary" class="d-flex justify-center" flat dense>
@@ -68,9 +68,6 @@ export default defineComponent({
       type: String,
       required: true
     }
-  },
-  setup() {}
+  }
 })
 </script>
-
-<style scoped></style>
