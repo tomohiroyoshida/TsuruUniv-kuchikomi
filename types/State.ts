@@ -11,8 +11,8 @@ export interface Class {
   classTitle: string
   teacherName: string
   term: string
-  dayOfWeek: string
-  period: string
+  // dayOfWeek: string
+  // period: string
   createdBy: string
   createdAt: string
 }

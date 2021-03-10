@@ -28,7 +28,7 @@
               <v-card
                 v-for="item in classList.slice(0, 20)"
                 :key="item.docId"
-                class="card my-1 ml-1"
+                class="card my-1 ml-1 pb-2"
                 rounded
                 outlined
               >
@@ -36,9 +36,9 @@
                 <v-card-subtitle class="py-0">
                   <div class="mr-3">講師： {{ item.teacherName }}</div>
                   <div class="mr-3">開講期： {{ item.term }}</div>
-                  <div v-if="item.dayOfWeek && item.period" class="mr-3">
+                  <!-- <div v-if="item.dayOfWeek && item.period" class="mr-3">
                     曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
-                  </div>
+                  </div> -->
                 </v-card-subtitle>
                 <v-card-text>
                   <AppBtn
@@ -77,7 +77,7 @@
           <v-card
             v-for="item in filteredClasses"
             :key="item.docId"
-            class="card my-1 ml-1"
+            class="card my-1 ml-1 pb-5"
             outlined
           >
             <v-card-title>{{ item.classTitle }}</v-card-title>
@@ -181,15 +181,19 @@ export default defineComponent({
   width: 100px;
 }
 
+/* ボタンの位置をタイトルの右側に置く */
+.card {
+  position: relative;
+}
+.btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+}
+
 /* 検索ボックスを真ん中に置く */
 .search-field {
   margin: 2rem auto 0;
-}
-/* 画面幅が700px以上の時 */
-@media (min-width: 700px) {
-  .search-field {
-    width: 30rem;
-  }
 }
 
 /* カードのレスポンシブ */
@@ -203,6 +207,9 @@ export default defineComponent({
   .card {
     width: 49.4%;
   }
+  .search-field {
+    width: 30rem;
+  }
 }
 @media (min-width: 1200px) {
   .flex {
@@ -214,16 +221,11 @@ export default defineComponent({
   .card {
     width: 24.6%;
   }
-}
-
-/* ボタンの位置をタイトルの右側に置く */
-.card {
-  position: relative;
-}
-.btn {
-  position: absolute;
-  bottom: 28px;
-  right: 16px;
+  .btn {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+  }
 }
 
 /* 検索欄の虫眼鏡アイコンが持つデフォルトのマージンを消す */

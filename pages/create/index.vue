@@ -1,7 +1,7 @@
 <template>
   <v-container id="create" class="pa-0">
     <v-row no-gutters justify="center">
-      <v-col cols="12">
+      <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center my-5 font-weight-bold">
           クチコミ新規作成
         </div>
@@ -41,13 +41,16 @@
               </div>
               <v-card rounded outlined>
                 <v-card-title>{{ classCardInfo.classTitle }}</v-card-title>
-                <v-card-subtitle class="py-0">
-                  {{ classCardInfo.teacherName }}
+                <v-card-subtitle class="pb-0">
+                  講師: {{ classCardInfo.teacherName }}
                 </v-card-subtitle>
-                <v-card-text>
+                <!-- <v-card-text>
                   {{ classCardInfo.term }} ｜ {{ classCardInfo.dayOfWeek }}曜
                   {{ classCardInfo.period }}限
-                </v-card-text>
+                </v-card-text> -->
+                <v-card-subtitle class="pt-0 pb-1">
+                  {{ classCardInfo.term }}
+                </v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -187,8 +190,8 @@ export default defineComponent({
       docId: '',
       classTitle: '',
       teacherName: '',
-      dayOfWeek: '',
-      period: '',
+      // dayOfWeek: '',
+      // period: '',
       term: '',
       createdAt: '',
       createdBy: ''

@@ -1,7 +1,7 @@
 <template>
   <v-container id="create" fluid class="pa-1">
     <v-row no-gutters justify="center">
-      <v-col cols="12">
+      <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center mt-2 mb-6 font-weight-bold">
           新しい授業＋クチコミ新規作成
         </div>
@@ -40,8 +40,17 @@
                 :rules="RULES.required"
               />
             </v-col>
-            <!-- 時限 -->
+            <!-- 受講した年 -->
             <v-col cols="5" class="mx-1">
+              <TextCaption required title="受講した年" />
+              <SelectInput
+                v-model="year"
+                :items="years"
+                :rules="RULES.required"
+              />
+            </v-col>
+            <!-- 時限 -->
+            <!-- <v-col cols="5" class="mx-1">
               <TextCaption required title="時限" />
               <SelectInput
                 v-model="period"
@@ -50,11 +59,11 @@
                 :disabled="isTermShort"
                 :placeholder="isTermShort ? '入力不要' : ''"
               />
-            </v-col>
+            </v-col> -->
           </v-row>
 
-          <v-row no-gutters justify="center">
-            <!-- 曜日 -->
+          <!-- 曜日 -->
+          <!-- <v-row no-gutters justify="center">
             <v-col cols="5" class="mx-1">
               <TextCaption required title="曜日" />
               <SelectInput
@@ -65,15 +74,7 @@
                 :placeholder="isTermShort ? '入力不要' : ''"
               />
             </v-col>
-            <v-col cols="5" class="mx-1">
-              <TextCaption required title="受講した年" />
-              <SelectInput
-                v-model="year"
-                :items="years"
-                :rules="RULES.required"
-              />
-            </v-col>
-          </v-row>
+          </v-row> -->
 
           <!-- おすすめ度 -->
           <v-row no-gutters justify="center">
@@ -247,8 +248,8 @@ export default defineComponent({
         classTitle: classTitle.value,
         teacherName: teacherName.value,
         term: term.value,
-        dayOfWeek: dayOfWeek.value,
-        period: period.value,
+        // dayOfWeek: dayOfWeek.value,
+        // period: period.value,
         createdBy: root.$store.getters.user.uid,
         createdAt: new Date().toLocaleString()
       }
