@@ -5,6 +5,8 @@
     :rules="$attrs.rules"
     :counter="$attrs.counter"
     :placeholder="$attrs.placeholder"
+    :hint="$attrs.hint"
+    persistent-hint
     flat
     dense
     solo
