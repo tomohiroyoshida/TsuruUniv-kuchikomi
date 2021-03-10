@@ -57,16 +57,10 @@
       <!-- アイコンボタン -->
       <v-menu v-else open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            text
-            icon
-            color="primary"
-            class="pa-1 mr-1"
-            x-large
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon color="primary" size="60"> mdi-account-circle </v-icon>
+          <v-btn text icon class="pa-1 mr-1" large v-bind="attrs" v-on="on">
+            <v-icon color="primary lighten-1" size="52">
+              mdi-account-circle
+            </v-icon>
             <!-- <v-img
               class="image"
               :src="loggedinUser.photoURL"
