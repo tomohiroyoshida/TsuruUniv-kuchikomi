@@ -116,11 +116,9 @@ import db from '@/plugins/firebase'
 import { Kuchikomi, User } from '@/types/State'
 
 export default defineComponent({
-  name: 'search-id',
+  name: 'SearchId',
   setup(_, { root }) {
     const classId = root.$route.params.id
-    const uid = root.$store.getters.user.uid
-
     const isOpenSuccessUpdateSnackbar = ref(false)
     const isOpenSuccessDeleteSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
@@ -210,6 +208,7 @@ export default defineComponent({
     }
 
     const kuchikomiList = ref<Kuchikomi[]>([])
+    const uid = ref(root.$store.getters.user.uid)
     useFetch(
       async (): Promise<void> => {
         try {
@@ -223,6 +222,7 @@ export default defineComponent({
                 kuchikomiList.value.push(doc.data() as Kuchikomi)
               })
             })
+          uid.value = root.$store.getters.user.uid
         } catch (e) {
           console.error(e)
           isOpenErrorSnackbar.value = true
