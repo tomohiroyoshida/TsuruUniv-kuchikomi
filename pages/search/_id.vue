@@ -5,7 +5,7 @@
   <!-- クチコミ一覧 -->
   <v-container v-else class="pt-15">
     <v-row no-gutters justify="center">
-      <v-col cols="12">
+      <v-col cols="12" lg="9">
         <!-- クチコミが存在しない場合 -->
         <div v-if="!kuchikomiList.length">
           <div class="text-h6 my-3 px-3">クチコミはまだありません😭</div>
@@ -59,9 +59,9 @@
                 受講した年: {{ item.classYear }} 年
               </div>
               <!-- クチコミの内容 -->
-              <v-card-text class="d-flex pa-2">
+              <div class="d-flex pa-3 text-body-1">
                 {{ item.kuchikomi }}
-              </v-card-text>
+              </div>
               <!-- 編集・削除ボタン -->
               <div v-if="uid === item.uid" class="buttons">
                 <v-btn fab icon small @click="openUpdateDialog(item)">
