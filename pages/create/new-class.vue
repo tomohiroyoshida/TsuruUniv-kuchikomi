@@ -25,6 +25,7 @@
                 :rules="RULES.requiredWith20"
                 :counter="20"
                 placeholder="例： 都留 太郎"
+                hint="(苗字と名前の間に半角スペースを入れてください)"
               />
             </v-col>
           </v-row>
