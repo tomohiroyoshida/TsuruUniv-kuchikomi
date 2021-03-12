@@ -20,17 +20,23 @@
       </v-col>
       <!-- ボタン -->
       <div class="d-flex justify-center mb-2">
-        <AppBtn color="red lighten-1 mr-2" depressed @click="loginWithGoogle">
-          <v-icon small left>mdi-google</v-icon>
-          <div class="text-caption">Googleでログイン</div>
+        <AppBtn
+          color="red lighten-1 mr-2"
+          width="11rem"
+          depressed
+          @click="loginWithGoogle"
+        >
+          <v-icon small left class="ma-0 mr-1">mdi-google</v-icon>
+          <div class="text-button">Googleでログイン</div>
         </AppBtn>
         <AppBtn
           color="light-blue lighten-1"
+          width="11rem"
           depressed
           @click="loginWithTwitter"
         >
-          <v-icon small left>mdi-twitter</v-icon>
-          <div class="text-caption">Twitterでログイン</div>
+          <v-icon small left class="ma-0 mr-1">mdi-twitter</v-icon>
+          <div class="text-button">Twitterでログイン</div>
         </AppBtn>
       </div>
       <!-- 利用規約 -->
