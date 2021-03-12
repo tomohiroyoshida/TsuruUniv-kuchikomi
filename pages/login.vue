@@ -13,7 +13,7 @@
               </div>
             </v-col>
             <v-col cols="12" sm="5" class="d-flex justify-center">
-              <v-img max-height="300" src="/login.webp" />
+              <v-img max-height="300" src="/login.webp" alt="ログインの画像" />
             </v-col>
           </v-row>
         </v-card>

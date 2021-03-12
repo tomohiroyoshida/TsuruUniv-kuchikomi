@@ -8,7 +8,7 @@
         </div>
       </v-col>
       <v-col cols="12" class="my-1">
-        <v-img max-height="250" src="/people.webp"></v-img>
+        <v-img max-height="250" src="/people.webp" alt="色々な人々"></v-img>
       </v-col>
       <v-col cols="8" class="text-center mt-6">
         <h2>機能説明</h2>
