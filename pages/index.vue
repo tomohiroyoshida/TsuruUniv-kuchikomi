@@ -4,7 +4,7 @@
       <v-col cols="12" class="text-center">
         <h1 class="mt-3 font-weight-bold">Learn it. Share it all.</h1>
         <div class="text-subtitle-1 mt-3 px-5">
-          「つるコミ」は都留文科大学の授業に関するクチコミを自由に閲覧・作成・共有できるアプリです
+          「つるコミ」は都留文科大学の授業に関するクチコミを自由に検索・作成・共有できるアプリです
         </div>
       </v-col>
       <v-col cols="12" class="my-1">
