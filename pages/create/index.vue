@@ -41,16 +41,16 @@
               </div>
               <v-card rounded outlined>
                 <v-card-title>{{ classCardInfo.classTitle }}</v-card-title>
-                <v-card-subtitle class="pb-0">
+                <v-card-subtitle>
                   講師: {{ classCardInfo.teacherName }}
                 </v-card-subtitle>
                 <!-- <v-card-text>
                   {{ classCardInfo.term }} ｜ {{ classCardInfo.dayOfWeek }}曜
                   {{ classCardInfo.period }}限
                 </v-card-text> -->
-                <v-card-subtitle class="pt-0 pb-1">
+                <!-- <v-card-subtitle class="pt-0 pb-1">
                   {{ classCardInfo.term }}
-                </v-card-subtitle>
+                </v-card-subtitle> -->
               </v-card>
             </v-col>
           </v-row>
@@ -192,7 +192,7 @@ export default defineComponent({
       teacherName: '',
       // dayOfWeek: '',
       // period: '',
-      term: '',
+      // term: '',
       createdAt: '',
       createdBy: ''
     })

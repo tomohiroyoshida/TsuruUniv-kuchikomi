@@ -32,14 +32,14 @@
 
           <v-row no-gutters justify="center">
             <!-- 開講期 -->
-            <v-col cols="5" class="mx-1">
+            <!-- <v-col cols="5" class="mx-1">
               <TextCaption required title="開講期" />
               <SelectInput
                 v-model="term"
                 :items="TERMS"
                 :rules="RULES.required"
               />
-            </v-col>
+            </v-col> -->
             <!-- 受講した年 -->
             <v-col cols="5" class="mx-1">
               <TextCaption required title="受講した年" />
@@ -48,6 +48,19 @@
                 :items="years"
                 :rules="RULES.required"
               />
+            </v-col>
+            <!-- おすすめ度 -->
+            <v-col cols="5" class="mx-1">
+              <TextCaption required title="おすすめ度(0.5~5)" />
+              <div class="my-2 d-flex justify-start">
+                <v-rating
+                  v-model="rating"
+                  half-increments
+                  color="warning"
+                  background-color="grey lighten-1"
+                />
+                <div class="ml-5 my-2">({{ rating }})</div>
+              </div>
             </v-col>
             <!-- 時限 -->
             <!-- <v-col cols="5" class="mx-1">
@@ -75,23 +88,6 @@
               />
             </v-col>
           </v-row> -->
-
-          <!-- おすすめ度 -->
-          <v-row no-gutters justify="center">
-            <v-col cols="10">
-              <TextCaption required title="おすすめ度(0.5~5)" />
-              <div class="my-2 d-flex justify-start">
-                <v-rating
-                  v-model="rating"
-                  half-increments
-                  color="warning"
-                  background-color="grey lighten-1"
-                />
-                <div class="ml-5 my-2">({{ rating }})</div>
-              </div>
-            </v-col>
-          </v-row>
-
           <!-- クチコミのタイトル -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
@@ -247,7 +243,7 @@ export default defineComponent({
         docId: docRef.id,
         classTitle: classTitle.value,
         teacherName: teacherName.value,
-        term: term.value,
+        // term: term.value,
         // dayOfWeek: dayOfWeek.value,
         // period: period.value,
         createdBy: root.$store.getters.user.uid,

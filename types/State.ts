@@ -10,7 +10,7 @@ export interface Class {
   docId: string
   classTitle: string
   teacherName: string
-  term: string
+  // term: string
   // dayOfWeek: string
   // period: string
   createdBy: string
