@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="value" persistent fullscreen class="edit-dialog">
+  <v-dialog v-model="value" persistent fullscreen class="edit-dialog">
     <v-card flat>
       <v-toolbar color="primary" flat dense>
         <v-spacer />
