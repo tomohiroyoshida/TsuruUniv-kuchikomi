@@ -9,7 +9,7 @@
                 Let's Login to Start.
               </div>
               <div class="text-subtitle-1 font-weight-bold text-center pt-3">
-                クチコミの閲覧・作成にはログインが必要です
+                クチコミの検索・作成にはログインが必要です
               </div>
             </v-col>
             <v-col cols="12" sm="5" class="d-flex justify-center">
