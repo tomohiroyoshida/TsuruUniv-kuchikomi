@@ -1,10 +1,10 @@
 <template>
-  <v-container id="login" class="pa-1">
+  <v-container id="login" class="pa-1" fluid>
     <v-row no-gutters justify="center" class="mt-15">
       <v-col cols="12">
-        <v-card flat class="mb-5">
+        <v-card flat>
           <v-row no-gutters justify="center">
-            <v-col cols="12" sm="6" align-self="center" class="pl-5 pb-3">
+            <v-col cols="12" md="3" align-self="center" class="pl-">
               <div class="text-h4 font-weight-bold text-center">
                 Let's Login to Start.
               </div>
@@ -12,8 +12,13 @@
                 クチコミの検索・作成にはログインが必要です
               </div>
             </v-col>
-            <v-col cols="12" sm="5" class="d-flex justify-center">
-              <v-img max-height="300" src="/login.webp" alt="ログインの画像" />
+            <v-col cols="12" md="2" class="d-flex justify-center">
+              <v-img
+                max-height="300"
+                max-width="300"
+                src="/login.webp"
+                alt="ログインの画像"
+              />
             </v-col>
           </v-row>
         </v-card>

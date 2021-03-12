@@ -157,7 +157,7 @@ export default defineComponent({
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
-
+    // 編集前のクチコミのデータ
     // eslint-disable-next-line prefer-const
     let originalKuchikomi = Object.assign({}, props.updatingKuchikomi)
     const isFormChanged = computed(() => {
