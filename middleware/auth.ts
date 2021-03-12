@@ -4,15 +4,15 @@ import { User } from 'types/State'
 import db from '@/plugins/firebase'
 
 export default defineNuxtMiddleware(({ store, route, redirect }) => {
-  // ログインしていないとアクセスできないパス
-  const loggedInPaths = ['index', 'terms', 'privacy', 'login']
+  // ログインしていなくてもアクセスできるパス(これ以外のパスはログインが必要)
+  const NOT_LOGGED_IN_PATHS = ['index', 'terms', 'privacy', 'login']
   const defaultImage =
     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
 
   // 認証状態の監視
-  firebase.auth().onAuthStateChanged(async (googleUser) => {
-    if (googleUser) {
-      const docRef = db.collection('users').doc(googleUser.uid)
+  firebase.auth().onAuthStateChanged(async (signInUser) => {
+    if (signInUser) {
+      const docRef = db.collection('users').doc(signInUser.uid)
       // firestore/users に登録されているユーザー情報
       const fireUser: User = await docRef
         .get()
@@ -21,10 +21,10 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
       // 2回目以降のログイン
       if (fireUser) {
         const userInfo: User = {
-          uid: googleUser.uid,
+          uid: signInUser.uid,
           username: fireUser.username
             ? fireUser.username
-            : googleUser.displayName || '名無しのユーザー',
+            : signInUser.displayName || '名無しのユーザー',
           photoURL: fireUser.photoURL
         }
         store.dispatch('setUser', userInfo)
@@ -33,20 +33,18 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
       // 初めてログイン
       else {
         const userInfo: User = {
-          uid: googleUser.uid,
-          username: googleUser.displayName || '名無しのユーザー',
-          photoURL: googleUser.photoURL || defaultImage
+          uid: signInUser.uid,
+          username: signInUser.displayName || '名無しのユーザー',
+          photoURL: signInUser.photoURL || defaultImage
         }
         store.dispatch('setUser', userInfo)
         docRef.set(userInfo)
       }
     } else {
+      // 現在のパスが「ログインしていなくてもアクセスできるパス」でないならリダイレクト
       const currentPath = route.name
-      if (currentPath) {
-        if (!loggedInPaths.includes(currentPath)) {
-          redirect('/login')
-        }
-      }
+      if (currentPath)
+        if (!NOT_LOGGED_IN_PATHS.includes(currentPath)) redirect('/login')
     }
   })
 

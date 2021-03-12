@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent, ref, computed } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { User } from '@/types/State'
 import { suid } from 'rand-token'
@@ -94,7 +94,10 @@ export default defineComponent({
   name: 'profile',
   setup(_, { root }) {
     const isFormValid = ref(true)
-    const user: User = Object.assign({}, root.$store.getters.user)
+    const user = computed(() => {
+      // console.debug('user ', user.value)
+      return Object.assign({}, root.$store.getters.user)
+    })
 
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
@@ -103,7 +106,7 @@ export default defineComponent({
 
     const imageFile = ref<File>()
     const photoURL = ref<ArrayBuffer | string>()
-    const originalPhotoURL = Object.assign({}, user.photoURL)
+    const originalPhotoURL = Object.assign({}, user.value.photoURL)
 
     // 変更したプロフィールを全ての口コミに反映
     const disabled = ref(false)
@@ -130,20 +133,22 @@ export default defineComponent({
       isOpenSuccessSnackbar.value = false
       //  更新処理
       const updatedUser: User = {
-        uid: user.uid,
-        username: user.username,
+        uid: user.value.uid,
+        username: user.value.username,
         photoURL:
           photoURL.value ||
+          user.value.photoURL ||
           'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
       }
+      console.debug('user', updatedUser)
       try {
-        const docRef = db.collection('users').doc(user.uid)
+        const docRef = db.collection('users').doc(user.value.uid)
         await docRef.set(updatedUser, { merge: true })
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
         root.$store.dispatch('setUser', updatedUser)
       } catch (e) {
-        console.error(e)
+        console.error('update に失敗！', e)
         isOpenUpdateConfirm.value = false
         isOpenErrorSnackbar.value = true
       }

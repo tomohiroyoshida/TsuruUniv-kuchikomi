@@ -2,27 +2,46 @@
   <v-container id="login" class="pa-1">
     <v-row no-gutters justify="center" class="mt-15">
       <v-col cols="12">
-        <div class="text-h6 text-center font-weight-bold mt-5">
-          クチコミ閲覧・作成にはログインが必要です
-        </div>
+        <v-card flat class="mb-5">
+          <v-row no-gutters justify="center">
+            <v-col cols="12" sm="6" align-self="center" class="pl-5 pb-3">
+              <div class="text-h4 font-weight-bold text-center">
+                Let's Login to Start.
+              </div>
+              <div class="text-subtitle-1 font-weight-bold text-center pt-3">
+                クチコミの閲覧・作成にはログインが必要です
+              </div>
+            </v-col>
+            <v-col cols="12" sm="5" class="d-flex justify-center">
+              <v-img max-height="300" src="/login.webp" />
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
       <!-- ボタン -->
-      <div class="d-flex justify-center mt-5 mb-2">
+      <div class="d-flex justify-center mb-2">
         <AppBtn color="red lighten-1 mr-2" depressed @click="loginWithGoogle">
           <v-icon small left>mdi-google</v-icon>
           <div class="text-caption">Googleでログイン</div>
         </AppBtn>
-        <!-- <AppBtn
+        <AppBtn
           color="light-blue lighten-1"
           depressed
           @click="loginWithTwitter"
         >
-          <v-icon small left>mdi-twitter</v-icon> Twitter
-        </AppBtn> -->
+          <v-icon small left>mdi-twitter</v-icon>
+          <div class="text-caption">Twitterでログイン</div>
+        </AppBtn>
       </div>
       <!-- 利用規約 -->
       <v-col cols="12">
         <div class="text-center mt-5">
+          ※ ログインに使用したアカウント情報は運営が安全に管理いたします。
+        </div>
+      </v-col>
+      <v-col cols="12">
+        <div class="text-center mt-5">
+          ※
           <nuxt-link to="/terms">利用規約</nuxt-link>、
           <nuxt-link to="/privacy">プライバシーポリシー</nuxt-link>
           に同意したうえでログインしてください。
@@ -68,11 +87,17 @@ export default defineComponent({
         await firebase
           .auth()
           .signInWithPopup(provider)
-          .then(() => {
-            root.$router.push('/edit-profile')
+          .then((signedInUser) => {
+            const users: User[] = root.$store.getters.users
+            const isRegistered = users.find(
+              (user) => user.uid === signedInUser.user?.uid
+            )
+            isRegistered
+              ? root.$router.replace('/search')
+              : root.$router.replace('/edit-profile')
           })
       } catch (e) {
-        console.error(e)
+        console.error('Twitter 失敗！', e)
       }
     }
     return {
