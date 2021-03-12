@@ -1,5 +1,5 @@
 <template>
-  <v-container id="create" fluid class="pa-1">
+  <v-container id="create" class="pa-1">
     <v-row no-gutters justify="center">
       <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center mt-2 mb-6 font-weight-bold">
@@ -31,17 +31,8 @@
           </v-row>
 
           <v-row no-gutters justify="center">
-            <!-- 開講期 -->
-            <!-- <v-col cols="5" class="mx-1">
-              <TextCaption required title="開講期" />
-              <SelectInput
-                v-model="term"
-                :items="TERMS"
-                :rules="RULES.required"
-              />
-            </v-col> -->
             <!-- 受講した年 -->
-            <v-col cols="5" class="mx-1">
+            <v-col cols="10" class="mx-1">
               <TextCaption required title="受講した年" />
               <SelectInput
                 v-model="year"
@@ -49,8 +40,10 @@
                 :rules="RULES.required"
               />
             </v-col>
+          </v-row>
+          <v-row no-gutters justify="center">
             <!-- おすすめ度 -->
-            <v-col cols="5" class="mx-1">
+            <v-col cols="10" class="mx-1">
               <TextCaption required title="おすすめ度(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
@@ -62,8 +55,18 @@
                 <div class="ml-5 my-2">({{ rating }})</div>
               </div>
             </v-col>
-            <!-- 時限 -->
-            <!-- <v-col cols="5" class="mx-1">
+          </v-row>
+          <!-- 開講期 -->
+          <!-- <v-col cols="5" class="mx-1">
+              <TextCaption required title="開講期" />
+              <SelectInput
+                v-model="term"
+                :items="TERMS"
+                :rules="RULES.required"
+              />
+            </v-col> -->
+          <!-- 時限 -->
+          <!-- <v-col cols="5" class="mx-1">
               <TextCaption required title="時限" />
               <SelectInput
                 v-model="period"
@@ -73,7 +76,6 @@
                 :placeholder="isTermShort ? '入力不要' : ''"
               />
             </v-col> -->
-          </v-row>
 
           <!-- 曜日 -->
           <!-- <v-row no-gutters justify="center">
