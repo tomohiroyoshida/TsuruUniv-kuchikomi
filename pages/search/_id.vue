@@ -132,7 +132,7 @@ export default defineComponent({
       // 編集するクチコミ情報のコピーを作成
       originalKuchikomi.value = Object.assign({}, item)
       updatingKuchikomi.value = Object.assign({}, item)
-
+      // スナックバーの開閉状態は一度初期化しておく必要有り
       isOpenUpdateDialog.value = true
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false
@@ -193,6 +193,7 @@ export default defineComponent({
      * init
      * クチコミ一覧を取得
      */
+    // ユーザーネーム取得
     const getUsername = (uid: string): string => {
       const users: User[] = root.$store.getters.users
       const username = users.find((user) => user.uid === uid)?.username
