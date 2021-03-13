@@ -108,7 +108,7 @@ export default defineComponent({
     const photoURL = ref<ArrayBuffer | string>()
     const originalPhotoURL = Object.assign({}, user.value.photoURL)
 
-    // 変更したプロフィールを全ての口コミに反映
+    // TODO: 変更したプロフィールを全ての口コミに反映
     const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
       if (file) {
@@ -140,13 +140,22 @@ export default defineComponent({
           user.value.photoURL ||
           'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
       }
-      console.debug('user', updatedUser)
+      // db更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
         await docRef.set(updatedUser, { merge: true })
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
+        // 更新後のユーザ一覧
+        const newUsers: User[] = []
+        await db
+          .collection('users')
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => newUsers.push(doc.data() as User))
+          })
         root.$store.dispatch('setUser', updatedUser)
+        root.$store.dispatch('setUsers', newUsers)
       } catch (e) {
         console.error('update に失敗！', e)
         isOpenUpdateConfirm.value = false
