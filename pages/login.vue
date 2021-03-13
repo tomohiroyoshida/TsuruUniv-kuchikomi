@@ -12,7 +12,7 @@
                 クチコミの検索・作成にはログインが必要です
               </div>
             </v-col>
-            <v-col cols="12" md="2" class="d-flex justify-center">
+            <v-col cols="12" md="3" class="d-flex justify-center">
               <v-img
                 max-height="300"
                 max-width="300"
@@ -26,7 +26,8 @@
       <!-- ボタン -->
       <div class="d-flex justify-center mb-2">
         <AppBtn
-          color="red lighten-1 mr-2"
+          color="red lighten-1"
+          class="mr-1"
           width="11rem"
           depressed
           @click="loginWithGoogle"
