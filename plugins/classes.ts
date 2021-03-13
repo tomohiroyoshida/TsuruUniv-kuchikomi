@@ -1,3 +1,4 @@
+/** 個別授業の情報をfirestoreから取得 */
 import { defineNuxtPlugin } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Class } from '@/types/State'

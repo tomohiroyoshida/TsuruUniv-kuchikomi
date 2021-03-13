@@ -1,3 +1,4 @@
+/** 登録されたユーザー一覧をfirestoreから取得 */
 import { defineNuxtPlugin } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { User } from '@/types/State'

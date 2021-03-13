@@ -1,3 +1,4 @@
+/** firebase の設定 */
 import firebase from 'firebase'
 
 const config = {
