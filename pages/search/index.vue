@@ -106,7 +106,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" async>
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 

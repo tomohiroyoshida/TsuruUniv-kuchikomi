@@ -166,7 +166,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" async>
 import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class, Kuchikomi } from '@/types/State'
 import db from '@/plugins/firebase'

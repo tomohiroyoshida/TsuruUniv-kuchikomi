@@ -63,7 +63,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" async>
 import { defineComponent } from '@nuxtjs/composition-api'
 import firebase from 'firebase'
 import { User } from '@/types/State'

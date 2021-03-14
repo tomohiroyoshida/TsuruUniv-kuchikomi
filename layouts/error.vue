@@ -44,7 +44,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts" async>
 export default {
   layout: 'error',
   props: {

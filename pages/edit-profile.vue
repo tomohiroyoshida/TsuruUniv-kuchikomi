@@ -80,7 +80,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" async>
 import { defineComponent, ref, computed } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { User } from '@/types/State'

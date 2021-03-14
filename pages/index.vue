@@ -89,7 +89,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" async>
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'About'

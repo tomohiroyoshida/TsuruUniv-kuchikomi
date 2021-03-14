@@ -110,7 +110,7 @@
   </v-container>
 </template>
 
-<script lang="ts">
+<script lang="ts" async>
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi, User } from '@/types/State'
