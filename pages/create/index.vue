@@ -245,7 +245,7 @@ export default defineComponent({
         resetInput()
         isOpenSuccessSnackbar.value = true
       } catch (e) {
-        console.error(e)
+        console.error('create', e)
         isOpenErrorSnackbar.value = true
       }
     }

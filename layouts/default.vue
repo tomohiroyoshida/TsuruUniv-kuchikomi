@@ -123,7 +123,7 @@ export default defineComponent({
           root.$store.dispatch('setUser', emptyUser)
         })
         .catch((e) => {
-          console.error(e)
+          console.error('default', e)
         })
     }
 

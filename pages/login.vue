@@ -89,10 +89,10 @@ export default defineComponent({
               : root.$router.replace('/edit-profile')
           })
       } catch (e) {
-        console.error(e)
+        console.error('google', e)
       }
     }
-    // TODO: Twitterでログイン
+    // Twitterでログイン
     const loginWithTwitter = async () => {
       const provider = new firebase.auth.TwitterAuthProvider()
       try {
@@ -109,7 +109,7 @@ export default defineComponent({
               : root.$router.replace('/edit-profile')
           })
       } catch (e) {
-        console.error('Twitter 失敗！', e)
+        console.error('twitter', e)
       }
     }
     return {

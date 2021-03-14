@@ -300,7 +300,7 @@ export default defineComponent({
           isOpenCreateConfirm.value = false
           isOpenSuccessSnackbar.value = true
         } catch (e) {
-          console.error(e)
+          console.error('create-new', e)
           isOpenErrorSnackbar.value = true
           isOpenCreateConfirm.value = false
         }

@@ -197,7 +197,7 @@ export default defineComponent({
           emit('updated', data)
         }, 1500)
       } catch (e) {
-        console.error(e)
+        console.error('update', e)
         isOpenErrorSnackbar.value = true
       }
     }

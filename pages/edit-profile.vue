@@ -157,7 +157,7 @@ export default defineComponent({
         root.$store.dispatch('setUser', updatedUser)
         root.$store.dispatch('setUsers', newUsers)
       } catch (e) {
-        console.error('update に失敗！', e)
+        console.error('update', e)
         isOpenUpdateConfirm.value = false
         isOpenErrorSnackbar.value = true
       }
