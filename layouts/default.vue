@@ -45,7 +45,7 @@
       </v-btn>
       <v-spacer />
       <!-- ログインボタン -->
-      <v-btn
+      <!-- <v-btn
         v-if="!loggedinUser.uid"
         :small="width < 700"
         depressed
@@ -53,9 +53,9 @@
         color="primary"
       >
         ログイン
-      </v-btn>
+      </v-btn> -->
       <!-- アイコンボタン -->
-      <v-menu v-else open-on-hover bottom offset-y>
+      <v-menu v-if="loggedinUser.uid" open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn text icon class="pa-1 mr-1" large v-bind="attrs" v-on="on">
             <v-icon color="primary lighten-1" size="52">
