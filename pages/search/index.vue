@@ -26,7 +26,7 @@
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
-                v-for="item in classList.slice(0, 20)"
+                v-for="item in classList"
                 :key="item.docId"
                 class="card my-1 ml-1 pb-2"
                 rounded
@@ -35,7 +35,7 @@
                 <v-card-title>{{ item.classTitle }}</v-card-title>
                 <v-card-subtitle class="py-0">
                   <div class="mr-3">講師： {{ item.teacherName }}</div>
-                  <div class="mr-3">開講期： {{ item.term }}</div>
+                  <!-- <div class="mr-3">開講期： {{ item.term }}</div> -->
                   <!-- <div v-if="item.dayOfWeek && item.period" class="mr-3">
                     曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
                   </div> -->
