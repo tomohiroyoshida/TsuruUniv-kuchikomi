@@ -1,18 +1,18 @@
 <template>
-  <v-container id="login" class="pa-1" fluid>
+  <v-container id="login" class="pa-1">
     <v-row no-gutters justify="center" class="mt-15">
       <v-col cols="12">
         <v-card flat>
           <v-row no-gutters justify="center">
-            <v-col cols="12" md="3" align-self="center" class="pl-">
-              <div class="text-h4 font-weight-bold text-center">
+            <v-col cols="12" align-self="center" class="pt-3">
+              <h1 class="font-weight-bold text-center">
                 Let's Login to Start.
-              </div>
+              </h1>
               <div class="text-subtitle-1 font-weight-bold text-center pt-3">
                 クチコミの検索・作成にはログインが必要です
               </div>
             </v-col>
-            <v-col cols="12" md="3" class="d-flex justify-center">
+            <v-col cols="12" class="d-flex justify-center">
               <v-img
                 max-height="300"
                 max-width="300"
@@ -120,4 +120,8 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+h1 {
+  font-size: 40px;
+}
+</style>
