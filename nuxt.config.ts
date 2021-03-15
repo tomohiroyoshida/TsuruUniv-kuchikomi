@@ -10,8 +10,8 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: '',
-    title: 'つるコミ 都留文科大学生のための授業クチコミアプリ',
+    titleTemplate: 'つるコミ',
+    title: 'つるコミ',
     meta: [
       { charset: 'utf-8' },
       {
@@ -21,7 +21,7 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: ''
+        content: '都留文科大学生のための授業クチコミアプリ'
       },
       {
         name: 'apple-mobile-web-app-capable',
