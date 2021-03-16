@@ -20,12 +20,7 @@
             <div
               class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold"
             >
-              クチコミ一覧
-            </div>
-            <div
-              class="d-flex justify-center px-3 text-subtitle-1 font-weight-medium"
-            >
-              {{ classTitle }}
+              『{{ classTitle }}』 のクチコミ一覧
             </div>
           </v-col>
           <v-col cols="12">
