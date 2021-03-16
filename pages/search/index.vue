@@ -83,10 +83,10 @@
             <v-card-title>{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
-              <div class="mr-3">開講期： {{ item.term }}</div>
+              <!-- <div class="mr-3">開講期： {{ item.term }}</div>
               <div v-if="item.dayOfWeek && item.period" class="mr-3">
                 曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
-              </div>
+              </div> -->
             </v-card-subtitle>
             <v-card-text>
               <AppBtn
