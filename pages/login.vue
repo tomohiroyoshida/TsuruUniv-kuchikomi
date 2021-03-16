@@ -48,7 +48,16 @@
       <!-- 利用規約 -->
       <v-col cols="12">
         <div class="text-center mt-5">
-          ※ ログインに使用したアカウント情報は運営が厳重に管理いたします。
+          ※ Twitter/Googleアカウント及び権限に関する説明は<a
+            href="https://www.notion.so/Q-A-a1f01d9ab2144b248ced87e036285dad"
+            target="_blank"
+            class="hoge"
+          >
+            こちらのQ&Aページをご覧ください
+            <!--TODO:  <v-icon small color="primary" class="new-tab"
+              >mdi-open-in-new</v-icon
+            > -->
+          </a>
         </div>
       </v-col>
       <v-col cols="12">
@@ -124,4 +133,7 @@ export default defineComponent({
 h1 {
   font-size: 40px;
 }
+/* .hoge .v-icon .notranslate .new-tab .mdi .mdi-open-in-new {
+  vertical-align: baseline;
+} */
 </style>
