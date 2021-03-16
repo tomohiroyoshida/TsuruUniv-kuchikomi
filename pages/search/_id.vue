@@ -22,6 +22,11 @@
             >
               クチコミ一覧
             </div>
+            <div
+              class="d-flex justify-center px-3 text-subtitle-1 font-weight-medium"
+            >
+              {{ classTitle }}
+            </div>
           </v-col>
           <v-col cols="12">
             <v-card
@@ -113,7 +118,7 @@
 <script lang="ts" async>
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
-import { Kuchikomi, User } from '@/types/State'
+import { Kuchikomi, User, Class } from '@/types/State'
 
 export default defineComponent({
   name: 'SearchId',
@@ -199,14 +204,19 @@ export default defineComponent({
       const username = users.find((user) => user.uid === uid)?.username
       return username || '名無しのユーザー'
     }
-    const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
-      const users: User[] = root.$store.getters.users
-      const photoURL = users.find((item) => item.uid === uid)?.photoURL
-      return (
-        photoURL ||
-        'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
-      )
-    }
+    // 授業名取得
+    const classList: Class[] = root.$store.getters.classes
+    const classTitle = classList.find((item) => item.docId === classId)
+      ?.classTitle
+    // TODO: プロフィール画像
+    // const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
+    //   const users: User[] = root.$store.getters.users
+    //   const photoURL = users.find((item) => item.uid === uid)?.photoURL
+    //   return (
+    //     photoURL ||
+    //     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+    //   )
+    // }
 
     const kuchikomiList = ref<Kuchikomi[]>([])
     const uid = ref(root.$store.getters.user.uid)
@@ -248,7 +258,8 @@ export default defineComponent({
       originalKuchikomi,
       updateKuchikomi,
       getUsername,
-      getUserPhotoURL
+      classTitle
+      // getUserPhotoURL
     }
   }
 })
