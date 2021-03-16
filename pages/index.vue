@@ -39,9 +39,9 @@
             もし「授業名」の検索ボックスに知りたい授業名がない場合は「こちらから新規作成」のリンクから必要事項を入力し、作成ボタンを押せば授業とクチコミの両方が作成されます。
           </div>
           <div class="ml-5 mt-2">
-            自分が作成したクチコミはいつでも編集・削除できます。
+            自分が作成したクチコミはいつでも編集・削除できます(
             <v-icon color="info">mdi-pencil-outline</v-icon>で編集
-            <v-icon color="error">mdi-trash-can-outline</v-icon>で削除
+            <v-icon color="error">mdi-trash-can-outline</v-icon>で削除)。
           </div>
         </v-col>
       </v-row>
