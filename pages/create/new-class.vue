@@ -22,16 +22,18 @@
               <TextCaption required title="講師名" />
               <TextInput
                 v-model="teacherName"
-                :rules="RULES.requiredWith20"
-                :counter="20"
-                placeholder="例： 都留 太郎"
-                hint="(苗字と名前の間に半角スペースを入れてください)"
+                :rules="RULES.requiredWith30"
+                :counter="30"
+                placeholder="例： 都留太郎"
               />
             </v-col>
           </v-row>
 
+          <!-- 受講した年 -->
+          <!-- おすすめ度 -->
+          <!-- クチコミのタイトル -->
+          <!-- クチコミ -->
           <v-row no-gutters justify="center">
-            <!-- 受講した年 -->
             <v-col cols="10" class="mx-1">
               <TextCaption required title="受講した年" />
               <SelectInput
@@ -42,7 +44,6 @@
             </v-col>
           </v-row>
           <v-row no-gutters justify="center">
-            <!-- おすすめ度 -->
             <v-col cols="10" class="mx-1">
               <TextCaption required title="おすすめ度(0.5~5)" />
               <div class="my-2 d-flex justify-start">
@@ -56,53 +57,17 @@
               </div>
             </v-col>
           </v-row>
-          <!-- 開講期 -->
-          <!-- <v-col cols="5" class="mx-1">
-              <TextCaption required title="開講期" />
-              <SelectInput
-                v-model="term"
-                :items="TERMS"
-                :rules="RULES.required"
-              />
-            </v-col> -->
-          <!-- 時限 -->
-          <!-- <v-col cols="5" class="mx-1">
-              <TextCaption required title="時限" />
-              <SelectInput
-                v-model="period"
-                :items="PERIODS"
-                :rules="isTermShort ? [] : dayAndPeriodRule"
-                :disabled="isTermShort"
-                :placeholder="isTermShort ? '入力不要' : ''"
-              />
-            </v-col> -->
-
-          <!-- 曜日 -->
-          <!-- <v-row no-gutters justify="center">
-            <v-col cols="5" class="mx-1">
-              <TextCaption required title="曜日" />
-              <SelectInput
-                v-model="dayOfWeek"
-                :items="DAYS"
-                :rules="isTermShort ? [] : dayAndPeriodRule"
-                :disabled="isTermShort"
-                :placeholder="isTermShort ? '入力不要' : ''"
-              />
-            </v-col>
-          </v-row> -->
-          <!-- クチコミのタイトル -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption required title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
-                :rules="RULES.requiredWith20"
+                :rules="RULES.requiredWith30"
                 :counter="20"
                 placeholder="例： おすすめの授業です"
               />
             </v-col>
           </v-row>
-          <!-- クチコミ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption required title="クチコミの内容" />
@@ -175,10 +140,6 @@ import { suid } from 'rand-token'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
-  requiredWith20: [
-    (v: string) => !!v || 'この欄の入力は必須です',
-    (v: string) => (v && v.length <= 20) || '20文字以下で記入してください'
-  ],
   requiredWith30: [
     (v: string) => !!v || 'この欄の入力は必須です',
     (v: string) => (v && v.length <= 30) || '30文字以下で記入してください'
@@ -295,7 +256,7 @@ export default defineComponent({
       if (!isTitleAndTeacherNameSame) {
         const docRef = db.collection('classes').doc()
         try {
-          Promise.all([addClass(docRef), addKuchikomi(docRef)])
+          Promise.all([addClass(docRef)]) // TODO: 戻す
           resetInput()
           isOpenCreateConfirm.value = false
           isOpenSuccessSnackbar.value = true
