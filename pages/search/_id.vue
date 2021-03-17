@@ -12,6 +12,7 @@
           <div class="text-h6 px-3">
             もしこの授業を受けたことがあれば、ぜひクチコミの作成をよろしくお願いいたします🙇‍♂️
           </div>
+          <!-- <AppBtn></AppBtn> -->
         </div>
 
         <!-- クチコミが存在する場合 -->
@@ -20,7 +21,16 @@
             <div
               class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold"
             >
-              『{{ classTitle }}』 のクチコミ一覧
+              {{ classTitle }}
+            </div>
+            <div class="d-flex justify-center pb-3">
+              <AppBtn
+                depressed
+                color="primary"
+                width="12rem"
+                @click="toCreatePage"
+                >この授業のクチコミを作成</AppBtn
+              >
             </div>
           </v-col>
           <v-col cols="12">
@@ -125,6 +135,12 @@ export default defineComponent({
     const isOpenUpdateDialog = ref(false)
     const isOpenDeleteConfirm = ref(false)
 
+    // クチコミ作成ページへ遷移
+    const toCreatePage = () => {
+      root.$store.dispatch('setCurrentClass', currentClass)
+      root.$router.push('/create')
+    }
+
     // 編集
     const updatingKuchikomi = ref({})
     const originalKuchikomi = ref({})
@@ -191,7 +207,6 @@ export default defineComponent({
 
     /**
      * init
-     * クチコミ一覧を取得
      */
     // ユーザーネーム取得
     const getUsername = (uid: string): string => {
@@ -199,10 +214,11 @@ export default defineComponent({
       const username = users.find((user) => user.uid === uid)?.username
       return username || '名無しのユーザー'
     }
-    // 授業名取得
+    // 授業と授業名取得
     const classList: Class[] = root.$store.getters.classes
     const classTitle = classList.find((item) => item.docId === classId)
       ?.classTitle
+    const currentClass = classList.find((item) => item.docId === classId)
     // TODO: プロフィール画像
     // const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
     //   const users: User[] = root.$store.getters.users
@@ -213,6 +229,7 @@ export default defineComponent({
     //   )
     // }
 
+    // クチコミの一覧を取得
     const kuchikomiList = ref<Kuchikomi[]>([])
     const uid = ref(root.$store.getters.user.uid)
     useFetch(
@@ -240,6 +257,7 @@ export default defineComponent({
       classId,
       kuchikomiList,
       uid,
+      toCreatePage,
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
       openUpdateDialog,
@@ -253,7 +271,8 @@ export default defineComponent({
       originalKuchikomi,
       updateKuchikomi,
       getUsername,
-      classTitle
+      classTitle,
+      currentClass
       // getUserPhotoURL
     }
   }

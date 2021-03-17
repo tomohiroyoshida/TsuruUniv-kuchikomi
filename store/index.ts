@@ -10,12 +10,21 @@ export const state = () => ({
   },
   // CSRF対策のtoken
   csrfToken: '',
+  // 登録されているユーザー一覧
   users: [],
   //  授業のリスト
   classes: [],
   // 検索ページで検索欄に入力された授業名 + フィルタリングされた授業一覧
   searchingTitle: '',
-  filteredClasses: []
+  filteredClasses: [],
+  // 閲覧している授業
+  currentClass: {
+    docId: '',
+    classTitle: '',
+    teacherName: '',
+    createdBy: '',
+    createdAt: ''
+  }
 })
 
 export const getters = {
@@ -36,6 +45,9 @@ export const getters = {
   },
   csrfToken: (state: NuxtState): string => {
     return state.csrfToken
+  },
+  currentClass: (state: NuxtState): string => {
+    return state.currentClass
   }
 }
 
@@ -60,6 +72,9 @@ export const mutations = {
   },
   setCsrfToken(state: NuxtState, csrfToken: string) {
     state.csrfToken = csrfToken
+  },
+  setCurrentClass(state: NuxtState, currentClass: string) {
+    state.currentClass = currentClass
   }
 }
 
@@ -91,5 +106,8 @@ export const actions = {
   // CSRF対策のTokenを保存
   setCsrfToken({ commit }: NuxtAppOptions, csrfToken: string) {
     commit('setCsrfToken', csrfToken)
+  },
+  setCurrentClass({ commit }: NuxtAppOptions, currentClass: string) {
+    commit('setCurrentClass', currentClass)
   }
 }

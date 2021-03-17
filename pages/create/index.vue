@@ -15,7 +15,7 @@
                 >)
               </TextCaption>
               <v-autocomplete
-                v-model="selectedClass"
+                v-model="selectedClassId"
                 :items="autoCompleteClasses"
                 :rules="RULES.required"
                 flat
@@ -176,7 +176,6 @@ const RULES = {
 export default defineComponent({
   name: 'create',
   setup(_, { root }) {
-    const selectedClass = ref('')
     const teacher = ref('')
     const isFormValid = ref(true)
     const rating = ref(0.5)
@@ -196,7 +195,9 @@ export default defineComponent({
       createdAt: '',
       createdBy: ''
     })
-    watch(selectedClass, (classId: string) => {
+    const selectedClassId = ref(root.$store.getters.currentClass.docId || '')
+    // 選択された授業名を監視
+    watch(selectedClassId, (classId: string) => {
       classList.value.find((item) =>
         item.docId === classId ? (classCardInfo.value = item) : ''
       )
@@ -204,8 +205,8 @@ export default defineComponent({
 
     // クチコミ作成
     // 選択された授業のidを格納
-    const targetClassId = ref('')
-    watch(selectedClass, (id: string) => {
+    const targetClassId = ref(selectedClassId || '')
+    watch(selectedClassId, (id: string) => {
       targetClassId.value = id
     })
 
@@ -252,12 +253,11 @@ export default defineComponent({
 
     // キャンセル
     const isOpenResetConfirm = ref(false)
-
     // 記入内容を全てリセット
     const form = ref(null)
     const resetInput = (): void => {
       isOpenResetConfirm.value = false
-      selectedClass.value = ''
+      selectedClassId.value = ''
       year.value = ''
       rating.value = 0.5
       kuchikomiTitle.value = ''
@@ -298,7 +298,7 @@ export default defineComponent({
       year,
       years,
       classList,
-      selectedClass,
+      selectedClassId,
       autoCompleteClasses,
       teacher,
       isOpenSuccessSnackbar,
