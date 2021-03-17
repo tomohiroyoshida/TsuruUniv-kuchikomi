@@ -13,9 +13,6 @@
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
-  name: 'AppBtn',
-  setup() {}
+  name: 'AppBtn'
 })
 </script>
-
-<style scoped></style>
