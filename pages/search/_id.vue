@@ -12,7 +12,17 @@
           <div class="text-h6 px-3">
             もしこの授業を受けたことがあれば、ぜひクチコミの作成をよろしくお願いいたします🙇‍♂️
           </div>
-          <!-- <AppBtn></AppBtn> -->
+          <div class="d-flex justify-center pb-3">
+            <AppBtn
+              depressed
+              color="primary"
+              width="12rem"
+              class="text-caption"
+              @click="toCreatePage"
+              ><v-icon small> mdi-pencil-plus-outline </v-icon
+              >この授業のクチコミを作成</AppBtn
+            >
+          </div>
         </div>
 
         <!-- クチコミが存在する場合 -->
@@ -21,14 +31,16 @@
             <div
               class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold"
             >
-              {{ classTitle }}
+              {{ currentClass.classTitle }}
             </div>
             <div class="d-flex justify-center pb-3">
               <AppBtn
                 depressed
                 color="primary"
                 width="12rem"
+                class="text-caption"
                 @click="toCreatePage"
+                ><v-icon small> mdi-pencil-plus-outline </v-icon
                 >この授業のクチコミを作成</AppBtn
               >
             </div>
@@ -214,10 +226,8 @@ export default defineComponent({
       const username = users.find((user) => user.uid === uid)?.username
       return username || '名無しのユーザー'
     }
-    // 授業と授業名取得
+    // 現在選択されている授業取得
     const classList: Class[] = root.$store.getters.classes
-    const classTitle = classList.find((item) => item.docId === classId)
-      ?.classTitle
     const currentClass = classList.find((item) => item.docId === classId)
     // TODO: プロフィール画像
     // const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
@@ -271,7 +281,6 @@ export default defineComponent({
       originalKuchikomi,
       updateKuchikomi,
       getUsername,
-      classTitle,
       currentClass
       // getUserPhotoURL
     }

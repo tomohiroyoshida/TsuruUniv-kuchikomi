@@ -244,6 +244,7 @@ export default defineComponent({
         }
         await docRef.set(data)
         resetInput()
+        emptyCurrentClass()
         isOpenSuccessSnackbar.value = true
       } catch (e) {
         console.error('create', e)
@@ -264,6 +265,17 @@ export default defineComponent({
       kuchikomi.value = ''
       // @ts-ignore "Object is possibly null" エラーをignore
       form.value.resetValidation()
+    }
+    // Store の currentClass を空にする
+    const emptyCurrentClass = () => {
+      const emptyClass = {
+        docId: '',
+        classTitle: '',
+        teacherName: '',
+        createdBy: '',
+        createdAt: ''
+      }
+      root.$store.dispatch('setCurrentClass', emptyClass)
     }
 
     /**
@@ -304,6 +316,7 @@ export default defineComponent({
       isOpenSuccessSnackbar,
       isOpenErrorSnackbar,
       resetInput,
+      emptyCurrentClass,
       createKuchikomi,
       isOpenCreateConfirm,
       isOpenResetConfirm,
