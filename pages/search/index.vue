@@ -20,9 +20,9 @@
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、授業のリストを20件表示 -->
         <section v-if="searchingTitle === '' || searchingTitle === null">
-          <div class="text-h6 text-center mb-3 ml-1">
-            登録されている授業一覧
-          </div>
+          <!-- <div class="text-h6 text-center mb-3 ml-1 font-weight-medium">
+            授業一覧
+          </div> -->
           <v-row no-gutters>
             <v-col cols="12" class="flex">
               <v-card
@@ -158,6 +158,18 @@ export default defineComponent({
         item.classTitle.includes(searchingTitle.value)
       )
     }
+    // Store の currentClass を空にする
+    // eslint-disable-next-line prettier/prettier
+    (() => {
+      const emptyClass = {
+        docId: '',
+        classTitle: '',
+        teacherName: '',
+        createdBy: '',
+        createdAt: ''
+      }
+      root.$store.dispatch('setCurrentClass', emptyClass)
+    })()
 
     return {
       RESULT_COMMENT,
