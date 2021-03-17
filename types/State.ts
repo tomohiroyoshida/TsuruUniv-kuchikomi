@@ -10,11 +10,11 @@ export interface Class {
   docId: string
   classTitle: string
   teacherName: string
+  createdBy: string
+  createdAt: string
   // term: string
   // dayOfWeek: string
   // period: string
-  createdBy: string
-  createdAt: string
 }
 
 // クチコミ
