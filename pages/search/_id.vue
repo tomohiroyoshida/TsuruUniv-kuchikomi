@@ -4,23 +4,25 @@
   </div>
   <!-- クチコミ一覧 -->
   <v-container v-else class="pt-15">
-    <v-row no-gutters justify="center">
+    <v-row no-gutters justify="center" align="center" class="body">
       <v-col cols="12" lg="9">
         <!-- クチコミが存在しない場合 -->
-        <div v-if="!kuchikomiList.length">
-          <div class="text-h6 my-3 px-3">クチコミはまだありません😭</div>
-          <div class="text-h6 px-3">
-            もしこの授業を受けたことがあれば、ぜひクチコミの作成をよろしくお願いいたします🙇‍♂️
+        <div v-if="!kuchikomiList.length" class="text-center">
+          <div class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold">
+            「{{ currentClass.classTitle }}」 のクチコミはありません
           </div>
-          <div class="d-flex justify-center pb-3">
+          <div class="px-3 grey--text">
+            もしこの授業を受けたことがあれば、最初のクチコミ作成者になりませんか？
+          </div>
+          <div class="d-flex justify-center py-3">
             <AppBtn
               depressed
               color="primary"
               width="12rem"
               class="text-caption"
               @click="toCreatePage"
-              ><v-icon small> mdi-pencil-plus-outline </v-icon
-              >この授業のクチコミを作成</AppBtn
+              ><v-icon small class="pr-1"> mdi-pencil-plus-outline </v-icon
+              >最初のクチコミを作成</AppBtn
             >
           </div>
         </div>
@@ -301,6 +303,9 @@ export default defineComponent({
 
 /* ローディングアイコンを中央揃え */
 .loading {
+  margin: auto;
+}
+.body {
   margin: auto;
 }
 </style>
