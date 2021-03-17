@@ -298,7 +298,7 @@ export default defineComponent({
     const autoCompleteClasses = ref<AutocompleteClasses[]>([])
     classList.value.forEach((item) => {
       autoCompleteClasses.value.push({
-        text: item.classTitle,
+        text: `${item.classTitle} (${item.teacherName})`,
         value: item.docId
       })
     })
