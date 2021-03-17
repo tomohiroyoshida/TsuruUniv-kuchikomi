@@ -185,15 +185,17 @@ export default defineComponent({
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
 
     // 授業情報のカード
+    // Vuex Storeにある currentClass のデータ
+    const storedClass = root.$store.getters.currentClass
     const classCardInfo = ref({
-      docId: '',
-      classTitle: '',
-      teacherName: '',
+      docId: storedClass.docId || '',
+      classTitle: storedClass.classTitle || '',
+      teacherName: storedClass.teacherName || '',
+      createdAt: storedClass.createdAt || '',
+      createdBy: storedClass.createdBy || ''
       // dayOfWeek: '',
       // period: '',
       // term: '',
-      createdAt: '',
-      createdBy: ''
     })
     const selectedClassId = ref(root.$store.getters.currentClass.docId || '')
     // 選択された授業名を監視
@@ -309,6 +311,7 @@ export default defineComponent({
       kuchikomi,
       year,
       years,
+      storedClass,
       classList,
       selectedClassId,
       autoCompleteClasses,
