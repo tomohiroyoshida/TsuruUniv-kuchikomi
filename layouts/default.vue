@@ -107,7 +107,7 @@ export default defineComponent({
     const loggedinUser = computed(() => root.$store.getters.user)
     const loggedIn = computed(() => root.$store.getters.user.loggedIn)
     const toProfile = () => {
-      root.$router.push('/edit-profile')
+      root.$router.push('/update-profile')
     }
 
     const signOut = () => {

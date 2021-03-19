@@ -95,7 +95,7 @@ export default defineComponent({
             )
             isRegistered
               ? root.$router.replace('/search')
-              : root.$router.replace('/edit-profile')
+              : root.$router.replace('/update-profile')
           })
       } catch (e) {
         console.error('google', e)
@@ -115,7 +115,7 @@ export default defineComponent({
             )
             isRegistered
               ? root.$router.replace('/search')
-              : root.$router.replace('/edit-profile')
+              : root.$router.replace('/update-profile')
           })
       } catch (e) {
         console.error('twitter', e)

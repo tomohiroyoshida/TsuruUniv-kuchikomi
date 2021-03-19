@@ -1,5 +1,11 @@
 <template>
-  <v-dialog v-model="value" persistent width="30rem" class="confirm-dialog">
+  <v-dialog
+    v-model="value"
+    persistent
+    width="30rem"
+    class="confirm-dialog"
+    v-bind="attrs"
+  >
     <v-card rounded>
       <!-- タイトル -->
       <v-toolbar color="primary" class="d-flex justify-center" flat dense>
@@ -9,7 +15,7 @@
       <v-row no-gutters>
         <v-col cols="12">
           <!-- テキスト -->
-          <v-card-text class="d-flex justify-center">
+          <v-card-text class="d-flex justify-center text-center">
             <div v-if="text === '作成'">
               <div>
                 入力した内容で授業とクチコミを新規作成します。よろしいですか？
@@ -29,6 +35,10 @@
                   >取り消せません。</span
                 >
               </div>
+              <div>よろしいですか？</div>
+            </div>
+            <div v-else-if="text == 'update-profile'">
+              <div>ユーザー名を「{{ $attrs.username }}」に設定します。</div>
               <div>よろしいですか？</div>
             </div>
           </v-card-text>

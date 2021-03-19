@@ -6,9 +6,9 @@
           <div class="text-h6 d-flex justify-center my-3 font-weight-bold">
             プロフィール設定
           </div>
-          <!-- ユーザーネーム -->
+          <!-- 名前？ -->
           <section>
-            <TextCaption required title="ユーザーネーム" class="mb-1" />
+            <TextCaption required title="名前" class="mb-1" />
             <TextInput
               v-model="user.username"
               :rules="RULES.required"
@@ -57,7 +57,8 @@
         <!-- ダイアログ・スナックバー -->
         <ConfirmDialog
           v-model="isOpenUpdateConfirm"
-          text="編集"
+          text="update-profile"
+          :username="user.username"
           @ok="updateProfile"
         />
         <SnackBar
@@ -156,6 +157,9 @@ export default defineComponent({
           })
         root.$store.dispatch('setUser', updatedUser)
         root.$store.dispatch('setUsers', newUsers)
+        setTimeout(() => {
+          root.$router.push('/search')
+        }, 1000)
       } catch (e) {
         console.error('update', e)
         isOpenUpdateConfirm.value = false
