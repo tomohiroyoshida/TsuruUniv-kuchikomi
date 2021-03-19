@@ -256,7 +256,7 @@ export default defineComponent({
       if (!isTitleAndTeacherNameSame) {
         const docRef = db.collection('classes').doc()
         try {
-          Promise.all([addClass(docRef)]) // TODO: 戻す
+          Promise.all([addClass(docRef), addKuchikomi(docRef)]) // TODO: 戻す
           resetInput()
           isOpenCreateConfirm.value = false
           isOpenSuccessSnackbar.value = true
