@@ -38,7 +38,7 @@
               <div>よろしいですか？</div>
             </div>
             <div v-else-if="text == 'update-profile'">
-              <div>ユーザー名を「{{ $attrs.username }}」に設定します。</div>
+              <div>名前を「{{ $attrs.username }}」に設定します。</div>
               <div>よろしいですか？</div>
             </div>
           </v-card-text>
