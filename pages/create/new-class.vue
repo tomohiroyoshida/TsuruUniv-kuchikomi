@@ -327,6 +327,8 @@ export default defineComponent({
       isTermShort,
       isOpenCreateConfirm,
       isFormValid,
+      addClass,
+      addKuchikomi,
       createClassAndKuchikomi,
       isOpenSuccessSnackbar,
       isOpenDuplicatedSnackbar,
@@ -334,7 +336,6 @@ export default defineComponent({
       isOpenResetConfirm,
       resetInput,
       form,
-      addClass,
       openCreateConfirm,
       csrfToken,
       storedCsrfToken
