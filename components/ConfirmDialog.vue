@@ -4,7 +4,7 @@
     persistent
     width="30rem"
     class="confirm-dialog"
-    v-bind="attrs"
+    v-bind="$attrs"
   >
     <v-card rounded>
       <!-- タイトル -->
