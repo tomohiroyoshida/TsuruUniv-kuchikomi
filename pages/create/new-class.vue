@@ -37,7 +37,7 @@
             <v-col cols="10" class="mx-1">
               <TextCaption required title="受講した年" />
               <SelectInput
-                v-model="year"
+                v-model="classYear"
                 :items="years"
                 :rules="RULES.required"
               />
@@ -100,9 +100,10 @@
         </div>
       </v-col>
       <!-- 確認ダイアログ -->
-      <ConfirmDialog
+      <KuchikomiConfirm
         v-model="isOpenCreateConfirm"
-        text="作成"
+        :input="classAndKuchikomiInput"
+        type="createClassAndKuchikomi"
         @ok="createClassAndKuchikomi"
       />
       <ConfirmDialog
@@ -165,7 +166,7 @@ export default defineComponent({
     const rating = ref(0.5)
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
-    const year = ref('')
+    const classYear = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
     const isFormValid = ref(true)
 
@@ -183,18 +184,29 @@ export default defineComponent({
         term.value === '時間外授業' ? false : !!v || 'この欄の入力は必須です'
     ]
 
+    // 講義を追加
     const isOpenCreateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
     const isOpenDuplicatedSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
+    const classAndKuchikomiInput = ref({})
 
     const openCreateConfirm = () => {
+      // 確認ダイアログで表示する内容
+      classAndKuchikomiInput.value = {
+        classTitle: classTitle.value,
+        teacherName: teacherName.value,
+        classYear: classYear.value,
+        rating: rating.value,
+        kuchikomiTitle: kuchikomiTitle.value,
+        kuchikomi: kuchikomi.value
+      }
+      console.debug('input', classAndKuchikomiInput.value)
       isOpenCreateConfirm.value = true
       isOpenSuccessSnackbar.value = false
       isOpenDuplicatedSnackbar.value = false
       isOpenErrorSnackbar.value = false
     }
-    // 講義を追加
     const addClass = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ): void => {
@@ -231,7 +243,7 @@ export default defineComponent({
       const data: Kuchikomi = {
         docId: kuchikomiRef.id,
         kuchikomiTitle: kuchikomiTitle.value,
-        classYear: year.value,
+        classYear: classYear.value,
         rating: rating.value,
         kuchikomi: kuchikomi.value,
         uid: root.$store.getters.user.uid,
@@ -282,7 +294,7 @@ export default defineComponent({
       teacherName.value = ''
       dayOfWeek.value = ''
       period.value = ''
-      year.value = ''
+      classYear.value = ''
       term.value = ''
       rating.value = 0.5
       kuchikomiTitle.value = ''
@@ -321,7 +333,7 @@ export default defineComponent({
       term,
       kuchikomiTitle,
       kuchikomi,
-      year,
+      classYear,
       years,
       rating,
       isTermShort,
@@ -338,7 +350,8 @@ export default defineComponent({
       form,
       openCreateConfirm,
       csrfToken,
-      storedCsrfToken
+      storedCsrfToken,
+      classAndKuchikomiInput
     }
   }
 })

@@ -24,6 +24,13 @@
                   よろしいですか？
                 </div>
                 <div
+                  v-else-if="type === 'createClassAndKuchikomi'"
+                  class="text-body-1 text-center"
+                >
+                  以下の内容で授業＋クチコミを作成します。<br />
+                  よろしいですか？
+                </div>
+                <div
                   v-else-if="type === 'edit'"
                   class="text-body-1 text-center"
                 >

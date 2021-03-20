@@ -16,20 +16,11 @@
         <v-col cols="12">
           <!-- テキスト -->
           <v-card-text class="d-flex justify-center text-center">
-            <div v-if="text === '作成'">
-              <div>
-                入力した内容で授業とクチコミを新規作成します。よろしいですか？
-              </div>
-            </div>
-            <div v-else-if="text == 'クリア'">
+            <div v-if="text == 'reset'">
               <div>入力した内容を全て削除します。</div>
               <div>よろしいですか？</div>
             </div>
-            <div v-else-if="text == '編集'">
-              <div>入力した内容で編集します。</div>
-              <div>よろしいですか？</div>
-            </div>
-            <div v-else-if="text === '削除'">
+            <div v-else-if="text === 'delete'">
               <div>
                 このクチコミを削除します。この操作は<span class="red--text"
                   >取り消せません。</span
