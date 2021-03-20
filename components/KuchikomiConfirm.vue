@@ -7,7 +7,7 @@
   >
     <v-card rounded>
       <!-- タイトル -->
-      <v-toolbar color="primary" class="d-flex justify-center" flat dense>
+      <v-toolbar color="primary" class="d-flex justify-center" flat dense short>
         <v-toolbar-title class="white--text">確認</v-toolbar-title>
       </v-toolbar>
       <!-- 中身 -->
@@ -92,14 +92,14 @@
                   outlined
                   readonly
                   no-resize
-                  height="130"
+                  height="170"
                   color="primary"
                 />
               </v-col>
             </v-row>
 
             <!-- 送信・キャンセルボタン -->
-            <div class="d-flex justify-center pb-3">
+            <div class="d-flex justify-center pb-5">
               <AppBtn
                 color="grey darken-2"
                 class="mr-1"
