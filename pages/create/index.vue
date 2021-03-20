@@ -44,13 +44,6 @@
                 <v-card-subtitle>
                   講師: {{ classCardInfo.teacherName }}
                 </v-card-subtitle>
-                <!-- <v-card-text>
-                  {{ classCardInfo.term }} ｜ {{ classCardInfo.dayOfWeek }}曜
-                  {{ classCardInfo.period }}限
-                </v-card-text> -->
-                <!-- <v-card-subtitle class="pt-0 pb-1">
-                  {{ classCardInfo.term }}
-                </v-card-subtitle> -->
               </v-card>
             </v-col>
           </v-row>
@@ -60,7 +53,7 @@
             <v-col cols="10">
               <TextCaption required title="受講した年" />
               <SelectInput
-                v-model="year"
+                v-model="classYear"
                 :items="years"
                 :rules="RULES.required"
               />
@@ -127,9 +120,10 @@
       </v-col>
 
       <!-- 確認ダイアログ -->
-      <ConfirmDialog
+      <KuchikomiConfirm
         v-model="isOpenCreateConfirm"
-        text="作成"
+        :input="kuchikomiInput"
+        type="createKuchikomi"
         @ok="createKuchikomi"
       />
       <ConfirmDialog
@@ -181,7 +175,7 @@ export default defineComponent({
     const rating = ref(0.5)
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
-    const year = ref('')
+    const classYear = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
 
     // 授業情報のカード
@@ -193,9 +187,6 @@ export default defineComponent({
       teacherName: storedClass.teacherName || '',
       createdAt: storedClass.createdAt || '',
       createdBy: storedClass.createdBy || ''
-      // dayOfWeek: '',
-      // period: '',
-      // term: '',
     })
     const selectedClassId = ref(root.$store.getters.currentClass.docId || '')
     // 選択された授業名を監視
@@ -212,11 +203,21 @@ export default defineComponent({
       targetClassId.value = id
     })
 
+    // クチコミ作成
     const isOpenCreateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
-
+    const kuchikomiInput = ref({})
     const openCreateConfirm = () => {
+      kuchikomiInput.value = {
+        classTitle: classCardInfo.value.classTitle,
+        teacherName: classCardInfo.value.teacherName,
+        classYear: classYear.value,
+        rating: rating.value,
+        kuchikomiTitle: kuchikomiTitle.value,
+        kuchikomi: kuchikomi.value
+      }
+      console.debug('input', kuchikomiInput.value)
       isOpenCreateConfirm.value = true
       isOpenSuccessSnackbar.value = false
       isOpenErrorSnackbar.value = false
@@ -239,7 +240,7 @@ export default defineComponent({
           kuchikomiTitle: kuchikomiTitle.value,
           kuchikomi: kuchikomi.value,
           rating: rating.value,
-          classYear: year.value,
+          classYear: classYear.value,
           uid: root.$store.getters.user.uid,
           username: root.$store.getters.user.username,
           createdAt: new Date().toLocaleString()
@@ -261,7 +262,7 @@ export default defineComponent({
     const resetInput = (): void => {
       isOpenResetConfirm.value = false
       selectedClassId.value = ''
-      year.value = ''
+      classYear.value = ''
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
@@ -309,7 +310,7 @@ export default defineComponent({
       rating,
       kuchikomiTitle,
       kuchikomi,
-      year,
+      classYear,
       years,
       storedClass,
       classList,
@@ -320,6 +321,7 @@ export default defineComponent({
       isOpenErrorSnackbar,
       resetInput,
       emptyCurrentClass,
+      kuchikomiInput,
       createKuchikomi,
       isOpenCreateConfirm,
       isOpenResetConfirm,

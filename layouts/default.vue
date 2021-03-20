@@ -44,16 +44,6 @@
         <div>作成</div>
       </v-btn>
       <v-spacer />
-      <!-- ログインボタン -->
-      <!-- <v-btn
-        v-if="!loggedinUser.uid"
-        :small="width < 700"
-        depressed
-        to="/login"
-        color="primary"
-      >
-        ログイン
-      </v-btn> -->
       <!-- アイコンボタン -->
       <v-menu v-if="loggedinUser.uid" open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
@@ -64,8 +54,8 @@
             <!-- <v-img
               class="image"
               :src="loggedinUser.photoURL"
-              max-height="52"
-              max-width="52"
+              max-height="45"
+              max-width="45"
             /> -->
           </v-btn>
         </template>

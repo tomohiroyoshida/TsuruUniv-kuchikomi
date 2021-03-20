@@ -7,9 +7,9 @@
     solo
     dense
     outlined
-    clearable
     no-resize
-    height="130"
+    clearable
+    height="200"
     counter="1000"
     color="primary"
     class="textarea-input"
@@ -33,9 +33,6 @@ export default defineComponent({
     rules: {
       type: Array
     }
-  },
-  setup() {}
+  }
 })
 </script>
-
-<style scoped></style>

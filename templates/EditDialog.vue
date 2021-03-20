@@ -9,6 +9,7 @@
           <v-icon color="white">mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
+      <!-- 内容 -->
       <v-container id="create" fluid class="pa-0 mt-3">
         <v-row no-gutters justify="center">
           <v-col cols="12">
@@ -157,9 +158,9 @@ export default defineComponent({
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
-    // 編集前のクチコミのデータ
-    // eslint-disable-next-line prefer-const
-    let originalKuchikomi = Object.assign({}, props.updatingKuchikomi)
+    // 編集前のクチコミの内容
+    const originalKuchikomi = Object.assign({}, props.updatingKuchikomi)
+    // 内容が変わったかどうかのフラグ
     const isFormChanged = computed(() => {
       return originalKuchikomi !== props.updatingKuchikomi
     })
@@ -170,7 +171,7 @@ export default defineComponent({
       isOpenErrorSnackbar.value = false
     }
 
-    // 更新
+    // 更新処理
     const update = async (): Promise<void> => {
       disabled.value = true
       const docRef = db
@@ -202,8 +203,8 @@ export default defineComponent({
       }
     }
 
+    // 記入内容をリセット
     const isOpenResetConfirm = ref(false)
-    // 記入内容を全てリセット
     const form = ref(null)
     const resetInput = (): void => {
       isOpenResetConfirm.value = false

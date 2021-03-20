@@ -12,9 +12,6 @@ export interface Class {
   teacherName: string
   createdBy: string
   createdAt: string
-  // term: string
-  // dayOfWeek: string
-  // period: string
 }
 
 // クチコミ

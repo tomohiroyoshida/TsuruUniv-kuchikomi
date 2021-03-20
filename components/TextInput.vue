@@ -4,6 +4,7 @@
     :value="$attrs.value"
     :rules="$attrs.rules"
     :counter="$attrs.counter"
+    :readonly="$attrs.readonly"
     :placeholder="$attrs.placeholder"
     :hint="$attrs.hint"
     persistent-hint
@@ -21,9 +22,6 @@
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
-  name: 'TextInput',
-  setup() {}
+  name: 'TextInput'
 })
 </script>
-
-<style scoped></style>

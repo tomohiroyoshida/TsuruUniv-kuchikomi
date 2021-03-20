@@ -20,7 +20,7 @@
               color="primary"
               width="12rem"
               class="text-caption"
-              @click="toCreatePage"
+              @click="goToCreatePage"
               ><v-icon small class="pr-1"> mdi-pencil-plus-outline </v-icon
               >最初のクチコミを作成</AppBtn
             >
@@ -41,7 +41,7 @@
                 color="primary"
                 width="12rem"
                 class="text-caption"
-                @click="toCreatePage"
+                @click="goToCreatePage"
                 ><v-icon small> mdi-pencil-plus-outline </v-icon
                 >この授業のクチコミを作成</AppBtn
               >
@@ -142,6 +142,7 @@ import { Kuchikomi, User, Class } from '@/types/State'
 export default defineComponent({
   name: 'SearchId',
   setup(_, { root }) {
+    const uid = ref(root.$store.getters.user.uid)
     const classId = root.$route.params.id
     const isOpenSuccessUpdateSnackbar = ref(false)
     const isOpenSuccessDeleteSnackbar = ref(false)
@@ -150,7 +151,7 @@ export default defineComponent({
     const isOpenDeleteConfirm = ref(false)
 
     // クチコミ作成ページへ遷移
-    const toCreatePage = () => {
+    const goToCreatePage = () => {
       root.$store.dispatch('setCurrentClass', currentClass)
       root.$router.push('/create')
     }
@@ -158,16 +159,17 @@ export default defineComponent({
     // 編集
     const updatingKuchikomi = ref({})
     const originalKuchikomi = ref({})
-    const openUpdateDialog = (item: Kuchikomi): void => {
+    const openUpdateDialog = (kuchikomi: Kuchikomi): void => {
       // 編集するクチコミ情報のコピーを作成
-      originalKuchikomi.value = Object.assign({}, item)
-      updatingKuchikomi.value = Object.assign({}, item)
-      // スナックバーの開閉状態は一度初期化しておく必要有り
+      originalKuchikomi.value = Object.assign({}, kuchikomi)
+      updatingKuchikomi.value = Object.assign({}, kuchikomi)
       isOpenUpdateDialog.value = true
+      // スナックバーの開閉状態は一度初期化しておく必要有り
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false
       isOpenErrorSnackbar.value = false
     }
+    // 更新された内容を一覧に反映させる処理
     const updateKuchikomi = (updatedKuchikomi: Kuchikomi): void => {
       isOpenUpdateDialog.value = false
       const docId = updatedKuchikomi.docId
@@ -180,6 +182,7 @@ export default defineComponent({
       updatingKuchikomi.value = originalKuchikomi.value
       isOpenUpdateDialog.value = false
     }
+
     // 削除
     const deleteTargetId = ref('')
     const openDeleteConfirm = (docId: string): void => {
@@ -189,16 +192,16 @@ export default defineComponent({
       isOpenErrorSnackbar.value = false
       deleteTargetId.value = docId
     }
+    // 削除処理
     const deleteKuchikomi = async (): Promise<void> => {
       try {
-        // 削除処理
-        await db
+        await db // 削除
           .collection('classes')
           .doc(classId)
           .collection('kuchikomis')
           .doc(deleteTargetId.value)
           .delete()
-        // 削除後クチコミ一覧のデータを更新
+        // 削除後のクチコミ全てをFirestoreから取得 -> クチコミ一覧を上書き
         const newKuchikoims: Kuchikomi[] = []
         await db
           .collection('classes')
@@ -210,7 +213,7 @@ export default defineComponent({
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
           })
-        kuchikomiList.value = newKuchikoims
+        kuchikomiList.value = newKuchikoims // 上書き
         isOpenDeleteConfirm.value = false
         isOpenSuccessDeleteSnackbar.value = true
       } catch (e) {
@@ -243,7 +246,6 @@ export default defineComponent({
 
     // クチコミの一覧を取得
     const kuchikomiList = ref<Kuchikomi[]>([])
-    const uid = ref(root.$store.getters.user.uid)
     useFetch(
       async (): Promise<void> => {
         try {
@@ -269,7 +271,7 @@ export default defineComponent({
       classId,
       kuchikomiList,
       uid,
-      toCreatePage,
+      goToCreatePage,
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
       openUpdateDialog,
