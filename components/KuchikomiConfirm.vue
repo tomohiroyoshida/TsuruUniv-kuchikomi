@@ -10,11 +10,10 @@
       <v-toolbar color="primary" class="d-flex justify-center" flat dense>
         <v-toolbar-title class="white--text">確認</v-toolbar-title>
       </v-toolbar>
-      <!-- TODO:中身 -->
+      <!-- 中身 -->
       <v-container id="create" fluid class="pa-0 mt-3">
         <v-row no-gutters justify="center">
           <v-col cols="12">
-            <!-- 受講した年 -->
             <v-row no-gutters justify="center">
               <v-col cols="11">
                 <div
@@ -25,13 +24,13 @@
                   よろしいですか？
                 </div>
                 <div
-                  v-else-if="type === 'editKuchikomi'"
+                  v-else-if="type === 'edit'"
                   class="text-body-1 text-center"
                 >
                   以下の内容でクチコミを編集します。<br />
                   よろしいですか？
                 </div>
-                <v-card rounded outlined>
+                <v-card v-if="type !== 'edit'" rounded outlined>
                   <v-card-title>{{ input.classTitle }}</v-card-title>
                   <v-card-subtitle>
                     講師: {{ input.teacherName }}
@@ -42,6 +41,9 @@
             <!-- おすすめ度 -->
             <v-row no-gutters justify="center" class="mt-3">
               <v-col cols="11">
+                <!-- 受講した年 -->
+                <TextCaption title="受講した年" />
+                <div class="pl-5">{{ input.classYear }} 年</div>
                 <TextCaption title="おすすめ度(0.5~5)" />
                 <div class="d-flex justify-start">
                   <v-rating
