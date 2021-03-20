@@ -110,7 +110,7 @@
         />
         <ConfirmDialog
           v-model="isOpenDeleteConfirm"
-          text="削除"
+          text="delete"
           @ok="deleteKuchikomi"
         />
         <!-- スナックバー -->

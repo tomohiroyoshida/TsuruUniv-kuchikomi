@@ -128,7 +128,7 @@
       />
       <ConfirmDialog
         v-model="isOpenResetConfirm"
-        text="クリア"
+        text="reset"
         @ok="resetInput"
       />
 

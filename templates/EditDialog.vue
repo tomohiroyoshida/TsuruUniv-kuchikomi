@@ -89,14 +89,15 @@
           </v-col>
 
           <!-- 確認ダイアログ -->
-          <ConfirmDialog
+          <KuchikomiConfirm
             v-model="isOpenUpdateConfirm"
-            text="編集"
+            :input="updatingKuchikomi"
+            type="edit"
             @ok="update"
           />
           <ConfirmDialog
             v-model="isOpenResetConfirm"
-            text="クリア"
+            text="reset"
             @ok="resetInput"
           />
 
