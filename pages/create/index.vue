@@ -217,7 +217,6 @@ export default defineComponent({
         kuchikomiTitle: kuchikomiTitle.value,
         kuchikomi: kuchikomi.value
       }
-      console.debug('input', kuchikomiInput.value)
       isOpenCreateConfirm.value = true
       isOpenSuccessSnackbar.value = false
       isOpenErrorSnackbar.value = false
