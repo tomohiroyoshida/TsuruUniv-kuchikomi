@@ -92,7 +92,7 @@
                   outlined
                   readonly
                   no-resize
-                  height="170"
+                  height="150"
                   color="primary"
                 />
               </v-col>
@@ -140,9 +140,6 @@ export default defineComponent({
     type: {
       type: String
     }
-  },
-  setup() {}
+  }
 })
 </script>
-
-<style scoped></style>
