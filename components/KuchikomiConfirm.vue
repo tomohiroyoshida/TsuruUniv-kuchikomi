@@ -45,6 +45,35 @@
                 </v-card>
               </v-col>
             </v-row>
+            <!-- タグ -->
+            <v-row
+              v-if="type === 'createClassAndKuchikomi'"
+              no-gutters
+              justify="center"
+            >
+              <v-col cols="11">
+                <TextCaption title="カテゴリタグ" />
+                <v-combobox
+                  v-model="input.tags"
+                  dense
+                  multiple
+                  outlined
+                  readonly
+                >
+                  <template v-slot:selection="data">
+                    <v-chip
+                      v-bind="data.attrs"
+                      :input-value="data.selected"
+                      :color="data.item.color"
+                      text-color="white"
+                      dense
+                    >
+                      {{ data.item.text }}
+                    </v-chip>
+                  </template>
+                </v-combobox>
+              </v-col>
+            </v-row>
             <!-- おすすめ度 -->
             <v-row no-gutters justify="center" class="mt-3">
               <v-col cols="11">

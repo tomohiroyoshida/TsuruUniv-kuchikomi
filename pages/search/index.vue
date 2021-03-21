@@ -19,41 +19,48 @@
 
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合、授業のリストを20件表示 -->
-        <section v-if="searchingTitle === '' || searchingTitle === null">
-          <!-- <div class="text-h6 text-center mb-3 ml-1 font-weight-medium">
-            授業一覧
-          </div> -->
-          <v-row no-gutters>
-            <v-col cols="12" class="flex">
-              <v-card
-                v-for="item in classList"
-                :key="item.docId"
-                class="card my-1 ml-1 pb-2"
-                rounded
-                outlined
+        <section
+          v-if="searchingTitle === '' || searchingTitle === null"
+          class="flex"
+        >
+          <v-card
+            v-for="item in classList"
+            :key="item.docId"
+            class="card my-1 ml-1 pb-2"
+            rounded
+            outlined
+          >
+            <v-card-title>{{ item.classTitle }}</v-card-title>
+            <v-card-subtitle class="py-0">
+              <div class="mr-3">講師： {{ item.teacherName }}</div>
+            </v-card-subtitle>
+            <!-- タグ -->
+            <v-row v-if="item.tags" justify="space-around" class="px-2 pb-2">
+              <v-col cols="12">
+                <v-chip
+                  v-for="(tag, idx) in item.tags"
+                  :key="idx"
+                  small
+                  class="mr-1 mb-1"
+                  :color="getTagData(tag).color"
+                  text-color="white"
+                >
+                  {{ getTagData(tag).text }}
+                </v-chip>
+              </v-col>
+            </v-row>
+            <v-card-text>
+              <AppBtn
+                class="btn"
+                color="primary"
+                width="6rem"
+                depressed
+                @click="goToKuchikomi(item.docId)"
               >
-                <v-card-title>{{ item.classTitle }}</v-card-title>
-                <v-card-subtitle class="py-0">
-                  <div class="mr-3">講師： {{ item.teacherName }}</div>
-                  <!-- <div class="mr-3">開講期： {{ item.term }}</div> -->
-                  <!-- <div v-if="item.dayOfWeek && item.period" class="mr-3">
-                    曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
-                  </div> -->
-                </v-card-subtitle>
-                <v-card-text>
-                  <AppBtn
-                    class="btn"
-                    color="primary"
-                    width="6rem"
-                    depressed
-                    @click="goToKuchikomi(item.docId)"
-                  >
-                    <div class="text-caption">クチコミ閲覧</div>
-                  </AppBtn>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
+                <div class="text-caption">クチコミ閲覧</div>
+              </AppBtn>
+            </v-card-text>
+          </v-card>
         </section>
 
         <!-- 検索結果が無かったときのコメント -->
@@ -63,6 +70,7 @@
         >
           {{ RESULT_COMMENT.NO }}
         </div>
+
         <!-- 授業カード一覧 -->
         <section v-if="filteredClasses.length && searchingTitle" class="flex">
           <!-- プログレスサークル -->
@@ -78,16 +86,28 @@
             v-for="item in filteredClasses"
             :key="item.docId"
             class="card my-1 ml-1 pb-5"
+            rounded
             outlined
           >
             <v-card-title>{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
-              <!-- <div class="mr-3">開講期： {{ item.term }}</div>
-              <div v-if="item.dayOfWeek && item.period" class="mr-3">
-                曜限：{{ item.dayOfWeek }}曜 {{ item.period }}限
-              </div> -->
             </v-card-subtitle>
+            <!-- タグ -->
+            <v-row v-if="item.tags" justify="space-around" class="px-2">
+              <v-col cols="12">
+                <v-chip
+                  v-for="(tag, idx) in item.tags"
+                  :key="idx"
+                  small
+                  class="mr-1 mb-1"
+                  :color="getTagData(tag).color"
+                  text-color="white"
+                >
+                  {{ getTagData(tag).text }}
+                </v-chip>
+              </v-col>
+            </v-row>
             <v-card-text>
               <AppBtn
                 class="btn"
@@ -109,11 +129,13 @@
 <script lang="ts" async>
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
+import { TAGS } from '@/data/TAGS'
 
 const RESULT_COMMENT = {
   YES: '検索結果',
   NO: 'まだクチコミが作成されていない、または授業名が正しくありません'
 }
+
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
@@ -141,6 +163,11 @@ export default defineComponent({
     const goToKuchikomi = (id: string): void => {
       root.$store.dispatch('setSearchingTitle', searchingTitle.value)
       root.$router.push(`/search/${id}`)
+    }
+
+    // タグのテキストを表示
+    const getTagData = (tag: string) => {
+      return TAGS.find((item) => item.value === tag)
     }
 
     /**
@@ -173,6 +200,7 @@ export default defineComponent({
 
     return {
       RESULT_COMMENT,
+      getTagData,
       isSearching,
       searchingTitle,
       filteredClasses,
@@ -199,7 +227,7 @@ export default defineComponent({
 }
 .btn {
   position: absolute;
-  bottom: 12px;
+  bottom: 8px;
   right: 12px;
 }
 

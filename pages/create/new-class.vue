@@ -43,6 +43,35 @@
               />
             </v-col>
           </v-row>
+          <!-- TODO: タグ -->
+          <v-row no-gutters justify="center">
+            <v-col cols="10">
+              <TextCaption title="カテゴリタグ(任意)" />
+              <v-combobox
+                v-model="selectedTags"
+                :items="TAGS"
+                placeholder="タグは複数選択できます"
+                dense
+                multiple
+                outlined
+                clearable
+              >
+                <template v-slot:selection="data">
+                  <v-chip
+                    v-bind="data.attrs"
+                    :input-value="data.selected"
+                    :color="data.item.color"
+                    text-color="white"
+                    dense
+                    close
+                    @click:close="data.parent.selectItem(data.item)"
+                  >
+                    {{ data.item.text }}
+                  </v-chip>
+                </template>
+              </v-combobox>
+            </v-col>
+          </v-row>
           <v-row no-gutters justify="center">
             <v-col cols="10" class="mx-1">
               <TextCaption required title="おすすめ度(0.5~5)" />
@@ -57,6 +86,7 @@
               </div>
             </v-col>
           </v-row>
+
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption required title="クチコミのタイトル" />
@@ -108,7 +138,7 @@
       />
       <ConfirmDialog
         v-model="isOpenResetConfirm"
-        text="クリア"
+        text="reset"
         @ok="resetInput"
       />
 
@@ -133,8 +163,9 @@
 </template>
 
 <script lang="ts" async>
-import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { Class, Kuchikomi } from '@/types/State'
+import { TAGS } from '@/data/TAGS'
 import db from '@/plugins/firebase'
 import firebase from 'firebase'
 import { suid } from 'rand-token'
@@ -151,52 +182,39 @@ const RULES = {
       (v && v.length <= 1000) || 'クチコミ内容は1000文字以下で記入してください'
   ]
 } as const
-const DAYS = ['月', '火', '水', '木', '金', '土', '日'] as const
-const PERIODS = ['1', '2', '3', '4', '5', '6'] as const
-const TERMS = ['前期', '後期', '通年', '時間外授業'] as const
+
+interface Tag {
+  text: string
+  value: string
+  color: string
+}
 
 export default defineComponent({
   name: 'create-new-class',
   setup(_, { root }) {
     const classTitle = ref('')
     const teacherName = ref('')
-    const term = ref('')
-    const dayOfWeek = ref('')
-    const period = ref('')
     const rating = ref(0.5)
+    const selectedTags = ref<Tag[]>([])
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
     const classYear = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
     const isFormValid = ref(true)
 
-    // 開講期が「時間外授業」の場合は「曜日・時限」を null にする
-    const isTermShort = computed(() => term.value === '時間外授業')
-    watch(isTermShort, () => {
-      if (term.value === '時間外授業') {
-        dayOfWeek.value = ''
-        period.value = ''
-      }
-    })
-    // 開講期が「時間外授業」の場合はルールを無くす
-    const dayAndPeriodRule = [
-      (v: string) =>
-        term.value === '時間外授業' ? false : !!v || 'この欄の入力は必須です'
-    ]
-
-    // 講義を追加
+    // 講義の追加
     const isOpenCreateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
     const isOpenDuplicatedSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
     const classAndKuchikomiInput = ref({})
-
     const openCreateConfirm = () => {
       // 確認ダイアログで表示する内容
       classAndKuchikomiInput.value = {
         classTitle: classTitle.value,
         teacherName: teacherName.value,
         classYear: classYear.value,
+        tags: selectedTags.value,
         rating: rating.value,
         kuchikomiTitle: kuchikomiTitle.value,
         kuchikomi: kuchikomi.value
@@ -207,6 +225,7 @@ export default defineComponent({
       isOpenDuplicatedSnackbar.value = false
       isOpenErrorSnackbar.value = false
     }
+    /**  追加処理 */
     const addClass = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ): void => {
@@ -214,13 +233,14 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
         return
       }
+      // タグのvalueのみ抽出
+      const tagValues: string[] = []
+      selectedTags.value.forEach((item) => tagValues.push(item.value))
       const data: Class = {
         docId: docRef.id,
         classTitle: classTitle.value,
         teacherName: teacherName.value,
-        // term: term.value,
-        // dayOfWeek: dayOfWeek.value,
-        // period: period.value,
+        tags: tagValues,
         createdBy: root.$store.getters.user.uid,
         createdAt: new Date().toLocaleString()
       }
@@ -264,11 +284,10 @@ export default defineComponent({
           item.classTitle === classTitle.value &&
           item.teacherName === teacherName.value
       )
-
       if (!isTitleAndTeacherNameSame) {
         const docRef = db.collection('classes').doc()
         try {
-          Promise.all([addClass(docRef), addKuchikomi(docRef)]) // TODO: 戻す
+          Promise.all([addClass(docRef), addKuchikomi(docRef)])
           resetInput()
           isOpenCreateConfirm.value = false
           isOpenSuccessSnackbar.value = true
@@ -292,10 +311,8 @@ export default defineComponent({
     const resetInput = (): void => {
       classTitle.value = ''
       teacherName.value = ''
-      dayOfWeek.value = ''
-      period.value = ''
       classYear.value = ''
-      term.value = ''
+      selectedTags.value = []
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
@@ -320,23 +337,17 @@ export default defineComponent({
 
     return {
       RULES,
-      dayAndPeriodRule,
-      DAYS,
-      PERIODS,
-      TERMS,
+      TAGS,
+      selectedTags,
       classList,
       classTitle,
       classTitles,
       teacherName,
-      dayOfWeek,
-      period,
-      term,
       kuchikomiTitle,
       kuchikomi,
       classYear,
       years,
       rating,
-      isTermShort,
       isOpenCreateConfirm,
       isFormValid,
       addClass,
