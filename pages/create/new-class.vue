@@ -28,22 +28,7 @@
               />
             </v-col>
           </v-row>
-
-          <!-- 受講した年 -->
-          <!-- おすすめ度 -->
-          <!-- クチコミのタイトル -->
-          <!-- クチコミ -->
-          <v-row no-gutters justify="center">
-            <v-col cols="10" class="mx-1">
-              <TextCaption required title="受講した年" />
-              <SelectInput
-                v-model="classYear"
-                :items="years"
-                :rules="RULES.required"
-              />
-            </v-col>
-          </v-row>
-          <!-- TODO: タグ -->
+          <!-- タグ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption title="カテゴリタグ(任意)" />
@@ -72,6 +57,19 @@
               </v-combobox>
             </v-col>
           </v-row>
+
+          <!-- 受講した年 -->
+          <v-row no-gutters justify="center">
+            <v-col cols="10" class="mx-1">
+              <TextCaption required title="受講した年" />
+              <SelectInput
+                v-model="classYear"
+                :items="years"
+                :rules="RULES.required"
+              />
+            </v-col>
+          </v-row>
+          <!-- おすすめ度 -->
           <v-row no-gutters justify="center">
             <v-col cols="10" class="mx-1">
               <TextCaption required title="おすすめ度(0.5~5)" />
@@ -86,7 +84,7 @@
               </div>
             </v-col>
           </v-row>
-
+          <!-- クチコミのタイトル -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption required title="クチコミのタイトル" />
@@ -98,6 +96,7 @@
               />
             </v-col>
           </v-row>
+          <!-- クチコミ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption required title="クチコミの内容" />
