@@ -171,7 +171,7 @@ export default defineComponent({
 
     // タグのテキストを表示
     const getTagData = (tag: string) => {
-      return TAGS.find((item) => item.value === tag)
+      return TAGS.find((item) => item.value === tag) || ''
     }
 
     /**
