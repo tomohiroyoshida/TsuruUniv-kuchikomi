@@ -15,10 +15,9 @@
       <v-row no-gutters>
         <v-col cols="12">
           <!-- テキスト -->
-          <v-card-text class="d-flex justify-center text-center">
+          <v-card-text class="text-center">
             <div v-if="text == 'reset'">
               <div>入力した内容を全て削除します。</div>
-              <div>よろしいですか？</div>
             </div>
             <div v-else-if="text === 'delete'">
               <div>
@@ -26,12 +25,11 @@
                   >取り消せません。</span
                 >
               </div>
-              <div>よろしいですか？</div>
             </div>
             <div v-else-if="text == 'update-profile'">
               <div>名前を「{{ $attrs.username }}」に設定します。</div>
-              <div>よろしいですか？</div>
             </div>
+            <div>よろしいですか？</div>
           </v-card-text>
         </v-col>
 
