@@ -4,7 +4,7 @@
       <v-col cols="12" class="text-center">
         <h1 class="mt-3 font-weight-bold">Learn it. Share it all.</h1>
         <div class="text-subtitle-1 mt-3 px-5">
-          「つるコミ」は都留文科大学の授業に関するクチコミを自由に検索・作成・共有できるアプリです
+          「つるコミ」は都留文の授業に関する情報共有コミュニティ・アプリです。
         </div>
       </v-col>
       <v-col cols="12" class="my-1">
@@ -22,7 +22,7 @@
             <v-icon color="primary">mdi-magnify</v-icon>検索
           </div>
           <div class="ml-5 mt-2">
-            検索ボックスに知りたい授業名を入力し、「クチコミ閲覧」ボタンを押すとクチコミを閲覧することができます。
+            ユーザーによって投稿されたクチコミを閲覧することができます。
           </div>
         </v-col>
       </v-row>
@@ -32,11 +32,7 @@
             <v-icon color="primary">mdi-pencil-plus-outline</v-icon>作成
           </div>
           <div class="ml-5 mt-2">
-            「授業名」の検索ボックスに知りたい授業名を入力し、候補から授業を一つ選択します。
-            必要事項を入力して作成ボタンを押せばクチコミの作成が行われます。
-          </div>
-          <div class="ml-5 mt-2">
-            もし「授業名」の検索ボックスに知りたい授業名がない場合は「こちらから新規作成」のリンクから必要事項を入力し、作成ボタンを押せば授業とクチコミの両方が作成されます。
+            「クチコミ」のみと、「授業＋クチコミ」の作成ができます。
           </div>
           <div class="ml-5 mt-2">
             自分が作成したクチコミはいつでも編集・削除できます(
