@@ -219,7 +219,6 @@ export default defineComponent({
         kuchikomiTitle: kuchikomiTitle.value,
         kuchikomi: kuchikomi.value
       }
-      console.debug('input', classAndKuchikomiInput.value)
       isOpenCreateConfirm.value = true
       isOpenSuccessSnackbar.value = false
       isOpenDuplicatedSnackbar.value = false
@@ -288,6 +287,7 @@ export default defineComponent({
         const docRef = db.collection('classes').doc()
         try {
           Promise.all([addClass(docRef), addKuchikomi(docRef)])
+          db.collection('classes')
           resetInput()
           isOpenCreateConfirm.value = false
           isOpenSuccessSnackbar.value = true

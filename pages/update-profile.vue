@@ -96,7 +96,6 @@ export default defineComponent({
   setup(_, { root }) {
     const isFormValid = ref(true)
     const user = computed(() => {
-      // console.debug('user ', user.value)
       return Object.assign({}, root.$store.getters.user)
     })
 

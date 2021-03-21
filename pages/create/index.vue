@@ -265,7 +265,7 @@ export default defineComponent({
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
-      classCardInfo.value.docId = ''
+      // classCardInfo.value.docId = ''
       // @ts-ignore "Object is possibly null" エラーをignore
       form.value.resetValidation()
     }

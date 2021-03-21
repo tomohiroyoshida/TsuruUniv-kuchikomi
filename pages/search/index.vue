@@ -18,7 +18,7 @@
         </div>
 
         <!-- 検索結果一覧 -->
-        <!-- 検索欄に文字が入力されていない場合、授業のリストを20件表示 -->
+        <!-- 検索欄に文字が入力されていない場合 -->
         <section
           v-if="searchingTitle === '' || searchingTitle === null"
           class="flex"
@@ -35,7 +35,11 @@
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
             <!-- タグ -->
-            <v-row v-if="item.tags" justify="space-around" class="px-2 pb-2">
+            <v-row
+              v-if="item.tags !== []"
+              justify="space-around"
+              class="px-2 pb-2"
+            >
               <v-col cols="12">
                 <v-chip
                   v-for="(tag, idx) in item.tags"
