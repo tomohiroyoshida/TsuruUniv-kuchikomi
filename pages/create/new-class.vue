@@ -93,7 +93,7 @@
               <TextInput
                 v-model="kuchikomiTitle"
                 :rules="RULES.requiredWith30"
-                :counter="20"
+                :counter="30"
                 placeholder="例： おすすめの授業です"
               />
             </v-col>

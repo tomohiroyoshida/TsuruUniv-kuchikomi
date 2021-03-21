@@ -80,8 +80,8 @@
               <TextCaption required title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
-                :rules="RULES.requiredWith20"
-                :counter="20"
+                :rules="RULES.requiredWith30"
+                :counter="30"
                 placeholder="例： おすすめの授業です"
               />
             </v-col>
@@ -161,9 +161,9 @@ const RULES = {
     (v: string) =>
       (v && v.length <= 1000) || 'クチコミ内容は1000文字以下で記入してください'
   ],
-  requiredWith20: [
+  requiredWith30: [
     (v: string) => !!v || 'この欄の入力は必須です',
-    (v: string) => (v && v.length <= 20) || '20文字以下で記入してください'
+    (v: string) => (v && v.length <= 30) || '30文字以下で記入してください'
   ]
 } as const
 
