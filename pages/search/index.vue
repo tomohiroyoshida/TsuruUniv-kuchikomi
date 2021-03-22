@@ -65,16 +65,17 @@
                 </v-col>
               </v-row>
             </v-card-text> -->
-
-            <AppBtn
-              class="btn"
-              color="primary"
-              width="6rem"
-              depressed
-              @click="goToKuchikomi(item.docId)"
-            >
-              <div class="text-caption">クチコミ閲覧</div>
-            </AppBtn>
+            <v-card-text>
+              <AppBtn
+                class="btn"
+                color="primary"
+                width="6rem"
+                depressed
+                @click="goToKuchikomi(item.docId)"
+              >
+                <div class="text-caption">クチコミ閲覧</div>
+              </AppBtn>
+            </v-card-text>
           </v-card>
         </section>
 
