@@ -35,7 +35,7 @@
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
             <!-- TODO: タグ+おすすめ度 -->
-            <v-card-text>
+            <!-- <v-card-text>
               <v-row justify="space-around">
                 <v-col cols="12">
                   <div v-if="item.tags !== []">
@@ -50,7 +50,7 @@
                       {{ getTagData(tag).text }}
                     </v-chip>
                   </div>
-                  <!-- <div class="d-flex justify-start">
+                  <div class="d-flex justify-start">
                     <v-rating
                       v-model="rating"
                       half-increments
@@ -61,10 +61,10 @@
                       background-color="grey lighten-1"
                     />
                     ({{ rating }})
-                  </div> -->
+                  </div>
                 </v-col>
               </v-row>
-            </v-card-text>
+            </v-card-text> -->
 
             <AppBtn
               class="btn"
@@ -108,8 +108,8 @@
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
-            <!-- タグ -->
-            <v-row v-if="item.tags" justify="space-around" class="px-2">
+            <!-- TODO: タグ -->
+            <!-- <v-row v-if="item.tags" justify="space-around" class="px-2">
               <v-col cols="12">
                 <v-chip
                   v-for="(tag, idx) in item.tags"
@@ -122,7 +122,7 @@
                   {{ getTagData(tag).text }}
                 </v-chip>
               </v-col>
-            </v-row>
+            </v-row> -->
             <v-card-text>
               <AppBtn
                 class="btn"

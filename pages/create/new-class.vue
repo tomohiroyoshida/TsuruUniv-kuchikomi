@@ -46,9 +46,10 @@
                     v-bind="data.attrs"
                     :input-value="data.selected"
                     :color="data.item.color"
-                    text-color="white"
+                    small
                     dense
                     close
+                    text-color="white"
                     @click:close="data.parent.selectItem(data.item)"
                   >
                     {{ data.item.text }}
