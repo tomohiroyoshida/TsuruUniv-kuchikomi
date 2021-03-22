@@ -31,7 +31,7 @@
           <!-- タグ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <TextCaption title="カテゴリタグ(任意)" />
+              <TextCaption title="カテゴリータグ(任意)" />
               <v-combobox
                 v-model="selectedTags"
                 :items="TAGS"
