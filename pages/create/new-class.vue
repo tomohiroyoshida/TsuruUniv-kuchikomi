@@ -192,6 +192,7 @@ interface Tag {
 export default defineComponent({
   name: 'create-new-class',
   setup(_, { root }) {
+    const uid: string = root.$store.getters.user.uid
     const classTitle = ref('')
     const teacherName = ref('')
     const rating = ref(0.5)
@@ -241,7 +242,7 @@ export default defineComponent({
         teacherName: teacherName.value,
         avgRating: rating.value,
         tags: tagValues,
-        createdBy: root.$store.getters.user.uid,
+        createdBy: uid,
         createdAt: new Date().toLocaleString()
       }
       docRef.set(data)
@@ -266,7 +267,7 @@ export default defineComponent({
         classYear: classYear.value,
         rating: rating.value,
         kuchikomi: kuchikomi.value,
-        uid: root.$store.getters.user.uid,
+        uid,
         username: root.$store.getters.user.username,
         createdAt: new Date().toLocaleString()
       }
@@ -343,6 +344,7 @@ export default defineComponent({
       classList,
       classTitle,
       classTitles,
+      uid,
       teacherName,
       kuchikomiTitle,
       kuchikomi,
