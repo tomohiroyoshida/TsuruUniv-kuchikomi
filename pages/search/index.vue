@@ -35,10 +35,10 @@
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
             <!-- TODO: タグ+おすすめ度 -->
-            <!-- <v-card-text>
+            <v-card-text>
               <v-row justify="space-around">
                 <v-col cols="12" class="pl-2">
-                  <div v-if="item.tags !== []">
+                  <!-- <div v-if="item.tags !== []">
                     <v-chip
                       v-for="(tag, idx) in item.tags"
                       :key="idx"
@@ -49,10 +49,10 @@
                     >
                       {{ getTagData(tag).text }}
                     </v-chip>
-                  </div>
+                  </div> -->
                   <div class="d-flex justify-start">
                     <v-rating
-                      v-model="rating"
+                      v-model="item.avgRating"
                       half-increments
                       small
                       dense
@@ -60,22 +60,20 @@
                       color="star"
                       background-color="grey lighten-1"
                     />
-                    ({{ rating }})
+                    ({{ item.avgRating }})
                   </div>
                 </v-col>
               </v-row>
-            </v-card-text> -->
-            <v-card-text>
-              <AppBtn
-                class="btn"
-                color="primary"
-                width="6rem"
-                depressed
-                @click="goToKuchikomi(item.docId)"
-              >
-                <div class="text-caption">クチコミ閲覧</div>
-              </AppBtn>
             </v-card-text>
+            <AppBtn
+              class="btn"
+              color="primary"
+              width="6rem"
+              depressed
+              @click="goToKuchikomi(item.docId)"
+            >
+              <div class="text-caption">クチコミ閲覧</div>
+            </AppBtn>
           </v-card>
         </section>
 
@@ -110,31 +108,43 @@
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
             <!-- TODO: タグ -->
-            <!-- <v-row v-if="item.tags" justify="space-around" class="px-2">
-              <v-col cols="12">
-                <v-chip
-                  v-for="(tag, idx) in item.tags"
-                  :key="idx"
-                  x-small
-                  outlined
-                  class="mr-1 mb-1"
-                  :color="getTagData(tag).color"
-                >
-                  {{ getTagData(tag).text }}
-                </v-chip>
+            <v-row justify="space-around">
+              <v-col cols="12" class="pl-2">
+                <!-- <div v-if="item.tags !== []">
+                    <v-chip
+                      v-for="(tag, idx) in item.tags"
+                      :key="idx"
+                      x-small
+                      outlined
+                      class="mr-1 mb-1"
+                      :color="getTagData(tag).color"
+                    >
+                      {{ getTagData(tag).text }}
+                    </v-chip>
+                  </div> -->
+                <div class="d-flex justify-start">
+                  <v-rating
+                    v-model="item.avgRating"
+                    half-increments
+                    small
+                    dense
+                    readonly
+                    color="star"
+                    background-color="grey lighten-1"
+                  />
+                  ({{ item.avgRating }})
+                </div>
               </v-col>
-            </v-row> -->
-            <v-card-text>
-              <AppBtn
-                class="btn"
-                color="primary"
-                width="6rem"
-                depressed
-                @click="goToKuchikomi(item.docId)"
-              >
-                <div class="text-caption">クチコミ閲覧</div>
-              </AppBtn>
-            </v-card-text>
+            </v-row>
+            <AppBtn
+              class="btn"
+              color="primary"
+              width="6rem"
+              depressed
+              @click="goToKuchikomi(item.docId)"
+            >
+              <div class="text-caption">クチコミ閲覧</div>
+            </AppBtn>
           </v-card>
         </section>
       </v-col>
@@ -155,7 +165,7 @@ const RESULT_COMMENT = {
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
-    const rating = 4
+    const rating = 4 // FIXME お勧め平均値表示機能できたら消す
     const isSearching = ref(false)
     const filteredClasses = ref<Class[]>([])
     const searchingTitle = ref('')

@@ -153,6 +153,7 @@ import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 import { suid } from 'rand-token'
+import { setAvgRating } from '@/helpers/setAgvRating'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -245,9 +246,10 @@ export default defineComponent({
           createdAt: new Date().toLocaleString()
         }
         await docRef.set(data)
+        await setAvgRating(targetClassId.value) // おすすめ度の平均値を更新
         resetInput()
-        emptyCurrentClass()
         isOpenSuccessSnackbar.value = true
+        emptyCurrentClass()
       } catch (e) {
         console.error('create', e)
         isOpenErrorSnackbar.value = true

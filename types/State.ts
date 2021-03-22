@@ -10,6 +10,7 @@ export interface Class {
   docId: string
   classTitle: string
   teacherName: string
+  avgRating: number
   tags: string[]
   createdBy: string
   createdAt: string

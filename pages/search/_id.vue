@@ -9,7 +9,7 @@
         <!-- クチコミが存在しない場合 -->
         <div v-if="!kuchikomiList.length" class="text-center">
           <div class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold">
-            「{{ currentClass.classTitle }}」 のクチコミはありません
+            {{ currentClass.classTitle }} のクチコミはありません
           </div>
           <div class="px-3 grey--text">
             もしこの授業を受けたことがあれば、最初のクチコミ作成者になりませんか？
@@ -138,6 +138,7 @@
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi, User, Class } from '@/types/State'
+import { setAvgRating } from '@/helpers/setAgvRating'
 
 export default defineComponent({
   name: 'SearchId',
@@ -213,7 +214,8 @@ export default defineComponent({
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
           })
-        kuchikomiList.value = newKuchikoims // 上書き
+        setAvgRating(classId) // おすすめ度の平均値を更新
+        kuchikomiList.value = newKuchikoims // クチコミの一覧を上書き
         isOpenDeleteConfirm.value = false
         isOpenSuccessDeleteSnackbar.value = true
       } catch (e) {

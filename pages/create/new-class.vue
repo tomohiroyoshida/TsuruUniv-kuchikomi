@@ -239,6 +239,7 @@ export default defineComponent({
         docId: docRef.id,
         classTitle: classTitle.value,
         teacherName: teacherName.value,
+        avgRating: rating.value,
         tags: tagValues,
         createdBy: root.$store.getters.user.uid,
         createdAt: new Date().toLocaleString()
