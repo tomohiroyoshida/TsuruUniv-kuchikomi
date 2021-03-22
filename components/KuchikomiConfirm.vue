@@ -40,7 +40,7 @@
               </v-col>
             </v-row>
             <!-- 授業名＋講師名 -->
-            <v-row no-gutters justify="center" class="mt-">
+            <v-row no-gutters justify="center" class="mt-2">
               <v-col cols="11">
                 <TextCaption title="授業情報" />
                 <div v-if="type !== 'edit'" class="pl-5 text-body-2">
@@ -54,28 +54,22 @@
               v-if="type === 'createClassAndKuchikomi'"
               no-gutters
               justify="center"
+              class="mt-2"
             >
               <v-col cols="11">
-                <TextCaption title="カテゴリタグ" />
-                <v-combobox
-                  v-model="input.tags"
-                  dense
-                  multiple
-                  outlined
-                  readonly
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      :color="data.item.color"
-                      text-color="white"
-                      dense
-                    >
-                      {{ data.item.text }}
-                    </v-chip>
-                  </template>
-                </v-combobox>
+                <TextCaption title="カテゴリータグ" />
+                <div class="pl-5">
+                  <v-chip
+                    v-for="(tag, idx) in input.tags"
+                    :key="idx"
+                    :color="tag.color"
+                    text-color="white"
+                    small
+                    class="mr-1"
+                  >
+                    {{ tag.text }}
+                  </v-chip>
+                </div>
               </v-col>
             </v-row>
             <!-- おすすめ度 -->
