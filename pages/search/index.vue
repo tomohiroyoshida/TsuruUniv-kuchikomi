@@ -30,7 +30,7 @@
             rounded
             outlined
           >
-            <v-card-title class="pt-">{{ item.classTitle }}</v-card-title>
+            <v-card-title>{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
@@ -99,18 +99,19 @@
           <v-card
             v-for="item in filteredClasses"
             :key="item.docId"
-            class="card my-1 ml-1 pb-5"
+            class="card my-2 pb-2"
             rounded
             outlined
           >
-            <v-card-title class="pt-">{{ item.classTitle }}</v-card-title>
+            <v-card-title>{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
-            <!-- TODO: タグ -->
-            <v-row justify="space-around">
-              <v-col cols="12" class="pl-2">
-                <!-- <div v-if="item.tags !== []">
+            <!-- TODO: タグ+おすすめ度 -->
+            <v-card-text>
+              <v-row justify="space-around">
+                <v-col cols="12" class="pl-2">
+                  <!-- <div v-if="item.tags !== []">
                     <v-chip
                       v-for="(tag, idx) in item.tags"
                       :key="idx"
@@ -122,20 +123,21 @@
                       {{ getTagData(tag).text }}
                     </v-chip>
                   </div> -->
-                <div class="d-flex justify-start">
-                  <v-rating
-                    v-model="item.avgRating"
-                    half-increments
-                    small
-                    dense
-                    readonly
-                    color="star"
-                    background-color="grey lighten-1"
-                  />
-                  ({{ item.avgRating }})
-                </div>
-              </v-col>
-            </v-row>
+                  <div class="d-flex justify-start">
+                    <v-rating
+                      v-model="item.avgRating"
+                      half-increments
+                      small
+                      dense
+                      readonly
+                      color="star"
+                      background-color="grey lighten-1"
+                    />
+                    ({{ item.avgRating }})
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card-text>
             <AppBtn
               class="btn"
               color="primary"
