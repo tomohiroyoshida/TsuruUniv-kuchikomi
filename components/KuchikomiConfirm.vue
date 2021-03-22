@@ -27,7 +27,7 @@
                   v-else-if="type === 'createClassAndKuchikomi'"
                   class="text-body-1 text-center"
                 >
-                  以下の内容で授業＋クチコミを作成します。<br />
+                  以下の内容で授業とクチコミを作成します。<br />
                   よろしいですか？
                 </div>
                 <div
@@ -121,7 +121,7 @@
                   outlined
                   readonly
                   no-resize
-                  height="150"
+                  height="120"
                   color="primary"
                 />
               </v-col>

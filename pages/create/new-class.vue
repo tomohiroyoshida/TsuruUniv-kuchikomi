@@ -3,7 +3,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center mt-2 mb-6 font-weight-bold">
-          新しい授業＋クチコミ新規作成
+          新しい授業とクチコミ作成
         </div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">

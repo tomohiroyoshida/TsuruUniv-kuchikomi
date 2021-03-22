@@ -72,7 +72,7 @@
               depressed
               @click="goToKuchikomi(item.docId)"
             >
-              <div class="text-caption">クチコミ閲覧</div>
+              <div class="text-caption">クチコミを見る</div>
             </AppBtn>
           </v-card>
         </section>
@@ -145,7 +145,7 @@
               depressed
               @click="goToKuchikomi(item.docId)"
             >
-              <div class="text-caption">クチコミ閲覧</div>
+              <div class="text-caption">クチコミを見る</div>
             </AppBtn>
           </v-card>
         </section>
