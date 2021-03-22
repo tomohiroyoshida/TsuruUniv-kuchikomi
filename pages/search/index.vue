@@ -34,36 +34,47 @@
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
-            <!-- タグ -->
-            <v-row
-              v-if="item.tags !== []"
-              justify="space-around"
-              class="px-2 pb-2"
-            >
-              <v-col cols="12">
-                <v-chip
-                  v-for="(tag, idx) in item.tags"
-                  :key="idx"
-                  small
-                  class="mr-1 mb-1"
-                  :color="getTagData(tag).color"
-                  text-color="white"
-                >
-                  {{ getTagData(tag).text }}
-                </v-chip>
-              </v-col>
-            </v-row>
+            <!-- TODO: タグ+おすすめ度 -->
             <v-card-text>
-              <AppBtn
-                class="btn"
-                color="primary"
-                width="6rem"
-                depressed
-                @click="goToKuchikomi(item.docId)"
-              >
-                <div class="text-caption">クチコミ閲覧</div>
-              </AppBtn>
+              <v-row justify="space-around">
+                <v-col cols="12">
+                  <div v-if="item.tags !== []">
+                    <v-chip
+                      v-for="(tag, idx) in item.tags"
+                      :key="idx"
+                      x-small
+                      outlined
+                      class="mr-1 mb-1"
+                      :color="getTagData(tag).color"
+                    >
+                      {{ getTagData(tag).text }}
+                    </v-chip>
+                  </div>
+                  <!-- <div class="d-flex justify-start">
+                    <v-rating
+                      v-model="rating"
+                      half-increments
+                      small
+                      dense
+                      readonly
+                      color="star"
+                      background-color="grey lighten-1"
+                    />
+                    ({{ rating }})
+                  </div> -->
+                </v-col>
+              </v-row>
             </v-card-text>
+
+            <AppBtn
+              class="btn"
+              color="primary"
+              width="6rem"
+              depressed
+              @click="goToKuchikomi(item.docId)"
+            >
+              <div class="text-caption">クチコミ閲覧</div>
+            </AppBtn>
           </v-card>
         </section>
 
@@ -103,10 +114,10 @@
                 <v-chip
                   v-for="(tag, idx) in item.tags"
                   :key="idx"
-                  small
+                  x-small
+                  outlined
                   class="mr-1 mb-1"
                   :color="getTagData(tag).color"
-                  text-color="white"
                 >
                   {{ getTagData(tag).text }}
                 </v-chip>
@@ -143,6 +154,7 @@ const RESULT_COMMENT = {
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
+    const rating = 4
     const isSearching = ref(false)
     const filteredClasses = ref<Class[]>([])
     const searchingTitle = ref('')
@@ -171,7 +183,7 @@ export default defineComponent({
 
     // タグのテキストを表示
     const getTagData = (tag: string) => {
-      return TAGS.find((item) => item.value === tag) || ''
+      return TAGS.find((item) => item.value === tag)
     }
 
     /**
@@ -203,6 +215,7 @@ export default defineComponent({
     })()
 
     return {
+      rating,
       RESULT_COMMENT,
       getTagData,
       isSearching,

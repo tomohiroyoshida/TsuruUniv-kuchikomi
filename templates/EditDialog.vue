@@ -33,7 +33,7 @@
                     <v-rating
                       v-model="updatingKuchikomi.rating"
                       half-increments
-                      color="warning"
+                      color="star"
                       background-color="grey lighten-1"
                     />
                     <div class="ml-5 my-2">

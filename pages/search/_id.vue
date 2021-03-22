@@ -73,7 +73,7 @@
                   dense
                   readonly
                   half-increments
-                  color="warning"
+                  color="star"
                   background-color="grey lighten-1"
                 />
                 <div class="text-subtitle-2 font-weight-bold px-2">
