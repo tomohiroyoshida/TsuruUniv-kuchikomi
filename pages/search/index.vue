@@ -16,6 +16,26 @@
             class="mx-1"
           />
         </div>
+        <div class="d-flex justify-end">
+          <FilteringBtn
+            text
+            :depressed="isFilteredByRatingDesc"
+            class="mr-1 px-1"
+            @click="filterByRatingDesc"
+          >
+            <v-icon small>mdi-star</v-icon>
+            <div class="text-caption">おすすめ順</div>
+          </FilteringBtn>
+          <!-- <FilteringBtn
+            text
+            :depressed="isFilteredByRatingAsc"
+            class="mr-1 px-1"
+            @click="filterByRatingAsc"
+          >
+            <v-icon small>mdi-sort-ascending</v-icon>
+            <div class="text-caption">おすすめ度高低い順</div>
+          </FilteringBtn> -->
+        </div>
 
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合 -->
@@ -199,12 +219,59 @@ export default defineComponent({
       return TAGS.find((item) => item.value === tag)
     }
 
+    // TODO: おすすめ度を昇順でフィルタリング これはいる？
+    const isFilteredByRatingAsc = ref(false)
+    // console.debug('query', root.$route.query, root.$route.params)
+    const filterByRatingAsc = () => {
+      isFilteredByRatingDesc.value = false
+      // フィルタリングされていなければフィルタリングした配列を classList へ代入
+      if (!isFilteredByRatingAsc.value) {
+        // root.$router.replace('/search?rating=asc')
+        console.debug('asc func', root.$route.query)
+        const filteredArr: Class[] = Object.assign([], classList.value)
+        filteredArr.sort((left, right) =>
+          left.avgRating > right.avgRating ? 1 : -1
+        )
+        classList.value = filteredArr
+        isFilteredByRatingAsc.value = true
+      } else {
+        // 元の順番に戻す
+        // root.$router.replace('/search')
+        classList.value = root.$store.getters.classes
+        isFilteredByRatingAsc.value = false
+      }
+    }
+
+    // TODO: おすすめ度を降順でフィルタリング
+    const isFilteredByRatingDesc = ref(false)
+    if (root.$route.query.rating === 'desc') isFilteredByRatingDesc.value = true
+    const filterByRatingDesc = () => {
+      isFilteredByRatingAsc.value = false
+      // フィルタリングされていなければフィルタリングした配列を classList へ代入
+      if (!isFilteredByRatingDesc.value) {
+        const filteredArr: Class[] = Object.assign([], classList.value)
+        filteredArr.sort((left, right) =>
+          left.avgRating < right.avgRating ? 1 : -1
+        )
+        classList.value = filteredArr
+        isFilteredByRatingDesc.value = true
+      } else {
+        // 元の順番に戻す
+        classList.value = root.$store.getters.classes
+        isFilteredByRatingDesc.value = false
+      }
+    }
+    // if (root.$route.query.rating === 'desc') {
+    //   filterByRatingDesc()
+    // }
+
     /**
      * init
      */
     // storeから全ての授業リスト
     const classList = ref<Class[]>([])
-    classList.value = root.$store.getters.classes
+    classList.value = Object.assign([], root.$store.getters.classes)
+    // console.debug('classList', classList.value)
 
     // Storeに 'searchingTitle' があればその授業の一覧を表示する
     const storeSearchingTitle = root.$store.getters.searchingTitle
@@ -231,6 +298,10 @@ export default defineComponent({
       rating,
       RESULT_COMMENT,
       getTagData,
+      isFilteredByRatingAsc,
+      filterByRatingAsc,
+      isFilteredByRatingDesc,
+      filterByRatingDesc,
       isSearching,
       searchingTitle,
       filteredClasses,
