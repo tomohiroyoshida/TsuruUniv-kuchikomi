@@ -21,10 +21,10 @@
             </div>
             <div v-else-if="text === 'delete'">
               <div>
-                このクチコミを削除します。この操作は<span class="red--text"
-                  >取り消せません。</span
-                >
+                クチコミを<span class="red--text font-weight-bold">削除</span
+                >します。
               </div>
+              <div>この操作は取り消せません。</div>
             </div>
             <div v-else-if="text == 'update-profile'">
               <div>名前を「{{ $attrs.username }}」に設定します。</div>
@@ -45,7 +45,12 @@
           >
             いいえ
           </AppBtn>
-          <AppBtn color="primary" class="mr-1" @click.stop="$emit('ok')">
+          <AppBtn
+            :color="text === 'delete' ? 'red' : 'primary'"
+            depressed
+            class="mr-2"
+            @click.stop="$emit('ok')"
+          >
             はい
           </AppBtn>
         </v-col>
