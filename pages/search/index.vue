@@ -26,18 +26,18 @@
           <v-card
             v-for="item in classList"
             :key="item.docId"
-            class="card my-1 ml-1 pb-2"
+            class="card my-2 pb-2"
             rounded
             outlined
           >
-            <v-card-title>{{ item.classTitle }}</v-card-title>
+            <v-card-title class="pt-">{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
             <!-- TODO: タグ+おすすめ度 -->
             <!-- <v-card-text>
               <v-row justify="space-around">
-                <v-col cols="12">
+                <v-col cols="12" class="pl-2">
                   <div v-if="item.tags !== []">
                     <v-chip
                       v-for="(tag, idx) in item.tags"
@@ -65,16 +65,17 @@
                 </v-col>
               </v-row>
             </v-card-text> -->
-
-            <AppBtn
-              class="btn"
-              color="primary"
-              width="6rem"
-              depressed
-              @click="goToKuchikomi(item.docId)"
-            >
-              <div class="text-caption">クチコミ閲覧</div>
-            </AppBtn>
+            <v-card-text>
+              <AppBtn
+                class="btn"
+                color="primary"
+                width="6rem"
+                depressed
+                @click="goToKuchikomi(item.docId)"
+              >
+                <div class="text-caption">クチコミ閲覧</div>
+              </AppBtn>
+            </v-card-text>
           </v-card>
         </section>
 
@@ -104,7 +105,7 @@
             rounded
             outlined
           >
-            <v-card-title>{{ item.classTitle }}</v-card-title>
+            <v-card-title class="pt-">{{ item.classTitle }}</v-card-title>
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
@@ -263,6 +264,7 @@ export default defineComponent({
   }
   .card {
     width: 49.4%;
+    margin-left: 4px;
   }
   .search-field {
     width: 30rem;
@@ -277,6 +279,7 @@ export default defineComponent({
   }
   .card {
     width: 24.6%;
+    margin-left: 4px;
   }
   .btn {
     position: absolute;

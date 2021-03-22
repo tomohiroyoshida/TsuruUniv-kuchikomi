@@ -3,7 +3,7 @@
     <v-progress-circular indeterminate size="100" width="6" color="primary" />
   </div>
   <!-- クチコミ一覧 -->
-  <v-container v-else class="pt-15">
+  <v-container v-else class="pt-15 px-2">
     <v-row no-gutters justify="center" align="center" class="body">
       <v-col cols="12" lg="9">
         <!-- クチコミが存在しない場合 -->
@@ -35,7 +35,7 @@
             >
               {{ currentClass.classTitle }}
             </div>
-            <div class="d-flex justify-center pb-3">
+            <div class="d-flex justify-center pb-1">
               <AppBtn
                 depressed
                 color="primary"
@@ -51,7 +51,7 @@
             <v-card
               v-for="item in kuchikomiList"
               :key="item.docId"
-              class="card my-1 ml-1"
+              class="card my-2"
               rounded
               outlined
             >
@@ -66,14 +66,14 @@
               </div>
 
               <!-- タイトル＋レーティング -->
-              <div class="d-flex px-1 pt-3">
+              <div class="d-flex px-1">
                 <v-rating
                   :value="item.rating"
                   small
                   dense
                   readonly
                   half-increments
-                  color="star"
+                  color="warning"
                   background-color="grey lighten-1"
                 />
                 <div class="text-subtitle-2 font-weight-bold px-2">
@@ -85,7 +85,7 @@
                 受講した年: {{ item.classYear }} 年
               </div>
               <!-- クチコミの内容 -->
-              <div class="d-flex pa-3 text-body-1">
+              <div class="d-flex pa-2 text-body-1">
                 {{ item.kuchikomi }}
               </div>
               <!-- 編集・削除ボタン -->
