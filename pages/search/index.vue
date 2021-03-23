@@ -169,7 +169,7 @@
 <script lang="ts" async>
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
-import { TAGS } from '@/data/TAGS'
+import { CLASS_TAGS } from '@/data/TAGS'
 
 const RESULT_COMMENT = {
   YES: '検索結果',
@@ -207,7 +207,7 @@ export default defineComponent({
 
     // タグのテキストを表示
     const getTagData = (tag: string) => {
-      return TAGS.find((item) => item.value === tag)
+      return CLASS_TAGS.find((item) => item.value === tag)
     }
 
     // 授業一覧をおすすめ降順で並べ替え

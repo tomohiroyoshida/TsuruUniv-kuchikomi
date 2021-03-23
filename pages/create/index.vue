@@ -8,10 +8,11 @@
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="10">
-              <TextCaption required class="my-1">
+            <v-col cols="11">
+              <TextCaption required>
                 授業名 (見つからない場合は
-                <nuxt-link to="/create/new-class">こちらから新規作成</nuxt-link
+                <nuxt-link to="/create/new-class"
+                  >こちらから授業を作成</nuxt-link
                 >)
               </TextCaption>
               <v-autocomplete
@@ -35,10 +36,8 @@
 
           <!--  授業の情報の書かれたカード -->
           <v-row v-show="classCardInfo.docId" no-gutters justify="center">
-            <v-col cols="10">
-              <div class="required-caption text-caption my-1 ml-3">
-                授業の情報
-              </div>
+            <v-col cols="11">
+              <TextCaption title="授業の情報" />
               <v-card rounded outlined>
                 <v-card-title>{{ classCardInfo.classTitle }}</v-card-title>
                 <v-card-subtitle>
@@ -48,9 +47,16 @@
             </v-col>
           </v-row>
 
+          <!-- TODO: クチコミのタグ -->
+          <!-- <v-row no-gutters justify="center" class="pt-2">
+            <v-col cols="11">
+              <TextCaption title="クチコミタグ(任意)" />
+              <TagsInput v-model="selectedTags" :items="KUCHIKOMI_TAGS" />
+            </v-col>
+          </v-row> -->
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption required title="受講した年" />
               <SelectInput
                 v-model="classYear"
@@ -61,7 +67,7 @@
           </v-row>
           <!-- おすすめ度 -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption required title="おすすめ度(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
@@ -76,7 +82,7 @@
           </v-row>
           <!-- タイトル -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption required title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
@@ -88,12 +94,12 @@
           </v-row>
           <!-- クチコミ -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption required title="クチコミの内容" />
               <TextareaInput
                 v-model="kuchikomi"
                 :rules="RULES.kuchikomi"
-                placeholder="例： 授業も面白いし先生も優しいです！ ただテストは難しいので要対策です！"
+                placeholder="例： 授業も面白いし先生も優しいです。 ただテストは難しいので要対策です！"
               />
             </v-col>
           </v-row>
@@ -154,6 +160,7 @@ import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 import { suid } from 'rand-token'
 import { setAvgRating } from '@/helpers/setAvgRating'
+import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -173,6 +180,7 @@ export default defineComponent({
   setup(_, { root }) {
     const teacher = ref('')
     const isFormValid = ref(true)
+    const selectedTags = ref([])
     const rating = ref(0.5)
     const kuchikomiTitle = ref('')
     const kuchikomi = ref('')
@@ -308,6 +316,8 @@ export default defineComponent({
 
     return {
       RULES,
+      KUCHIKOMI_TAGS,
+      selectedTags,
       isFormValid,
       rating,
       kuchikomiTitle,

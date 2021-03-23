@@ -1,5 +1,5 @@
 <template>
-  <v-container id="create" class="pa-1">
+  <v-container id="create" class="pa-0">
     <v-row no-gutters justify="center">
       <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center mt-2 mb-6 font-weight-bold">
@@ -8,7 +8,7 @@
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
             <!-- 授業名 -->
-            <v-col cols="10" md="5" class="mx-1">
+            <v-col cols="11" md="6" class="mr-1">
               <TextCaption required title="授業名" />
               <TextInput
                 v-model="classTitle"
@@ -18,7 +18,7 @@
               />
             </v-col>
             <!-- 講師名 -->
-            <v-col cols="10" md="5" class="mx-1">
+            <v-col cols="11" md="5">
               <TextCaption required title="講師名" />
               <TextInput
                 v-model="teacherName"
@@ -28,21 +28,32 @@
               />
             </v-col>
           </v-row>
-          <!-- タグ -->
+          <!-- 授業タグ -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption title="カテゴリータグ(任意)" />
               <TagsInput
                 v-model="selectedTags"
-                :items="TAGS"
+                :items="CLASS_TAGS"
                 placeholder="タグは複数選択できます"
               />
             </v-col>
           </v-row>
+          <!-- TODO: クチコミタグ -->
+          <!-- <v-row no-gutters justify="center">
+            <v-col cols="11">
+              <TextCaption title="カテゴリータグ(任意)" />
+              <TagsInput
+                v-model="selectedTags"
+                :items="CLASS_TAGS"
+                placeholder="タグは複数選択できます"
+              />
+            </v-col>
+          </v-row> -->
 
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
-            <v-col cols="10" class="mx-1">
+            <v-col cols="11" class="mx-1">
               <TextCaption required title="受講した年" />
               <SelectInput
                 v-model="classYear"
@@ -53,7 +64,7 @@
           </v-row>
           <!-- おすすめ度 -->
           <v-row no-gutters justify="center">
-            <v-col cols="10" class="mx-1">
+            <v-col cols="11" class="mx-1">
               <TextCaption required title="おすすめ度(0.5~5)" />
               <div class="my-2 d-flex justify-start">
                 <v-rating
@@ -68,7 +79,7 @@
           </v-row>
           <!-- クチコミのタイトル -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption required title="クチコミのタイトル" />
               <TextInput
                 v-model="kuchikomiTitle"
@@ -80,12 +91,12 @@
           </v-row>
           <!-- クチコミ -->
           <v-row no-gutters justify="center">
-            <v-col cols="10">
+            <v-col cols="11">
               <TextCaption required title="クチコミの内容" />
               <TextareaInput
                 v-model="kuchikomi"
                 :rules="RULES.kuchikomi"
-                placeholder="例： 授業も面白いし先生も優しいです！ ただテストは難しいので要対策です！"
+                placeholder="例： 授業も面白いし先生も優しいです ただテストは難しいので要対策です！"
               />
             </v-col>
           </v-row>
@@ -146,7 +157,7 @@
 <script lang="ts" async>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { Class, Kuchikomi } from '@/types/State'
-import { TAGS } from '@/data/TAGS'
+import { CLASS_TAGS } from '@/data/TAGS'
 import db from '@/plugins/firebase'
 import firebase from 'firebase'
 import { suid } from 'rand-token'
@@ -320,7 +331,7 @@ export default defineComponent({
 
     return {
       RULES,
-      TAGS,
+      CLASS_TAGS,
       selectedTags,
       classList,
       classTitle,

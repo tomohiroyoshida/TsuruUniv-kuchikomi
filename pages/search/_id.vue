@@ -47,6 +47,7 @@
               >
             </div>
           </v-col>
+          <!-- クチコミのカード -->
           <v-col cols="12">
             <v-card
               v-for="item in kuchikomiList"
@@ -80,8 +81,21 @@
                   {{ item.kuchikomiTitle }}
                 </div>
               </div>
+              <!-- TODO: クチコミタグ -->
+              <!-- <div v-if="item.tags !== []" class="px-2">
+                <v-chip
+                  v-for="(tag, idx) in item.tags"
+                  :key="idx"
+                  x-small
+                  class="mr-1 mb-1"
+                  :color="getTagData(tag).color"
+                  text-color="white"
+                >
+                  {{ getTagData(tag).text }}
+                </v-chip>
+              </div> -->
               <!-- 受講年 -->
-              <div class="text-caption text--disabled mx-2">
+              <div class="text-caption text--disabled px-2">
                 受講した年: {{ item.classYear }} 年
               </div>
               <!-- クチコミの内容 -->
@@ -139,6 +153,7 @@ import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi, User, Class } from '@/types/State'
 import { setAvgRating } from '@/helpers/setAvgRating'
+import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 
 export default defineComponent({
   name: 'SearchId',
@@ -224,6 +239,11 @@ export default defineComponent({
       }
     }
 
+    // タグのテキストを表示
+    const getTagData = (tag: string) => {
+      return KUCHIKOMI_TAGS.find((item) => item.value === tag)
+    }
+
     /**
      * init
      */
@@ -270,6 +290,8 @@ export default defineComponent({
     )
 
     return {
+      KUCHIKOMI_TAGS,
+      getTagData,
       classId,
       kuchikomiList,
       uid,
