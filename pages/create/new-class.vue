@@ -32,30 +32,11 @@
           <v-row no-gutters justify="center">
             <v-col cols="10">
               <TextCaption title="カテゴリータグ(任意)" />
-              <v-combobox
+              <TagsInput
                 v-model="selectedTags"
                 :items="TAGS"
                 placeholder="タグは複数選択できます"
-                dense
-                multiple
-                outlined
-                clearable
-              >
-                <template v-slot:selection="data">
-                  <v-chip
-                    v-bind="data.attrs"
-                    :input-value="data.selected"
-                    :color="data.item.color"
-                    small
-                    dense
-                    close
-                    text-color="white"
-                    @click:close="data.parent.selectItem(data.item)"
-                  >
-                    {{ data.item.text }}
-                  </v-chip>
-                </template>
-              </v-combobox>
+              />
             </v-col>
           </v-row>
 
