@@ -3,7 +3,9 @@
   <v-combobox
     :value="value"
     :items="items"
+    :rules="rules"
     :placeholder="placeholder"
+    :counter="counter"
     dense
     multiple
     outlined
@@ -46,7 +48,13 @@ export default defineComponent({
       type: Array as PropType<Tag[]>,
       required: true
     },
+    rules: {
+      type: Array
+    },
     placeholder: {
+      type: String
+    },
+    counter: {
       type: String
     }
   }

@@ -28,14 +28,17 @@
               />
             </v-col>
           </v-row>
+
           <!-- 授業タグ -->
           <v-row no-gutters justify="center">
             <v-col cols="11">
-              <TextCaption title="カテゴリータグ(任意)" />
+              <TextCaption title="授業カテゴリータグ(任意)" />
               <TagsInput
                 v-model="selectedTags"
                 :items="CLASS_TAGS"
-                placeholder="タグは複数選択できます"
+                :rules="RULES.tags"
+                counter="3"
+                placeholder="タグ3個まで選択できます"
               />
             </v-col>
           </v-row>
@@ -162,6 +165,12 @@ import db from '@/plugins/firebase'
 import firebase from 'firebase'
 import { suid } from 'rand-token'
 
+interface Tag {
+  text: string
+  value: string
+  color: string
+}
+
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
   requiredWith30: [
@@ -172,14 +181,9 @@ const RULES = {
     (v: string) => !!v || 'この欄の入力は必須です',
     (v: string) =>
       (v && v.length <= 1000) || 'クチコミ内容は1000文字以下で記入してください'
-  ]
+  ],
+  tags: [(v: Tag[]) => v.length < 4 || 'タグは4個以上追加できません。']
 } as const
-
-interface Tag {
-  text: string
-  value: string
-  color: string
-}
 
 export default defineComponent({
   name: 'create-new-class',
