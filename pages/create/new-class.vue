@@ -38,7 +38,7 @@
                 :items="CLASS_TAGS"
                 :rules="RULES.tags"
                 counter="3"
-                placeholder="タグは3つまで選択可"
+                placeholder="3つまで選択できます"
               />
             </v-col>
           </v-row>
