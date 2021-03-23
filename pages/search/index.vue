@@ -16,25 +16,17 @@
             class="mx-1"
           />
         </div>
+        <!-- 並べ替えボタン -->
         <div class="d-flex justify-end">
           <FilteringBtn
             text
-            :depressed="isFilteredByRatingDesc"
+            :depressed="isOrderedByRating"
             class="mr-1 px-1"
-            @click="filterByRatingDesc"
+            @click="orderByRating"
           >
             <v-icon small>mdi-star</v-icon>
             <div class="text-caption">おすすめ順</div>
           </FilteringBtn>
-          <!-- <FilteringBtn
-            text
-            :depressed="isFilteredByRatingAsc"
-            class="mr-1 px-1"
-            @click="filterByRatingAsc"
-          >
-            <v-icon small>mdi-sort-ascending</v-icon>
-            <div class="text-caption">おすすめ度高低い順</div>
-          </FilteringBtn> -->
         </div>
 
         <!-- 検索結果一覧 -->
@@ -187,7 +179,6 @@ const RESULT_COMMENT = {
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
-    const rating = 4 // FIXME お勧め平均値表示機能できたら消す
     const isSearching = ref(false)
     const filteredClasses = ref<Class[]>([])
     const searchingTitle = ref('')
@@ -219,51 +210,26 @@ export default defineComponent({
       return TAGS.find((item) => item.value === tag)
     }
 
-    // TODO: おすすめ度を昇順でフィルタリング これはいる？
-    const isFilteredByRatingAsc = ref(false)
-    // console.debug('query', root.$route.query, root.$route.params)
-    const filterByRatingAsc = () => {
-      isFilteredByRatingDesc.value = false
+    // 授業一覧をおすすめ降順で並べ替え
+    const orderedByRating: boolean = root.$store.getters.orderedBy.rating
+    const isOrderedByRating = ref<boolean>(orderedByRating)
+    const orderByRating = () => {
       // フィルタリングされていなければフィルタリングした配列を classList へ代入
-      if (!isFilteredByRatingAsc.value) {
-        // root.$router.replace('/search?rating=asc')
-        console.debug('asc func', root.$route.query)
-        const filteredArr: Class[] = Object.assign([], classList.value)
-        filteredArr.sort((left, right) =>
-          left.avgRating > right.avgRating ? 1 : -1
-        )
-        classList.value = filteredArr
-        isFilteredByRatingAsc.value = true
-      } else {
-        // 元の順番に戻す
-        // root.$router.replace('/search')
-        classList.value = root.$store.getters.classes
-        isFilteredByRatingAsc.value = false
-      }
-    }
-
-    // TODO: おすすめ度を降順でフィルタリング
-    const isFilteredByRatingDesc = ref(false)
-    if (root.$route.query.rating === 'desc') isFilteredByRatingDesc.value = true
-    const filterByRatingDesc = () => {
-      isFilteredByRatingAsc.value = false
-      // フィルタリングされていなければフィルタリングした配列を classList へ代入
-      if (!isFilteredByRatingDesc.value) {
+      if (!isOrderedByRating.value) {
         const filteredArr: Class[] = Object.assign([], classList.value)
         filteredArr.sort((left, right) =>
           left.avgRating < right.avgRating ? 1 : -1
         )
         classList.value = filteredArr
-        isFilteredByRatingDesc.value = true
+        isOrderedByRating.value = true
+        root.$store.dispatch('setOrderedByRating', true)
       } else {
         // 元の順番に戻す
         classList.value = root.$store.getters.classes
-        isFilteredByRatingDesc.value = false
+        isOrderedByRating.value = false
+        root.$store.dispatch('setOrderedByRating', false)
       }
     }
-    // if (root.$route.query.rating === 'desc') {
-    //   filterByRatingDesc()
-    // }
 
     /**
      * init
@@ -294,14 +260,22 @@ export default defineComponent({
       root.$store.dispatch('setCurrentClass', emptyClass)
     })()
 
+    // 最初にページを訪れたとき isOrderedByRating === true の場合は授業一覧を並べ替える
+    if (isOrderedByRating.value) {
+      const filteredArr: Class[] = Object.assign([], classList.value)
+      filteredArr.sort((left, right) =>
+        left.avgRating < right.avgRating ? 1 : -1
+      )
+      classList.value = filteredArr
+      isOrderedByRating.value = true
+    }
+
     return {
-      rating,
       RESULT_COMMENT,
       getTagData,
-      isFilteredByRatingAsc,
-      filterByRatingAsc,
-      isFilteredByRatingDesc,
-      filterByRatingDesc,
+      isOrderedByRating,
+      orderedByRating,
+      orderByRating,
       isSearching,
       searchingTitle,
       filteredClasses,
