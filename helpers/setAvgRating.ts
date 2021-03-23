@@ -29,11 +29,11 @@ export async function setAvgRating(classId: string): Promise<void> {
     })
   }
   // avgRating が NaN(クチコミが存在しない)の場合 デフォルト値として ０ をセット
-  else if (isNaN(avgRating)) {
-    await db.collection('classes').doc(classId).update({
-      avgRating: 0
-    })
-  } else {
-    console.error('error')
-  }
+  // else if (isNaN(avgRating)) {
+  //   await db.collection('classes').doc(classId).update({
+  //     avgRating: 0
+  //   })
+  // } else {
+  //   console.error('error')
+  // }
 }
