@@ -38,7 +38,7 @@
                 :items="CLASS_TAGS"
                 :rules="RULES.tags"
                 counter="3"
-                placeholder="タグ3個まで選択できます"
+                placeholder="タグは3つまで選択可"
               />
             </v-col>
           </v-row>
@@ -182,7 +182,7 @@ const RULES = {
     (v: string) =>
       (v && v.length <= 1000) || 'クチコミ内容は1000文字以下で記入してください'
   ],
-  tags: [(v: Tag[]) => v.length < 4 || 'タグは4個以上追加できません。']
+  tags: [(v: Tag[]) => v.length < 4 || 'タグは4つ以上追加できません。']
 } as const
 
 export default defineComponent({
