@@ -40,10 +40,15 @@
               </v-col>
             </v-row>
             <!-- 授業名＋講師名 -->
-            <v-row no-gutters justify="center" class="mt-2">
+            <v-row
+              v-if="type !== 'edit'"
+              no-gutters
+              justify="center"
+              class="mt-2"
+            >
               <v-col cols="11">
                 <TextCaption title="授業情報" />
-                <div v-if="type !== 'edit'" class="pl-5 text-body-2">
+                <div class="pl-5 text-body-2">
                   <div>{{ input.classTitle }}</div>
                   <div class="text-caption">{{ input.teacherName }}</div>
                 </div>
