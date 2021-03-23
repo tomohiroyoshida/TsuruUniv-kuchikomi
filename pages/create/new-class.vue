@@ -3,7 +3,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center mt-2 mb-6 font-weight-bold">
-          新しい授業＋クチコミ新規作成
+          新しい授業とクチコミ作成
         </div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
@@ -24,14 +24,14 @@
                 v-model="teacherName"
                 :rules="RULES.requiredWith30"
                 :counter="30"
-                placeholder="例： 都留太郎"
+                placeholder="例： 都留 千尋"
               />
             </v-col>
           </v-row>
           <!-- タグ -->
           <v-row no-gutters justify="center">
             <v-col cols="10">
-              <TextCaption title="カテゴリタグ(任意)" />
+              <TextCaption title="カテゴリータグ(任意)" />
               <v-combobox
                 v-model="selectedTags"
                 :items="TAGS"
@@ -192,6 +192,7 @@ interface Tag {
 export default defineComponent({
   name: 'create-new-class',
   setup(_, { root }) {
+    const uid: string = root.$store.getters.user.uid
     const classTitle = ref('')
     const teacherName = ref('')
     const rating = ref(0.5)
@@ -239,8 +240,9 @@ export default defineComponent({
         docId: docRef.id,
         classTitle: classTitle.value,
         teacherName: teacherName.value,
+        avgRating: rating.value,
         tags: tagValues,
-        createdBy: root.$store.getters.user.uid,
+        createdBy: uid,
         createdAt: new Date().toLocaleString()
       }
       docRef.set(data)
@@ -265,7 +267,7 @@ export default defineComponent({
         classYear: classYear.value,
         rating: rating.value,
         kuchikomi: kuchikomi.value,
-        uid: root.$store.getters.user.uid,
+        uid,
         username: root.$store.getters.user.username,
         createdAt: new Date().toLocaleString()
       }
@@ -342,6 +344,7 @@ export default defineComponent({
       classList,
       classTitle,
       classTitles,
+      uid,
       teacherName,
       kuchikomiTitle,
       kuchikomi,

@@ -1,6 +1,11 @@
 import { NuxtAppOptions, NuxtState } from '@nuxt/types/app'
 import { User, Class } from '@/types/State'
 
+interface OrderedBy {
+  rating: boolean
+  tags: string[]
+}
+
 export const state = () => ({
   // ユーザーの情報
   user: {
@@ -17,13 +22,18 @@ export const state = () => ({
   // 検索ページで検索欄に入力された授業名 + フィルタリングされた授業一覧
   searchingTitle: '',
   filteredClasses: [],
-  // 閲覧している授業
+  // 閲覧している授業の情報
   currentClass: {
     docId: '',
     classTitle: '',
     teacherName: '',
     createdBy: '',
     createdAt: ''
+  },
+  // 授業一覧が何で並べ替えされているか
+  orderedBy: {
+    rating: false,
+    tags: []
   }
 })
 
@@ -48,6 +58,9 @@ export const getters = {
   },
   currentClass: (state: NuxtState): string => {
     return state.currentClass
+  },
+  orderedBy: (state: NuxtState): OrderedBy => {
+    return state.orderedBy
   }
 }
 
@@ -75,6 +88,9 @@ export const mutations = {
   },
   setCurrentClass(state: NuxtState, currentClass: string) {
     state.currentClass = currentClass
+  },
+  setOrderedByRating(state: NuxtState, isOrderedByRating: boolean) {
+    state.orderedBy.rating = isOrderedByRating
   }
 }
 
@@ -95,6 +111,11 @@ export const actions = {
   pushClass({ commit }: NuxtAppOptions, newClass: Class) {
     commit('pushClass', newClass)
   },
+  // CSRF対策のTokenを保存
+  setCsrfToken({ commit }: NuxtAppOptions, csrfToken: string) {
+    commit('setCsrfToken', csrfToken)
+  },
+
   // 検索ページで検索欄に入力された授業名を保存
   setSearchingTitle({ commit }: NuxtAppOptions, searchingTitle: string) {
     commit('setSearchingTitle', searchingTitle)
@@ -103,10 +124,11 @@ export const actions = {
   setFilteredClasses({ commit }: NuxtAppOptions, filteredClasses: string) {
     commit('setFilteredClasses', filteredClasses)
   },
-  // CSRF対策のTokenを保存
-  setCsrfToken({ commit }: NuxtAppOptions, csrfToken: string) {
-    commit('setCsrfToken', csrfToken)
+  // おすすめ順で並べ替え
+  setOrderedByRating({ commit }: NuxtAppOptions, isOrderedByRating: boolean) {
+    commit('setOrderedByRating', isOrderedByRating)
   },
+  // 現在閲覧している授業
   setCurrentClass({ commit }: NuxtAppOptions, currentClass: string) {
     commit('setCurrentClass', currentClass)
   }

@@ -127,6 +127,7 @@ import {
 } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
+import { setAvgRating } from '@/helpers/setAvgRating'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -175,12 +176,14 @@ export default defineComponent({
     // 更新処理
     const update = async (): Promise<void> => {
       disabled.value = true
+      const classId = root.$route.params.id
       const docRef = db
         .collection('classes')
-        .doc(root.$route.params.id)
+        .doc(classId)
         .collection('kuchikomis')
         .doc(props.updatingKuchikomi.docId)
       try {
+        // 更新した内容
         const data: Kuchikomi = {
           docId: props.updatingKuchikomi.docId,
           kuchikomiTitle: props.updatingKuchikomi.kuchikomiTitle,
@@ -191,7 +194,8 @@ export default defineComponent({
           username: root.$store.getters.user.username,
           createdAt: props.updatingKuchikomi.createdAt
         }
-        await docRef.set(data, { merge: true })
+        await docRef.set(data, { merge: true }) // 更新
+        await setAvgRating(classId) // 授業のおすすめ度の平均値を更新
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
         setTimeout(() => {

@@ -16,6 +16,18 @@
             class="mx-1"
           />
         </div>
+        <!-- 並べ替えボタン -->
+        <div class="d-flex justify-end">
+          <FilteringBtn
+            text
+            :depressed="isOrderedByRating"
+            class="mr-1 px-1"
+            @click="orderByRating"
+          >
+            <v-icon small>mdi-star</v-icon>
+            <div class="text-caption">おすすめ順</div>
+          </FilteringBtn>
+        </div>
 
         <!-- 検索結果一覧 -->
         <!-- 検索欄に文字が入力されていない場合 -->
@@ -26,7 +38,7 @@
           <v-card
             v-for="item in classList"
             :key="item.docId"
-            class="card my-1 ml-1 pb-2"
+            class="card my-2 pb-2"
             rounded
             outlined
           >
@@ -35,10 +47,10 @@
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
             <!-- TODO: タグ+おすすめ度 -->
-            <!-- <v-card-text>
+            <v-card-text>
               <v-row justify="space-around">
-                <v-col cols="12">
-                  <div v-if="item.tags !== []">
+                <v-col cols="12" class="pl-2">
+                  <!-- <div v-if="item.tags !== []">
                     <v-chip
                       v-for="(tag, idx) in item.tags"
                       :key="idx"
@@ -49,10 +61,10 @@
                     >
                       {{ getTagData(tag).text }}
                     </v-chip>
-                  </div>
+                  </div> -->
                   <div class="d-flex justify-start">
                     <v-rating
-                      v-model="rating"
+                      v-model="item.avgRating"
                       half-increments
                       small
                       dense
@@ -60,22 +72,20 @@
                       color="star"
                       background-color="grey lighten-1"
                     />
-                    ({{ rating }})
+                    ({{ item.avgRating }})
                   </div>
                 </v-col>
               </v-row>
-            </v-card-text> -->
-            <v-card-text>
-              <AppBtn
-                class="btn"
-                color="primary"
-                width="6rem"
-                depressed
-                @click="goToKuchikomi(item.docId)"
-              >
-                <div class="text-caption">クチコミ閲覧</div>
-              </AppBtn>
             </v-card-text>
+            <AppBtn
+              class="btn"
+              color="primary"
+              width="6rem"
+              depressed
+              @click="goToKuchikomi(item.docId)"
+            >
+              <div class="text-caption">クチコミを見る</div>
+            </AppBtn>
           </v-card>
         </section>
 
@@ -101,7 +111,7 @@
           <v-card
             v-for="item in filteredClasses"
             :key="item.docId"
-            class="card my-1 ml-1 pb-5"
+            class="card my-2 pb-2"
             rounded
             outlined
           >
@@ -109,32 +119,46 @@
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
-            <!-- TODO: タグ -->
-            <!-- <v-row v-if="item.tags" justify="space-around" class="px-2">
-              <v-col cols="12">
-                <v-chip
-                  v-for="(tag, idx) in item.tags"
-                  :key="idx"
-                  x-small
-                  outlined
-                  class="mr-1 mb-1"
-                  :color="getTagData(tag).color"
-                >
-                  {{ getTagData(tag).text }}
-                </v-chip>
-              </v-col>
-            </v-row> -->
+            <!-- TODO: タグ+おすすめ度 -->
             <v-card-text>
-              <AppBtn
-                class="btn"
-                color="primary"
-                width="6rem"
-                depressed
-                @click="goToKuchikomi(item.docId)"
-              >
-                <div class="text-caption">クチコミ閲覧</div>
-              </AppBtn>
+              <v-row justify="space-around">
+                <v-col cols="12" class="pl-2">
+                  <!-- <div v-if="item.tags !== []">
+                    <v-chip
+                      v-for="(tag, idx) in item.tags"
+                      :key="idx"
+                      x-small
+                      outlined
+                      class="mr-1 mb-1"
+                      :color="getTagData(tag).color"
+                    >
+                      {{ getTagData(tag).text }}
+                    </v-chip>
+                  </div> -->
+                  <div class="d-flex justify-start">
+                    <v-rating
+                      v-model="item.avgRating"
+                      half-increments
+                      small
+                      dense
+                      readonly
+                      color="star"
+                      background-color="grey lighten-1"
+                    />
+                    ({{ item.avgRating }})
+                  </div>
+                </v-col>
+              </v-row>
             </v-card-text>
+            <AppBtn
+              class="btn"
+              color="primary"
+              width="6rem"
+              depressed
+              @click="goToKuchikomi(item.docId)"
+            >
+              <div class="text-caption">クチコミを見る</div>
+            </AppBtn>
           </v-card>
         </section>
       </v-col>
@@ -155,7 +179,6 @@ const RESULT_COMMENT = {
 export default defineComponent({
   name: 'search',
   setup(_, { root }) {
-    const rating = 4
     const isSearching = ref(false)
     const filteredClasses = ref<Class[]>([])
     const searchingTitle = ref('')
@@ -187,12 +210,34 @@ export default defineComponent({
       return TAGS.find((item) => item.value === tag)
     }
 
+    // 授業一覧をおすすめ降順で並べ替え
+    const orderedByRating: boolean = root.$store.getters.orderedBy.rating
+    const isOrderedByRating = ref<boolean>(orderedByRating)
+    const orderByRating = () => {
+      // フィルタリングされていなければフィルタリングした配列を classList へ代入
+      if (!isOrderedByRating.value) {
+        const filteredArr: Class[] = Object.assign([], classList.value)
+        filteredArr.sort((left, right) =>
+          left.avgRating < right.avgRating ? 1 : -1
+        )
+        classList.value = filteredArr
+        isOrderedByRating.value = true
+        root.$store.dispatch('setOrderedByRating', true)
+      } else {
+        // 元の順番に戻す
+        classList.value = root.$store.getters.classes
+        isOrderedByRating.value = false
+        root.$store.dispatch('setOrderedByRating', false)
+      }
+    }
+
     /**
      * init
      */
     // storeから全ての授業リスト
     const classList = ref<Class[]>([])
-    classList.value = root.$store.getters.classes
+    classList.value = Object.assign([], root.$store.getters.classes)
+    // console.debug('classList', classList.value)
 
     // Storeに 'searchingTitle' があればその授業の一覧を表示する
     const storeSearchingTitle = root.$store.getters.searchingTitle
@@ -215,10 +260,22 @@ export default defineComponent({
       root.$store.dispatch('setCurrentClass', emptyClass)
     })()
 
+    // 最初にページを訪れたとき isOrderedByRating === true の場合は授業一覧を並べ替える
+    if (isOrderedByRating.value) {
+      const filteredArr: Class[] = Object.assign([], classList.value)
+      filteredArr.sort((left, right) =>
+        left.avgRating < right.avgRating ? 1 : -1
+      )
+      classList.value = filteredArr
+      isOrderedByRating.value = true
+    }
+
     return {
-      rating,
       RESULT_COMMENT,
       getTagData,
+      isOrderedByRating,
+      orderedByRating,
+      orderByRating,
       isSearching,
       searchingTitle,
       filteredClasses,
@@ -264,6 +321,7 @@ export default defineComponent({
   }
   .card {
     width: 49.4%;
+    margin-left: 4px;
   }
   .search-field {
     width: 30rem;
@@ -278,6 +336,7 @@ export default defineComponent({
   }
   .card {
     width: 24.6%;
+    margin-left: 4px;
   }
   .btn {
     position: absolute;

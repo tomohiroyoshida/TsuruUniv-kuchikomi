@@ -3,13 +3,13 @@
     <v-progress-circular indeterminate size="100" width="6" color="primary" />
   </div>
   <!-- クチコミ一覧 -->
-  <v-container v-else class="pt-15">
+  <v-container v-else class="pt-15 px-2">
     <v-row no-gutters justify="center" align="center" class="body">
       <v-col cols="12" lg="9">
         <!-- クチコミが存在しない場合 -->
         <div v-if="!kuchikomiList.length" class="text-center">
           <div class="my-3 mx-1 d-flex justify-center text-h6 font-weight-bold">
-            「{{ currentClass.classTitle }}」 のクチコミはありません
+            {{ currentClass.classTitle }} のクチコミはありません
           </div>
           <div class="px-3 grey--text">
             もしこの授業を受けたことがあれば、最初のクチコミ作成者になりませんか？
@@ -35,7 +35,7 @@
             >
               {{ currentClass.classTitle }}
             </div>
-            <div class="d-flex justify-center pb-3">
+            <div class="d-flex justify-center pb-1">
               <AppBtn
                 depressed
                 color="primary"
@@ -51,7 +51,7 @@
             <v-card
               v-for="item in kuchikomiList"
               :key="item.docId"
-              class="card my-1 ml-1"
+              class="card my-2"
               rounded
               outlined
             >
@@ -66,7 +66,7 @@
               </div>
 
               <!-- タイトル＋レーティング -->
-              <div class="d-flex px-1 pt-3">
+              <div class="d-flex px-1">
                 <v-rating
                   :value="item.rating"
                   small
@@ -85,7 +85,7 @@
                 受講した年: {{ item.classYear }} 年
               </div>
               <!-- クチコミの内容 -->
-              <div class="d-flex pa-3 text-body-1">
+              <div class="d-flex pa-2 text-body-1">
                 {{ item.kuchikomi }}
               </div>
               <!-- 編集・削除ボタン -->
@@ -138,6 +138,7 @@
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi, User, Class } from '@/types/State'
+import { setAvgRating } from '@/helpers/setAvgRating'
 
 export default defineComponent({
   name: 'SearchId',
@@ -213,7 +214,8 @@ export default defineComponent({
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
           })
-        kuchikomiList.value = newKuchikoims // 上書き
+        setAvgRating(classId) // おすすめ度の平均値を更新
+        kuchikomiList.value = newKuchikoims // クチコミの一覧を上書き
         isOpenDeleteConfirm.value = false
         isOpenSuccessDeleteSnackbar.value = true
       } catch (e) {

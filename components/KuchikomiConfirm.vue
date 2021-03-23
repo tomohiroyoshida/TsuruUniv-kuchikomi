@@ -27,7 +27,7 @@
                   v-else-if="type === 'createClassAndKuchikomi'"
                   class="text-body-1 text-center"
                 >
-                  以下の内容で授業＋クチコミを作成します。<br />
+                  以下の内容で授業とクチコミを作成します。<br />
                   よろしいですか？
                 </div>
                 <div
@@ -37,12 +37,16 @@
                   以下の内容でクチコミを編集します。<br />
                   よろしいですか？
                 </div>
-                <v-card v-if="type !== 'edit'" rounded outlined>
-                  <v-card-title>{{ input.classTitle }}</v-card-title>
-                  <v-card-subtitle>
-                    講師: {{ input.teacherName }}
-                  </v-card-subtitle>
-                </v-card>
+              </v-col>
+            </v-row>
+            <!-- 授業名＋講師名 -->
+            <v-row no-gutters justify="center" class="mt-2">
+              <v-col cols="11">
+                <TextCaption title="授業情報" />
+                <div v-if="type !== 'edit'" class="pl-5 text-body-2">
+                  <div>{{ input.classTitle }}</div>
+                  <div class="text-caption">{{ input.teacherName }}</div>
+                </div>
               </v-col>
             </v-row>
             <!-- タグ -->
@@ -50,46 +54,41 @@
               v-if="type === 'createClassAndKuchikomi'"
               no-gutters
               justify="center"
+              class="mt-2"
             >
               <v-col cols="11">
-                <TextCaption title="カテゴリタグ" />
-                <v-combobox
-                  v-model="input.tags"
-                  dense
-                  multiple
-                  outlined
-                  readonly
-                >
-                  <template v-slot:selection="data">
-                    <v-chip
-                      v-bind="data.attrs"
-                      :input-value="data.selected"
-                      :color="data.item.color"
-                      text-color="white"
-                      dense
-                    >
-                      {{ data.item.text }}
-                    </v-chip>
-                  </template>
-                </v-combobox>
+                <TextCaption title="カテゴリータグ" />
+                <div class="pl-5">
+                  <v-chip
+                    v-for="(tag, idx) in input.tags"
+                    :key="idx"
+                    :color="tag.color"
+                    text-color="white"
+                    small
+                    class="mr-1"
+                  >
+                    {{ tag.text }}
+                  </v-chip>
+                </div>
               </v-col>
             </v-row>
             <!-- おすすめ度 -->
-            <v-row no-gutters justify="center" class="mt-3">
+            <v-row no-gutters justify="center" class="mt-2">
               <v-col cols="11">
                 <!-- 受講した年 -->
                 <TextCaption title="受講した年" />
-                <div class="pl-5">{{ input.classYear }} 年</div>
+                <div class="pl-5 text-body-2">{{ input.classYear }} 年</div>
                 <TextCaption title="おすすめ度(0.5~5)" />
                 <div class="d-flex justify-start">
                   <v-rating
                     v-model="input.rating"
                     readonly
+                    small
                     half-increments
                     color="star"
                     background-color="grey lighten-1"
                   />
-                  <div class="ml-5 my-2">({{ input.rating }})</div>
+                  <div class="my-2">({{ input.rating }})</div>
                 </div>
               </v-col>
             </v-row>
@@ -121,7 +120,7 @@
                   outlined
                   readonly
                   no-resize
-                  height="150"
+                  height="120"
                   color="primary"
                 />
               </v-col>

@@ -3,7 +3,7 @@
     <v-row no-gutters justify="center">
       <v-col cols="12" lg="9">
         <div class="text-h6 d-flex justify-center my-5 font-weight-bold">
-          クチコミ新規作成
+          クチコミ作成
         </div>
         <v-form ref="form" v-model="isFormValid">
           <v-row no-gutters justify="center">
@@ -153,6 +153,7 @@ import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 import { suid } from 'rand-token'
+import { setAvgRating } from '@/helpers/setAvgRating'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -245,9 +246,10 @@ export default defineComponent({
           createdAt: new Date().toLocaleString()
         }
         await docRef.set(data)
+        await setAvgRating(targetClassId.value) // おすすめ度の平均値を更新
         resetInput()
-        emptyCurrentClass()
         isOpenSuccessSnackbar.value = true
+        emptyCurrentClass()
       } catch (e) {
         console.error('create', e)
         isOpenErrorSnackbar.value = true
