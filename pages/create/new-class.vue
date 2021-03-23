@@ -24,7 +24,7 @@
                 v-model="teacherName"
                 :rules="RULES.requiredWith30"
                 :counter="30"
-                placeholder="例： 都留太郎"
+                placeholder="例： 都留 千尋"
               />
             </v-col>
           </v-row>
