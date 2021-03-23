@@ -138,7 +138,7 @@
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi, User, Class } from '@/types/State'
-import { setAvgRating } from '@/helpers/setAgvRating'
+import { setAvgRating } from '@/helpers/setAvgRating'
 
 export default defineComponent({
   name: 'SearchId',

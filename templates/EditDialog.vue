@@ -127,7 +127,7 @@ import {
 } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
-import { setAvgRating } from '@/helpers/setAgvRating'
+import { setAvgRating } from '@/helpers/setAvgRating'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],

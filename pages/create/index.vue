@@ -153,7 +153,7 @@ import { Class } from '@/types/State'
 import db from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 import { suid } from 'rand-token'
-import { setAvgRating } from '@/helpers/setAgvRating'
+import { setAvgRating } from '@/helpers/setAvgRating'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
