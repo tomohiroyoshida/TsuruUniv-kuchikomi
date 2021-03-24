@@ -105,11 +105,7 @@
               <!-- 編集・削除ボタン -->
               <div v-if="uid === item.uid" class="buttons">
                 <v-btn fab icon small @click="openUpdateDialog(item)">
-                  <v-icon
-                    color="teal lighten-2
-"
-                    >mdi-pencil-outline</v-icon
-                  >
+                  <v-icon color="teal lighten-2">mdi-pencil-outline</v-icon>
                 </v-btn>
                 <v-btn fab icon small @click="openDeleteConfirm(item.docId)">
                   <v-icon color="red lighten-1">mdi-trash-can-outline</v-icon>
