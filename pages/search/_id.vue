@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$fetchState.pending" class="loading">
+  <div v-if="$fetchState.pending" id="hoge" class="loading">
     <v-progress-circular indeterminate size="100" width="6" color="primary" />
   </div>
   <!-- クチコミ一覧 -->
@@ -105,11 +105,32 @@
               <!-- 編集・削除ボタン -->
               <div v-if="uid === item.uid" class="buttons">
                 <v-btn fab icon small @click="openUpdateDialog(item)">
-                  <v-icon color="info">mdi-pencil-outline</v-icon>
+                  <v-icon
+                    color="teal lighten-2
+"
+                    >mdi-pencil-outline</v-icon
+                  >
                 </v-btn>
                 <v-btn fab icon small @click="openDeleteConfirm(item.docId)">
-                  <v-icon color="error">mdi-trash-can-outline</v-icon>
+                  <v-icon color="red lighten-1">mdi-trash-can-outline</v-icon>
                 </v-btn>
+              </div>
+              <!-- いいねボタン -->
+              <div
+                v-if="item.uid !== uid"
+                icon
+                small
+                class="d-flex justify-center"
+              >
+                <v-icon
+                  :id="item.docId"
+                  class="likes-icon"
+                  @click="clickHeart(item.docId)"
+                  >mdi-thumb-up</v-icon
+                >
+                <div class="text-body-2 ml-2 mt-2">
+                  {{ getLikesCount(item.docId) || 0 }}
+                </div>
               </div>
             </v-card>
           </v-col>
@@ -155,6 +176,15 @@ import { Kuchikomi, User, Class } from '@/types/State'
 import { setAvgRating } from '@/helpers/setAvgRating'
 import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 
+interface Like {
+  docId: string
+  classId: string
+  kuchikomiId: string
+  likedBy: string
+  likeTo: string
+  createdAt: string
+}
+
 export default defineComponent({
   name: 'SearchId',
   setup(_, { root }) {
@@ -165,6 +195,63 @@ export default defineComponent({
     const isOpenErrorSnackbar = ref(false)
     const isOpenUpdateDialog = ref(false)
     const isOpenDeleteConfirm = ref(false)
+
+    // いいねの Map(クチコミID, いいねId)
+    const likesMap = ref(new Map())
+    // いいねボタンを押す
+    const clickHeart = async (kuchikomiId: string) => {
+      const target = document.getElementById(kuchikomiId)
+      if (target) {
+        target.classList.toggle('liked')
+      }
+      // いいねが押されていれば追加・なければ削除
+      if (target && target.className.includes('liked')) {
+        const docRef = await db.collection('likes').doc()
+        const targetKuchikomiAuthorUid = kuchikomiList.value.find(
+          (item) => item.docId === kuchikomiId
+        )?.uid
+        if (targetKuchikomiAuthorUid) {
+          const input: Like = {
+            docId: docRef.id,
+            classId,
+            kuchikomiId,
+            likedBy: uid.value,
+            likeTo: targetKuchikomiAuthorUid,
+            createdAt: new Date().toLocaleString()
+          }
+          likesList.value.push(input)
+          likesMap.value.set(kuchikomiId, docRef.id)
+          await docRef.set(input)
+        }
+      }
+      // いいねを取り消す
+      else if (target && !target.className.includes('liked')) {
+        const targetLikeDocId = likesMap.value.get(kuchikomiId)
+        const targetIndex = likesList.value.findIndex(
+          (item) => item.docId === targetLikeDocId
+        )
+        // 授業の全いいねの中から該当のいいねを削除
+        likesList.value.splice(targetIndex, 1)
+        // firestoreから削除
+        await db.collection('likes').doc(targetLikeDocId).delete()
+        // console.debug('target: ', target)
+      }
+    }
+
+    // 各クチコミのいいね数を取得
+    const getLikesCount = (kuchikomiId: string) => {
+      const count = likesList.value.filter(
+        (item) => item.kuchikomiId === kuchikomiId
+      )
+      return count.length
+    }
+    // 自分がこのクチコミにいいねしたか
+    const isLikedByMe = (kuchikomiId: string) => {
+      const isKuchikomiLikedByMe = likedKuchikomisByMe.value.filter(
+        (item) => item.kuchikomiId === kuchikomiId
+      )
+      return isKuchikomiLikedByMe[0]
+    }
 
     // クチコミ作成ページへ遷移
     const goToCreatePage = () => {
@@ -268,6 +355,10 @@ export default defineComponent({
 
     // クチコミの一覧を取得
     const kuchikomiList = ref<Kuchikomi[]>([])
+    // この授業に押された全いいね
+    const likesList = ref<Like[]>([])
+    // 自分がどれにいいねしたかのリスト
+    const likedKuchikomisByMe = ref<Like[]>([])
     useFetch(
       async (): Promise<void> => {
         try {
@@ -282,6 +373,34 @@ export default defineComponent({
               })
             })
           uid.value = root.$store.getters.user.uid
+
+          // 全いいねのリストを取得
+          await db
+            .collection('likes')
+            .where('classId', '==', classId)
+            .get()
+            .then((snapshot) => {
+              snapshot.forEach((doc) =>
+                likesList.value.push(doc.data() as Like)
+              )
+            })
+
+          // // 自分がどれにいいねしたかのリスト
+          likedKuchikomisByMe.value = likesList.value.filter(
+            (item) => item.likedBy === uid.value
+          )
+          likedKuchikomisByMe.value.forEach((item) => {
+            likesMap.value.set(item.kuchikomiId, item.docId)
+          })
+          // 自分がいいねしたハートはクリックされた状態にする
+          setTimeout(() => {
+            kuchikomiList.value.forEach((item) => {
+              if (isLikedByMe(item.docId)) {
+                const target = document.getElementById(item.docId)
+                if (target) target.classList.add('liked')
+              }
+            })
+          }, 100)
         } catch (e) {
           console.error(e)
           isOpenErrorSnackbar.value = true
@@ -309,7 +428,13 @@ export default defineComponent({
       originalKuchikomi,
       updateKuchikomi,
       getUsername,
-      currentClass
+      currentClass,
+      likesList,
+      clickHeart,
+      getLikesCount,
+      isLikedByMe,
+      likedKuchikomisByMe,
+      likesMap
       // getUserPhotoURL
     }
   }
@@ -333,5 +458,50 @@ export default defineComponent({
 }
 .body {
   margin: auto;
+}
+
+/* いいねボタンのアニメーション */
+@keyframes heartAnimation {
+  0% {
+    transform: scale(0.7);
+  }
+  10% {
+    transform: scale(0.5);
+  }
+  20% {
+    transform: scale(0.7);
+  }
+  30% {
+    transform: scale(0.9);
+  }
+  40% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  60% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1.4);
+  }
+  80% {
+    transform: scale(1.3);
+  }
+  90% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.likes-icon {
+  font-size: 25px;
+}
+.likes-icon.liked {
+  /* heartAnimationアニメーションを200ミリ秒かけて実行する */
+  animation: heartAnimation 0.2s;
+  color: #29b6f6;
 }
 </style>
