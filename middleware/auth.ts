@@ -25,8 +25,8 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
           username: fireUser.username
             ? fireUser.username
             : signInUser.displayName || '名無しのユーザー',
-          department: fireUser.department,
-          photoURL: fireUser.photoURL,
+          department: fireUser.department || '',
+          photoURL: fireUser.photoURL || '',
           twitterURL: fireUser.twitterURL || ''
         }
         store.dispatch('setUser', userInfo)
