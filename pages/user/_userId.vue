@@ -7,18 +7,22 @@
   <v-container v-else class="pt-15 px-0">
     <v-row no-gutters justify="center" class="pt-3">
       <!-- プロフィール画像 -->
-      <v-col cols="12">
-        <!-- <v-icon size="70" color="primary lighten-1">mdi-account-circle</v-icon> -->
+      <v-col cols="12" class="">
         <v-img :src="userData.photoURL" alt="ユーザー画像" class="image" />
       </v-col>
       <!-- ユーザーネーム -->
       <v-col cols="11" class="pt-3 d-flex justify-center">
-        <div class="text-h5 font-weight-bold">
-          {{ userData.username }}
-        </div>
-        <!-- TODO: 位置を調整 Twitterアイコン -->
-        <div v-if="userData.twitterURL" class="pl-2 pt-1">
-          <a :href="userData.twitterURL" target="_blank" class="twitter-icon">
+        <div class="username">
+          <div class="text-h5 font-weight-bold">
+            {{ userData.username }}
+          </div>
+          <!-- Twitter -->
+          <a
+            v-if="userData.twitterURL"
+            class="pl-2 pt-1 twitter"
+            :href="userData.twitterURL"
+            target="_blank"
+          >
             <v-icon color="primary">mdi-twitter</v-icon>
           </a>
         </div>
@@ -28,7 +32,9 @@
         <TextCaption title="プロフィール" />
         <v-card rounded outlined>
           <div class="pa-4">
-            <div>学科：{{ userData.department || '未登録' }}</div>
+            <div>
+              学科：{{ getUserDepartment(userData.department) || '未登録' }}
+            </div>
             <div>投稿したクチコミ数：{{ kuchikomisCount }}</div>
             <div>もらったいいね数：{{ likesCount }}</div>
           </div>
@@ -45,7 +51,7 @@
           rounded
           outlined
         >
-          <!-- TODO: 授業名 -->
+          <!-- 授業名 -->
           <div
             class="mx-1 mt-2 user-info"
             @click="goToKuchikomiPage(item.classId)"
@@ -95,6 +101,15 @@ import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
 import { Kuchikomi, Like, User } from '@/types/State'
 
+const DEPARTMETS = [
+  { text: '国文', value: 'japanese' },
+  { text: '英文', value: 'english' },
+  { text: '比文', value: 'comparativeCulture' },
+  { text: '国教', value: 'globalEducation' },
+  { text: '学教', value: 'teacherEducation' },
+  { text: '地社', value: 'communitySociety' }
+]
+
 export default defineComponent({
   name: 'UserId',
   setup(_, { root }) {
@@ -110,6 +125,10 @@ export default defineComponent({
     })
     const kuchikomisCount = ref(0)
     const likesCount = ref(0)
+
+    const getUserDepartment = (value: string) => {
+      return DEPARTMETS.find((item) => item.value === value)?.text
+    }
 
     const goToKuchikomiPage = (classId: string) => {
       root.$router.push(`/search/${classId}`)
@@ -167,9 +186,11 @@ export default defineComponent({
     })
 
     return {
+      DEPARTMETS,
       isLoading,
       userId,
       userData,
+      getUserDepartment,
       likesCount,
       kuchikomisCount,
       kuchikomiList,
@@ -189,13 +210,23 @@ export default defineComponent({
 }
 .image {
   border-radius: 50%;
-  border: 1px solid black;
+  border: 1px solid #e0e0e0;
   width: 80px;
   height: 80px;
   margin: auto;
 }
 .twitter-icon {
   text-decoration: none;
+}
+
+/** ユーザーネーム */
+.username {
+  position: relative;
+}
+.twitter {
+  position: absolute;
+  top: -2px;
+  right: -34px;
 }
 
 /** ユーザーの情報 */

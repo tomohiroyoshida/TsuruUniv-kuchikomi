@@ -48,15 +48,15 @@
       <v-menu v-if="loggedinUser.uid" open-on-hover bottom offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn text icon class="pa-1 mr-1" large v-bind="attrs" v-on="on">
-            <v-icon color="primary lighten-1" size="52">
+            <!-- <v-icon color="primary lighten-1" size="52">
               mdi-account-circle
-            </v-icon>
-            <!-- <v-img
+            </v-icon> -->
+            <v-img
               class="image"
               :src="loggedinUser.photoURL"
               max-height="45"
               max-width="45"
-            /> -->
+            />
           </v-btn>
         </template>
         <v-list>
@@ -132,6 +132,7 @@ export default defineComponent({
 
 <style scoped>
 .image {
+  border: 1px solid #e0e0e0;
   border-radius: 50%;
   width: 100px;
   height: 100px;

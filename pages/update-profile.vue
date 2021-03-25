@@ -6,20 +6,26 @@
           <div class="text-h6 d-flex justify-center my-3 font-weight-bold">
             プロフィール設定
           </div>
-          <!-- 名前？ -->
-          <section>
+          <!-- 名前 -->
+          <div>
             <TextCaption required title="名前" class="mb-1" />
-            <TextInput
-              v-model="user.username"
-              :rules="RULES.required"
-              color="primary"
-            />
-          </section>
-
-          <!-- TODO: 画像 -->
-          <!-- <TextCaption title="プロフィール画像" class="mb-1" />
+            <TextInput v-model="user.username" :rules="RULES.required" />
+          </div>
+          <!-- 学科 -->
+          <div>
+            <TextCaption title="学科" class="mb-1" />
+            <SelectInput v-model="user.department" :items="DEPARTMETS" />
+          </div>
+          <!-- Twitter -->
+          <div>
+            <TextCaption title="Twitterアカウント" class="mb-1" />
+            <TextInput v-model="user.twitterURL" />
+          </div>
+          <!-- 画像 -->
+          <TextCaption title="プロフィール画像" class="mb-1" />
           <v-file-input
             v-model="imageFile"
+            dense
             outlined
             clearable
             show-size
@@ -39,7 +45,7 @@
               max-width="100"
             />
           </div>
-          <div class="text-center text-caption">プレビュー</div> -->
+          <div class="text-center text-caption">プレビュー</div>
 
           <!-- 送信・キャンセルボタン -->
           <div class="d-flex justify-center py-3 mt-5">
@@ -57,7 +63,6 @@
         <!-- ダイアログ・スナックバー -->
         <ConfirmDialog
           v-model="isOpenUpdateConfirm"
-          text="update-profile"
           :username="user.username"
           @ok="updateProfile"
         />
@@ -91,11 +96,20 @@ const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です']
 } as const
 
+const DEPARTMETS = [
+  { text: '国文', value: 'japanese' },
+  { text: '英文', value: 'english' },
+  { text: '比文', value: 'comparativeCulture' },
+  { text: '国教', value: 'globalEducation' },
+  { text: '学教', value: 'teacherEducation' },
+  { text: '地社', value: 'communitySociety' }
+]
+
 export default defineComponent({
-  name: 'profile',
+  name: 'UpdateProfile',
   setup(_, { root }) {
     const isFormValid = ref(true)
-    const user = computed(() => {
+    const user = computed<User>(() => {
       return Object.assign({}, root.$store.getters.user)
     })
 
@@ -106,9 +120,9 @@ export default defineComponent({
 
     const imageFile = ref<File>()
     const photoURL = ref<ArrayBuffer | string>()
-    const originalPhotoURL = Object.assign({}, user.value.photoURL)
+    const originalPhotoURL = user.value.photoURL
 
-    // TODO: 変更したプロフィールを全ての口コミに反映
+    // 画像変更
     const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
       if (file) {
@@ -149,6 +163,7 @@ export default defineComponent({
         await docRef.set(updatedUser, { merge: true })
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
+
         // 更新後のユーザ一覧
         const newUsers: User[] = []
         await db
@@ -177,6 +192,7 @@ export default defineComponent({
 
     return {
       RULES,
+      DEPARTMETS,
       user,
       imageFile,
       originalPhotoURL,
@@ -197,6 +213,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .image {
+  border: 1px solid #e0e0e0;
   border-radius: 50%;
   width: 100px;
   height: 100px;
