@@ -167,8 +167,11 @@ export default defineComponent({
         username: user.value.username,
         department: user.value.department,
         photoURL: photoURL.value || user.value.photoURL || '',
-        twitterURL: `https://twitter.com/${twitterId.value}`
+        twitterURL: twitterId.value
+          ? `https://twitter.com/${twitterId.value}`
+          : ''
       }
+      console.debug('in', updatedUser)
       // DB更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
