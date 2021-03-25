@@ -12,23 +12,23 @@
       </v-col>
       <!-- ユーザーネーム -->
       <v-col cols="11" class="pt-3 d-flex justify-center">
-        <div class="username">
-          <div class="text-h5 font-weight-bold">
-            {{ userData.username }}
-          </div>
-          <!-- Twitter -->
-          <a
-            v-if="userData.twitterURL"
-            class="pl-2 pt-1 twitter"
-            :href="userData.twitterURL"
-            target="_blank"
-          >
-            <v-icon color="primary">mdi-twitter</v-icon>
-          </a>
+        <div class="text-h5 font-weight-bold">
+          {{ userData.username }}
         </div>
       </v-col>
+      <!-- Twitter -->
+      <v-col cols="11" class="d-flex justify-center">
+        <a
+          v-if="userData.twitterURL"
+          class="pl-2 pt-1"
+          :href="userData.twitterURL"
+          target="_blank"
+        >
+          <v-icon color="primary">mdi-twitter</v-icon>
+        </a>
+      </v-col>
       <!-- ユーザー情報 -->
-      <v-col cols="11" class="pt-3">
+      <v-col cols="11">
         <TextCaption title="プロフィール" />
         <v-card rounded outlined>
           <div class="pa-4">
@@ -208,15 +208,13 @@ export default defineComponent({
 .body {
   margin: auto;
 }
+/* 画像 */
 .image {
   border-radius: 50%;
   border: 1px solid #e0e0e0;
   width: 80px;
   height: 80px;
   margin: auto;
-}
-.twitter-icon {
-  text-decoration: none;
 }
 
 /** ユーザーネーム */
