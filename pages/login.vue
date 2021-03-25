@@ -133,7 +133,4 @@ export default defineComponent({
 h1 {
   font-size: 40px;
 }
-/* .hoge .v-icon .notranslate .new-tab .mdi .mdi-open-in-new {
-  vertical-align: baseline;
-} */
 </style>
