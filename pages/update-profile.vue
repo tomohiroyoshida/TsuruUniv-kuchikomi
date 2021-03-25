@@ -18,8 +18,12 @@
           </div>
           <!-- Twitter -->
           <div>
-            <TextCaption title="Twitterアカウント" class="mb-1" />
-            <TextInput v-model="user.twitterURL" />
+            <TextCaption title="Twitter ID" class="mb-1" />
+            <TextInput
+              v-model="twitterId"
+              placeholder="例: asatei_umauma"
+              prefix="@"
+            />
           </div>
           <!-- 画像 -->
           <TextCaption title="プロフィール画像" class="mb-1" />
@@ -112,6 +116,7 @@ export default defineComponent({
     const user = computed<User>(() => {
       return Object.assign({}, root.$store.getters.user)
     })
+    const twitterId = ref('')
 
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
@@ -119,7 +124,7 @@ export default defineComponent({
     const isOpenFileSizeErrorSnackbar = ref(false)
 
     const imageFile = ref<File>()
-    const photoURL = ref<ArrayBuffer | string>()
+    const photoURL = ref<string>('')
     const originalPhotoURL = user.value.photoURL
 
     // 画像変更
@@ -134,7 +139,8 @@ export default defineComponent({
         const fr = new FileReader()
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
-          if (fr.result) photoURL.value = fr.result
+          if (fr.result && typeof fr.result === 'string')
+            photoURL.value = fr.result
         })
       }
     }
@@ -155,8 +161,9 @@ export default defineComponent({
           photoURL.value ||
           user.value.photoURL ||
           'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp',
-        twitterURL: user.value.twitterURL
+        twitterURL: `https://twitter.com/${twitterId.value}`
       }
+      console.debug('user', updatedUser)
       // db更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
@@ -186,14 +193,23 @@ export default defineComponent({
     /**
      * init
      */
+    // CSRF Token
     const csrfToken = suid(16)
     root.$store.dispatch('setCsrfToken', csrfToken)
     const storedCsrfToken = root.$store.getters.csrfToken
+
+    // TwitterのユーザーIDの部分のみを表示
+    twitterId.value = (function () {
+      const index = user.value.twitterURL.indexOf('m')
+      const userId = user.value.twitterURL.slice(index + 2)
+      return userId
+    })()
 
     return {
       RULES,
       DEPARTMETS,
       user,
+      twitterId,
       imageFile,
       originalPhotoURL,
       photoURL,
