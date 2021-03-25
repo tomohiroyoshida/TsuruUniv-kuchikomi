@@ -1,5 +1,5 @@
 <template>
-  <div class="required-caption text-caption pb-1 pl-3">
+  <div class="required-caption text-caption pl-3">
     <span v-if="required" class="red--text">* </span>
     <!-- TODO: これslotでいい気がする -->
     <slot />

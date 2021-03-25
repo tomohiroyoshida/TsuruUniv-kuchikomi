@@ -47,6 +47,7 @@
               >
             </div>
           </v-col>
+
           <!-- クチコミのカード -->
           <v-col cols="12">
             <v-card
@@ -57,13 +58,18 @@
               outlined
             >
               <!-- アイコン＋ユーザー名 -->
-              <div class="d-flex mx-1 mt-2">
+              <div
+                class="d-flex mx-1 mt-2 user-info"
+                @click="goToUserPage(item.uid)"
+              >
                 <!-- TODO: プロフィール画像  -->
-                <!-- <v-img :src="getUserPhotoURL" /> -->
-                <v-icon color="primary lighten-1"> mdi-account-circle </v-icon>
-                <div class="text-body-2 pa-1">
-                  {{ getUsername(item.uid) }}
-                </div>
+                <!-- <v-img :src="getUserPhotoURL()" class="image" /> -->
+                <v-icon color="grey lighten-1"> mdi-account-circle </v-icon>
+                <a class="text-body-2 pa-1">
+                  <span class="black--text">
+                    {{ getUsername(item.uid) }}
+                  </span>
+                </a>
               </div>
 
               <!-- タイトル＋レーティング -->
@@ -81,19 +87,7 @@
                   {{ item.kuchikomiTitle }}
                 </div>
               </div>
-              <!-- TODO: クチコミタグ -->
-              <!-- <div v-if="item.tags !== []" class="px-2">
-                <v-chip
-                  v-for="(tag, idx) in item.tags"
-                  :key="idx"
-                  x-small
-                  class="mr-1 mb-1"
-                  :color="getTagData(tag).color"
-                  text-color="white"
-                >
-                  {{ getTagData(tag).text }}
-                </v-chip>
-              </div> -->
+
               <!-- 受講年 -->
               <div class="text-caption text--disabled px-2">
                 受講した年: {{ item.classYear }} 年
@@ -250,6 +244,10 @@ export default defineComponent({
       return isKuchikomiLikedByMe[0]
     }
 
+    const goToUserPage = (userId: string) => {
+      root.$router.push(`/user/${userId}`)
+    }
+
     // クチコミ作成ページへ遷移
     const goToCreatePage = () => {
       root.$store.dispatch('setCurrentClass', currentClass)
@@ -341,14 +339,14 @@ export default defineComponent({
     const classList: Class[] = root.$store.getters.classes
     const currentClass = classList.find((item) => item.docId === classId)
     // TODO: プロフィール画像
-    // const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
-    //   const users: User[] = root.$store.getters.users
-    //   const photoURL = users.find((item) => item.uid === uid)?.photoURL
-    //   return (
-    //     photoURL ||
-    //     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
-    //   )
-    // }
+    const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
+      const users: User[] = root.$store.getters.users
+      const photoURL = users.find((item) => item.uid === uid)?.photoURL
+      return (
+        photoURL ||
+        'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+      )
+    }
 
     // クチコミの一覧を取得
     const kuchikomiList = ref<Kuchikomi[]>([])
@@ -408,6 +406,7 @@ export default defineComponent({
       kuchikomiList,
       uid,
       goToCreatePage,
+      goToUserPage,
       isLoading,
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
@@ -428,8 +427,8 @@ export default defineComponent({
       getLikesCount,
       isLikedByMe,
       likedKuchikomisByMe,
-      likesMap
-      // getUserPhotoURL
+      likesMap,
+      getUserPhotoURL
     }
   }
 })
@@ -444,6 +443,23 @@ export default defineComponent({
   position: absolute;
   top: 0;
   right: 20px;
+}
+
+.image {
+  width: 30px;
+  height: 30px;
+  transform: scale(0.5);
+  border-radius: 50%;
+}
+/** ユーザーの情報 */
+.user-info {
+  width: 200px;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 
 /* ローディングアイコンを中央揃え */

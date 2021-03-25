@@ -6,20 +6,30 @@
           <div class="text-h6 d-flex justify-center my-3 font-weight-bold">
             プロフィール設定
           </div>
-          <!-- 名前？ -->
-          <section>
+          <!-- 名前 -->
+          <div>
             <TextCaption required title="名前" class="mb-1" />
+            <TextInput v-model="user.username" :rules="RULES.required" />
+          </div>
+          <!-- 学科 -->
+          <div>
+            <TextCaption title="学科" class="mb-1" />
+            <SelectInput v-model="user.department" :items="DEPARTMETS" />
+          </div>
+          <!-- Twitter -->
+          <div>
+            <TextCaption title="Twitter ID" class="mb-1" />
             <TextInput
-              v-model="user.username"
-              :rules="RULES.required"
-              color="primary"
+              v-model="twitterId"
+              placeholder="例: asatei_umauma"
+              prefix="@"
             />
-          </section>
-
-          <!-- TODO: 画像 -->
-          <!-- <TextCaption title="プロフィール画像" class="mb-1" />
+          </div>
+          <!-- 画像 -->
+          <TextCaption title="プロフィール画像" class="mb-1" />
           <v-file-input
             v-model="imageFile"
+            dense
             outlined
             clearable
             show-size
@@ -39,7 +49,7 @@
               max-width="100"
             />
           </div>
-          <div class="text-center text-caption">プレビュー</div> -->
+          <div class="text-center text-caption">プレビュー</div>
 
           <!-- 送信・キャンセルボタン -->
           <div class="d-flex justify-center py-3 mt-5">
@@ -57,7 +67,6 @@
         <!-- ダイアログ・スナックバー -->
         <ConfirmDialog
           v-model="isOpenUpdateConfirm"
-          text="update-profile"
           :username="user.username"
           @ok="updateProfile"
         />
@@ -91,13 +100,23 @@ const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です']
 } as const
 
+const DEPARTMETS = [
+  { text: '国文', value: 'japanese' },
+  { text: '英文', value: 'english' },
+  { text: '比文', value: 'comparativeCulture' },
+  { text: '国教', value: 'globalEducation' },
+  { text: '学教', value: 'teacherEducation' },
+  { text: '地社', value: 'communitySociety' }
+]
+
 export default defineComponent({
-  name: 'profile',
+  name: 'UpdateProfile',
   setup(_, { root }) {
     const isFormValid = ref(true)
-    const user = computed(() => {
+    const user = computed<User>(() => {
       return Object.assign({}, root.$store.getters.user)
     })
+    const twitterId = ref('')
 
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
@@ -105,10 +124,10 @@ export default defineComponent({
     const isOpenFileSizeErrorSnackbar = ref(false)
 
     const imageFile = ref<File>()
-    const photoURL = ref<ArrayBuffer | string>()
-    const originalPhotoURL = Object.assign({}, user.value.photoURL)
+    const photoURL = ref<string>('')
+    const originalPhotoURL = user.value.photoURL
 
-    // TODO: 変更したプロフィールを全ての口コミに反映
+    // 画像変更
     const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
       if (file) {
@@ -120,10 +139,12 @@ export default defineComponent({
         const fr = new FileReader()
         fr.readAsDataURL(file)
         fr.addEventListener('load', () => {
-          if (fr.result) photoURL.value = fr.result
+          if (fr.result && typeof fr.result === 'string')
+            photoURL.value = fr.result
         })
       }
     }
+    // プロフィール更新
     const updateProfile = async (): Promise<void> => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
@@ -135,17 +156,21 @@ export default defineComponent({
       const updatedUser: User = {
         uid: user.value.uid,
         username: user.value.username,
+        department: user.value.department,
         photoURL:
           photoURL.value ||
           user.value.photoURL ||
-          'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+          'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp',
+        twitterURL: `https://twitter.com/${twitterId.value}`
       }
+      console.debug('user', updatedUser)
       // db更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
         await docRef.set(updatedUser, { merge: true })
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
+
         // 更新後のユーザ一覧
         const newUsers: User[] = []
         await db
@@ -168,13 +193,23 @@ export default defineComponent({
     /**
      * init
      */
+    // CSRF Token
     const csrfToken = suid(16)
     root.$store.dispatch('setCsrfToken', csrfToken)
     const storedCsrfToken = root.$store.getters.csrfToken
 
+    // TwitterのユーザーIDの部分のみを表示
+    twitterId.value = (function () {
+      const index = user.value.twitterURL.indexOf('m')
+      const userId = user.value.twitterURL.slice(index + 2)
+      return userId
+    })()
+
     return {
       RULES,
+      DEPARTMETS,
       user,
+      twitterId,
       imageFile,
       originalPhotoURL,
       photoURL,
@@ -194,6 +229,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .image {
+  border: 1px solid #e0e0e0;
   border-radius: 50%;
   width: 100px;
   height: 100px;

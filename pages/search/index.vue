@@ -194,8 +194,7 @@ export default defineComponent({
 
       // Storeを綺麗にする
       root.$store.dispatch('setSearchingTitle', '')
-      root.$store.dispatch('setFilteredClasses', [])
-
+      // root.$store.dispatch('setFilteredClasses', [])
       isSearching.value = false
     })
 

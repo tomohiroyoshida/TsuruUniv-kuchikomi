@@ -1,8 +1,10 @@
-// ユーザーの情報
+// ユーザー
 export interface User {
   uid: string
   username: string
+  department: string
   photoURL: string | ArrayBuffer
+  twitterURL: string
 }
 
 // 授業
@@ -23,7 +25,15 @@ export interface Kuchikomi {
   classYear: string
   rating: number
   kuchikomi: string
-  uid: string
+  uid: string // クチコミを作成したユーザーの]ID
   username: string
+  createdAt: string
+}
+export interface Like {
+  docId: string
+  classId: string
+  kuchikomiId: string
+  likedBy: string
+  likeTo: string
   createdAt: string
 }
