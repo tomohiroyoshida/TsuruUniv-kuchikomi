@@ -453,7 +453,7 @@ export default defineComponent({
 }
 /** ユーザーの情報 */
 .user-info {
-  width: 200px;
+  width: 280px;
 }
 a {
   text-decoration: none;
