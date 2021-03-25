@@ -64,7 +64,7 @@
               >
                 <!-- TODO: プロフィール画像  -->
                 <!-- <v-img :src="getUserPhotoURL()" class="image" /> -->
-                <v-icon color="grey lighten-1"> mdi-account-circle </v-icon>
+                <v-icon color="primary"> mdi-account-circle </v-icon>
                 <a class="text-body-2 pa-1">
                   <span class="black--text">
                     {{ getUsername(item.uid) }}
@@ -116,7 +116,7 @@
                   :id="item.docId"
                   class="likes-icon"
                   @click="clickHeart(item.docId)"
-                  >mdi-thumb-up</v-icon
+                  >mdi-heart</v-icon
                 >
                 <div class="text-body-2 ml-2 mt-2">
                   {{ getLikesCount(item.docId) || 0 }}
@@ -512,6 +512,6 @@ a:hover {
 .likes-icon.liked {
   /* heartAnimationアニメーションを200ミリ秒かけて実行する */
   animation: heartAnimation 0.2s;
-  color: #29b6f6;
+  color: #e53935;
 }
 </style>
