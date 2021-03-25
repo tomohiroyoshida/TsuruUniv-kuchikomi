@@ -47,6 +47,7 @@
               >
             </div>
           </v-col>
+
           <!-- クチコミのカード -->
           <v-col cols="12">
             <v-card
@@ -57,13 +58,18 @@
               outlined
             >
               <!-- アイコン＋ユーザー名 -->
-              <div class="d-flex mx-1 mt-2">
+              <div
+                class="d-flex mx-1 mt-2 user-info"
+                @click="goToUserPage(item.uid)"
+              >
                 <!-- TODO: プロフィール画像  -->
                 <!-- <v-img :src="getUserPhotoURL" /> -->
                 <v-icon color="primary lighten-1"> mdi-account-circle </v-icon>
-                <div class="text-body-2 pa-1">
-                  {{ getUsername(item.uid) }}
-                </div>
+                <a class="text-body-2 pa-1">
+                  <span class="black--text">
+                    {{ getUsername(item.uid) }}
+                  </span>
+                </a>
               </div>
 
               <!-- タイトル＋レーティング -->
@@ -81,19 +87,7 @@
                   {{ item.kuchikomiTitle }}
                 </div>
               </div>
-              <!-- TODO: クチコミタグ -->
-              <!-- <div v-if="item.tags !== []" class="px-2">
-                <v-chip
-                  v-for="(tag, idx) in item.tags"
-                  :key="idx"
-                  x-small
-                  class="mr-1 mb-1"
-                  :color="getTagData(tag).color"
-                  text-color="white"
-                >
-                  {{ getTagData(tag).text }}
-                </v-chip>
-              </div> -->
+
               <!-- 受講年 -->
               <div class="text-caption text--disabled px-2">
                 受講した年: {{ item.classYear }} 年
@@ -216,6 +210,7 @@ export default defineComponent({
             likeTo: targetKuchikomiAuthorUid,
             createdAt: new Date().toLocaleString()
           }
+          console.debug('input', input)
           likesList.value.push(input)
           likesMap.value.set(kuchikomiId, docRef.id)
           await docRef.set(input)
@@ -248,6 +243,11 @@ export default defineComponent({
         (item) => item.kuchikomiId === kuchikomiId
       )
       return isKuchikomiLikedByMe[0]
+    }
+
+    const goToUserPage = (userId: string) => {
+      console.debug('uid', userId)
+      root.$router.push(`/user/${userId}`)
     }
 
     // クチコミ作成ページへ遷移
@@ -408,6 +408,7 @@ export default defineComponent({
       kuchikomiList,
       uid,
       goToCreatePage,
+      goToUserPage,
       isLoading,
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
@@ -452,6 +453,19 @@ export default defineComponent({
 }
 .body {
   margin: auto;
+}
+
+/** ユーザーの情報 */
+.user-info {
+  width: 200px;
+  color: black;
+}
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 /* いいねボタンのアニメーション */

@@ -94,6 +94,8 @@
 
 <script lang="ts" async>
 import { defineComponent } from '@nuxtjs/composition-api'
+// import { setKuchikomisCollection } from '@/admin/setKuchikomisCollection'
+// setKuchikomisCollection()
 export default defineComponent({
   name: 'About'
 })
