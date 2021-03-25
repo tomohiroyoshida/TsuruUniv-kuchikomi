@@ -63,8 +63,8 @@
                 @click="goToUserPage(item.uid)"
               >
                 <!-- TODO: プロフィール画像  -->
-                <!-- <v-img :src="getUserPhotoURL" /> -->
-                <v-icon color="primary lighten-1"> mdi-account-circle </v-icon>
+                <!-- <v-img :src="getUserPhotoURL()" class="image" /> -->
+                <v-icon color="grey lighten-1"> mdi-account-circle </v-icon>
                 <a class="text-body-2 pa-1">
                   <span class="black--text">
                     {{ getUsername(item.uid) }}
@@ -339,14 +339,14 @@ export default defineComponent({
     const classList: Class[] = root.$store.getters.classes
     const currentClass = classList.find((item) => item.docId === classId)
     // TODO: プロフィール画像
-    // const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
-    //   const users: User[] = root.$store.getters.users
-    //   const photoURL = users.find((item) => item.uid === uid)?.photoURL
-    //   return (
-    //     photoURL ||
-    //     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
-    //   )
-    // }
+    const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
+      const users: User[] = root.$store.getters.users
+      const photoURL = users.find((item) => item.uid === uid)?.photoURL
+      return (
+        photoURL ||
+        'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+      )
+    }
 
     // クチコミの一覧を取得
     const kuchikomiList = ref<Kuchikomi[]>([])
@@ -427,8 +427,8 @@ export default defineComponent({
       getLikesCount,
       isLikedByMe,
       likedKuchikomisByMe,
-      likesMap
-      // getUserPhotoURL
+      likesMap,
+      getUserPhotoURL
     }
   }
 })
@@ -445,25 +445,29 @@ export default defineComponent({
   right: 20px;
 }
 
+.image {
+  width: 30px;
+  height: 30px;
+  transform: scale(0.5);
+  border-radius: 50%;
+}
+/** ユーザーの情報 */
+.user-info {
+  width: 200px;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
 /* ローディングアイコンを中央揃え */
 .loading {
   margin: auto;
 }
 .body {
   margin: auto;
-}
-
-/** ユーザーの情報 */
-.user-info {
-  width: 200px;
-  color: black;
-}
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
 }
 
 /* いいねボタンのアニメーション */
