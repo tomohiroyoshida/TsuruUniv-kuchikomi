@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$fetchState.pending" id="hoge" class="loading">
+  <div v-if="isLoading" class="loading">
     <v-progress-circular indeterminate size="100" width="6" color="primary" />
   </div>
   <!-- クチコミ一覧 -->
@@ -184,8 +184,9 @@ interface Like {
 export default defineComponent({
   name: 'SearchId',
   setup(_, { root }) {
-    const uid = ref(root.$store.getters.user.uid)
+    const uid = ref<string>(root.$store.getters.user.uid)
     const classId = root.$route.params.id
+    const isLoading = ref(false)
     const isOpenSuccessUpdateSnackbar = ref(false)
     const isOpenSuccessDeleteSnackbar = ref(false)
     const isOpenErrorSnackbar = ref(false)
@@ -193,7 +194,7 @@ export default defineComponent({
     const isOpenDeleteConfirm = ref(false)
 
     // いいねの Map(クチコミID, いいねId)
-    const likesMap = ref(new Map())
+    const likesMap = ref<Map<string, string>>(new Map())
     // いいねボタンを押す
     const clickHeart = async (kuchikomiId: string) => {
       const target = document.getElementById(kuchikomiId)
@@ -355,54 +356,50 @@ export default defineComponent({
     const likesList = ref<Like[]>([])
     // 自分がどれにいいねしたかのリスト
     const likedKuchikomisByMe = ref<Like[]>([])
-    useFetch(
-      async (): Promise<void> => {
-        try {
-          await db
-            .collection('classes')
-            .doc(classId)
-            .collection('kuchikomis')
-            .get()
-            .then((querySnapshot): void => {
-              querySnapshot.forEach((doc) => {
-                kuchikomiList.value.push(doc.data() as Kuchikomi)
-              })
+    useFetch(async () => {
+      isLoading.value = true
+      try {
+        await db
+          .collection('classes')
+          .doc(classId)
+          .collection('kuchikomis')
+          .get()
+          .then((querySnapshot): void => {
+            querySnapshot.forEach((doc) => {
+              kuchikomiList.value.push(doc.data() as Kuchikomi)
             })
-          uid.value = root.$store.getters.user.uid
-
-          // 全いいねのリストを取得
-          await db
-            .collection('likes')
-            .where('classId', '==', classId)
-            .get()
-            .then((snapshot) => {
-              snapshot.forEach((doc) =>
-                likesList.value.push(doc.data() as Like)
-              )
-            })
-
-          // // 自分がどれにいいねしたかのリスト
-          likedKuchikomisByMe.value = likesList.value.filter(
-            (item) => item.likedBy === uid.value
-          )
-          likedKuchikomisByMe.value.forEach((item) => {
-            likesMap.value.set(item.kuchikomiId, item.docId)
           })
-          // 自分がいいねしたハートはクリックされた状態にする
-          setTimeout(() => {
-            kuchikomiList.value.forEach((item) => {
-              if (isLikedByMe(item.docId)) {
-                const target = document.getElementById(item.docId)
-                if (target) target.classList.add('liked')
-              }
-            })
-          }, 100)
-        } catch (e) {
-          console.error(e)
-          isOpenErrorSnackbar.value = true
-        }
+        uid.value = root.$store.getters.user.uid
+        // 全いいねのリストを取得
+        await db
+          .collection('likes')
+          .where('classId', '==', classId)
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => likesList.value.push(doc.data() as Like))
+          })
+        // // 自分がどれにいいねしたかのリスト
+        likedKuchikomisByMe.value = likesList.value.filter(
+          (item) => item.likedBy === uid.value
+        )
+        likedKuchikomisByMe.value.forEach((item) => {
+          likesMap.value.set(item.kuchikomiId, item.docId)
+        })
+        // 自分がいいねしたハートはクリックされた状態にする
+        await setTimeout(() => {
+          kuchikomiList.value.forEach((item) => {
+            if (isLikedByMe(item.docId)) {
+              const target = document.getElementById(item.docId)
+              if (target) target.classList.add('liked')
+            }
+          })
+        }, 1)
+        isLoading.value = false
+      } catch (e) {
+        console.error(e)
+        isOpenErrorSnackbar.value = true
       }
-    )
+    })
 
     return {
       KUCHIKOMI_TAGS,
@@ -411,6 +408,7 @@ export default defineComponent({
       kuchikomiList,
       uid,
       goToCreatePage,
+      isLoading,
       isOpenErrorSnackbar,
       isOpenUpdateDialog,
       openUpdateDialog,
