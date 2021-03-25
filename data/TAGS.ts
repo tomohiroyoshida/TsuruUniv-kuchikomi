@@ -19,7 +19,7 @@ export const CLASS_TAGS: Tag[] = [
 /** クチコミにつけるカテゴリータグ */
 export const KUCHIKOMI_TAGS: Tag[] = [
   { text: 'ラクタン', value: 'easy', color: 'pink lighten-3' },
-  { text: 'オニタン👹', value: 'difficult', color: 'deep-purple accent-1' },
+  { text: 'オニタン', value: 'difficult', color: 'deep-purple accent-1' },
   { text: 'オンライン', value: 'online', color: 'light-blue darken-1' }
   // { text: '実習', value: 'workshop', color: '' },
 ]
