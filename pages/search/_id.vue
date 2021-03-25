@@ -210,7 +210,6 @@ export default defineComponent({
             likeTo: targetKuchikomiAuthorUid,
             createdAt: new Date().toLocaleString()
           }
-          console.debug('input', input)
           likesList.value.push(input)
           likesMap.value.set(kuchikomiId, docRef.id)
           await docRef.set(input)
@@ -246,7 +245,6 @@ export default defineComponent({
     }
 
     const goToUserPage = (userId: string) => {
-      console.debug('uid', userId)
       root.$router.push(`/user/${userId}`)
     }
 
