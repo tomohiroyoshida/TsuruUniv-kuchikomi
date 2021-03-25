@@ -91,3 +91,6 @@ sw.*
 
 # env file
 .env
+
+# admin folder
+admin
