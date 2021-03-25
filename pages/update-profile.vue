@@ -124,6 +124,7 @@ export default defineComponent({
         })
       }
     }
+    // プロフィール更新
     const updateProfile = async (): Promise<void> => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
@@ -135,10 +136,12 @@ export default defineComponent({
       const updatedUser: User = {
         uid: user.value.uid,
         username: user.value.username,
+        department: user.value.department,
         photoURL:
           photoURL.value ||
           user.value.photoURL ||
-          'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+          'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp',
+        twitterURL: user.value.twitterURL
       }
       // db更新
       try {

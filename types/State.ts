@@ -2,9 +2,9 @@
 export interface User {
   uid: string
   username: string
+  department: string
   photoURL: string | ArrayBuffer
-  // department: string
-  // twitterURL: string
+  twitterURL: string
 }
 
 // 授業

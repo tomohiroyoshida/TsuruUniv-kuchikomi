@@ -93,16 +93,7 @@
 <script lang="ts">
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import db from '@/plugins/firebase'
-import { Kuchikomi, Like } from '@/types/State'
-//  import { User } from '@/types/State'
-// TODO: User 型を以下のものに変えて適応させる
-interface User {
-  uid: string
-  username: string
-  photoURL: string
-  department: string
-  twitterURL: string
-}
+import { Kuchikomi, Like, User } from '@/types/State'
 
 export default defineComponent({
   name: 'UserId',
