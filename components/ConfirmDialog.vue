@@ -27,7 +27,7 @@
               <div>この操作は取り消せません。</div>
             </div>
             <div v-else-if="text == 'update-profile'">
-              <div>名前を「{{ $attrs.username }}」に設定します。</div>
+              <div>入力した内容でプロフィールを設定します。</div>
             </div>
             <div>よろしいですか？</div>
           </v-card-text>
@@ -41,15 +41,17 @@
           <AppBtn
             color="grey darken-2"
             class="mx-1"
+            :disabled="disabled"
             @click.stop="$emit('input', false)"
           >
             いいえ
           </AppBtn>
           <AppBtn
-            :color="text === 'delete' ? 'red' : 'primary'"
             depressed
             class="mr-2"
-            @click.stop="$emit('ok')"
+            :color="text === 'delete' ? 'red' : 'primary'"
+            :disabled="disabled"
+            @click.stop="ok"
           >
             はい
           </AppBtn>
@@ -60,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'ConfirmDialog',
   props: {
@@ -71,6 +73,14 @@ export default defineComponent({
     text: {
       type: String
     }
+  },
+  setup(_, { emit }) {
+    const disabled = ref(false)
+    const ok = () => {
+      disabled.value = true
+      emit('ok')
+    }
+    return { ok, disabled }
   }
 })
 </script>
