@@ -9,7 +9,11 @@
           <!-- 名前 -->
           <div>
             <TextCaption required title="名前" class="mb-1" />
-            <TextInput v-model="user.username" :rules="RULES.required" />
+            <TextInput
+              v-model="user.username"
+              :rules="RULES.required"
+              counter="30"
+            />
           </div>
           <!-- 学科 -->
           <div>
@@ -67,7 +71,7 @@
         <!-- ダイアログ・スナックバー -->
         <ConfirmDialog
           v-model="isOpenUpdateConfirm"
-          :username="user.username"
+          text="update-profile"
           @ok="updateProfile"
         />
         <SnackBar
@@ -97,7 +101,11 @@ import { User } from '@/types/State'
 import { suid } from 'rand-token'
 
 const RULES = {
-  required: [(v: string) => !!v || 'この欄の入力は必須です']
+  required: [
+    (v: string) => !!v || 'この欄の入力は必須です',
+    (v: string) =>
+      (!!v && v.length < 31) || '名前は30文字以下で入力してください。'
+  ]
 } as const
 
 const DEPARTMETS = [
@@ -146,6 +154,7 @@ export default defineComponent({
     }
     // プロフィール更新
     const updateProfile = async (): Promise<void> => {
+      disabled.value = true
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
         return
@@ -157,14 +166,10 @@ export default defineComponent({
         uid: user.value.uid,
         username: user.value.username,
         department: user.value.department,
-        photoURL:
-          photoURL.value ||
-          user.value.photoURL ||
-          'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp',
+        photoURL: photoURL.value || user.value.photoURL || '',
         twitterURL: `https://twitter.com/${twitterId.value}`
       }
-      console.debug('user', updatedUser)
-      // db更新
+      // DB更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
         await docRef.set(updatedUser, { merge: true })
@@ -183,7 +188,7 @@ export default defineComponent({
         root.$store.dispatch('setUsers', newUsers)
         setTimeout(() => {
           root.$router.push('/search')
-        }, 1000)
+        }, 600)
       } catch (e) {
         console.error('update', e)
         isOpenUpdateConfirm.value = false
