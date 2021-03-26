@@ -12,7 +12,7 @@ export async function setAvgRating(classId: string): Promise<void> {
     .collection('kuchikomis')
     .get()
     .then((snap) => {
-      snap.forEach((item) => avgRatingsArr.push(item.data().rating))
+      snap.forEach((doc) => avgRatingsArr.push(doc.data().rating))
     })
 
   // おすすめ度の平均値を算出
@@ -29,11 +29,12 @@ export async function setAvgRating(classId: string): Promise<void> {
     })
   }
   // avgRating が NaN(クチコミが存在しない)の場合 デフォルト値として ０ をセット
-  // else if (isNaN(avgRating)) {
-  //   await db.collection('classes').doc(classId).update({
-  //     avgRating: 0
-  //   })
-  // } else {
+  else if (isNaN(avgRating)) {
+    await db.collection('classes').doc(classId).update({
+      avgRating: 0
+    })
+  }
+  // else {
   //   console.error('error')
   // }
 }
