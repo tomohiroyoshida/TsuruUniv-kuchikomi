@@ -171,7 +171,6 @@ export default defineComponent({
           ? `https://twitter.com/${twitterId.value}`
           : ''
       }
-      console.debug('in', updatedUser)
       // DB更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)

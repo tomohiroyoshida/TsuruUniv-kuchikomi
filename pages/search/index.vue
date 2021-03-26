@@ -236,7 +236,6 @@ export default defineComponent({
     // storeから全ての授業リスト
     const classList = ref<Class[]>([])
     classList.value = Object.assign([], root.$store.getters.classes)
-    // console.debug('classList', classList.value)
 
     // Storeに 'searchingTitle' があればその授業の一覧を表示する
     const storeSearchingTitle = root.$store.getters.searchingTitle

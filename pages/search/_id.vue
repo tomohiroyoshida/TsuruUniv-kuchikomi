@@ -225,7 +225,6 @@ export default defineComponent({
         likesList.value.splice(targetIndex, 1)
         // firestoreから削除
         await db.collection('likes').doc(targetLikeDocId).delete()
-        // console.debug('target: ', target)
       }
     }
 
