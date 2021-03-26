@@ -92,8 +92,7 @@ import { User } from 'types/State'
 export default defineComponent({
   name: 'default',
   setup(_, { root }) {
-    const width = ref()
-    width.value = window.innerWidth
+    const width = window.innerWidth
     const loggedinUser = computed(() => root.$store.getters.user)
     const loggedIn = computed(() => root.$store.getters.user.loggedIn)
     const toProfile = () => {
