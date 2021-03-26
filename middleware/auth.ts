@@ -5,7 +5,7 @@ import db from '@/plugins/firebase'
 
 export default defineNuxtMiddleware(({ store, route, redirect }) => {
   // ログインしていなくてもアクセスできるパス(これ以外のパスはログインが必要)
-  const NOT_LOGGED_IN_PATHS = ['index', 'terms', 'privacy', 'login']
+  const NO_LOGIN_NEEDED_PATHS = ['index', 'terms', 'privacy', 'login']
   const defaultImage =
     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
 
@@ -48,7 +48,7 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
       // 現在のパスが「ログインしていなくてもアクセスできるパス」でないならリダイレクト
       const currentPath = route.name
       if (currentPath)
-        if (!NOT_LOGGED_IN_PATHS.includes(currentPath)) redirect('/login')
+        if (!NO_LOGIN_NEEDED_PATHS.includes(currentPath)) redirect('/login')
     }
   })
 
