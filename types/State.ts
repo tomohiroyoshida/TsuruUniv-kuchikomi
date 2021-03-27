@@ -1,6 +1,4 @@
-import { Tag } from '@/types/General'
-
-// ユーザー
+/** ユーザー */
 export interface User {
   uid: string
   username: string
@@ -9,13 +7,13 @@ export interface User {
   twitterURL: string
 }
 
-// 授業
+/** 授業 */
 export interface Class {
   docId: string
   classTitle: string
   teacherName: string
   avgRating: number
-  tags: Tag[]
+  tags: string[]
   createdBy: string
   createdAt: string
 }

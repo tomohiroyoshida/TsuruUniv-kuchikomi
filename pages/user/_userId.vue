@@ -52,16 +52,20 @@
           outlined
         >
           <!-- 授業名 -->
-          <div
-            class="mx-1 mt-2 user-info"
-            @click="goToKuchikomiPage(item.classId)"
-          >
-            <a class="pl-1">
-              <span class="black--text font-weight-medium">
-                {{ item.classTitle }}
-              </span>
-            </a>
-            <div class="text-body-2 pl-1">
+          <div class="user-info">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <div class="mx-1 mt-2" @click="goToKuchikomiPage(item.classId)">
+                  <a class="pl-1" v-bind="attrs" v-on="on">
+                    <span class="black--text font-weight-medium">
+                      {{ item.classTitle }}
+                    </span>
+                  </a>
+                </div>
+              </template>
+              <span>この授業のクチコミ一覧へ</span>
+            </v-tooltip>
+            <div class="text-body-2 pl-2">
               {{ item.classTeacherName }}
             </div>
           </div>
@@ -230,7 +234,7 @@ export default defineComponent({
 
 /** ユーザーの情報 */
 .user-info {
-  width: 200px;
+  width: 300px;
   color: black;
 }
 a {
