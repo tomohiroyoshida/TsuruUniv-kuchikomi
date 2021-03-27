@@ -1,7 +1,7 @@
 import { defineNuxtMiddleware } from '@nuxtjs/composition-api'
 import firebase from 'firebase'
 import { User } from 'types/State'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 
 export default defineNuxtMiddleware(({ store, route, redirect }) => {
   // ログインしていなくてもアクセスできるパス(これ以外のパスはログインが必要)

@@ -98,7 +98,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { Kuchikomi, Like, User } from '@/types/State'
 
 const DEPARTMETS = [

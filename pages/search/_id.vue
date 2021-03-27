@@ -161,7 +161,7 @@
 
 <script lang="ts" async>
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { Kuchikomi, User, Class } from '@/types/State'
 import { setAvgRating } from '@/helpers/setAvgRating'
 import { KUCHIKOMI_TAGS } from '@/data/TAGS'

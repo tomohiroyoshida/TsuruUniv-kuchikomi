@@ -161,7 +161,7 @@
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { Class, Kuchikomi } from '@/types/State'
 import { CLASS_TAGS } from '@/data/TAGS'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import firebase from 'firebase'
 import { suid } from 'rand-token'
 
