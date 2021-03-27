@@ -111,7 +111,7 @@
                   :id="item.docId"
                   class="likes-icon"
                   @click="clickHeart(item.docId)"
-                  >mdi-heart</v-icon
+                  >mdi-heart-outline</v-icon
                 >
                 <div class="text-body-2 ml-2 mt-2">
                   {{ getLikesCount(item.docId) || 0 }}
