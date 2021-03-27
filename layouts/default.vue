@@ -7,9 +7,8 @@
   </v-app>
 </template>
 
-<script lang="ts" async>
+<script lang="ts">
 import { defineComponent, computed } from '@nuxtjs/composition-api'
-
 export default defineComponent({
   name: 'Default',
   setup(_, { root }) {
