@@ -7,7 +7,7 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
   // ログインしていなくてもアクセスできるパス(これ以外のパスはログインが必要)
   const NO_LOGIN_NEEDED_PATHS = ['index', 'terms', 'privacy', 'login']
   const defaultImage =
-    'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+    'https://2.bp.blogspot.com/--IoxlstfWg0/XAY5h7Ruy7I/AAAAAAABQcA/PV17GrN6Io8Yv4Ql1xxq68THYITbRLEMwCLcBGAs/s800/animal_koutei_penguin_hina.png'
 
   // 認証状態の監視
   firebase.auth().onAuthStateChanged(async (signInUser) => {
@@ -22,11 +22,10 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
       if (fireUser) {
         const userInfo: User = {
           uid: signInUser.uid,
-          username: fireUser.username
-            ? fireUser.username
-            : signInUser.displayName || '名無しのユーザー',
+          username:
+            fireUser.username || signInUser.displayName || '名無しのユーザー',
           department: fireUser.department || '',
-          photoURL: fireUser.photoURL || '',
+          photoURL: fireUser.photoURL || defaultImage,
           twitterURL: fireUser.twitterURL || ''
         }
         store.dispatch('setUser', userInfo)

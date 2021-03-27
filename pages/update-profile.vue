@@ -53,7 +53,7 @@
               max-width="100"
             />
           </div>
-          <div class="text-center text-caption">プレビュー</div>
+          <div class="text-center text-caption pt-2">プレビュー</div>
 
           <!-- 送信・キャンセルボタン -->
           <div class="d-flex justify-center py-3 mt-5">
@@ -138,6 +138,8 @@ export default defineComponent({
     // 画像変更
     const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
+      disabled.value = false
+      isOpenFileSizeErrorSnackbar.value = false
       if (file) {
         if (file.size > 1048480) {
           isOpenFileSizeErrorSnackbar.value = true
