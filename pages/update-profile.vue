@@ -138,6 +138,8 @@ export default defineComponent({
     // 画像変更
     const disabled = ref(false)
     const makePhotoURL = (file: File): void => {
+      disabled.value = false
+      isOpenFileSizeErrorSnackbar.value = false
       if (file) {
         if (file.size > 1048480) {
           isOpenFileSizeErrorSnackbar.value = true
