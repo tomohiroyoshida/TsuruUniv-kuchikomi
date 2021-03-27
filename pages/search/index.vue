@@ -46,22 +46,10 @@
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
-            <!-- TODO: タグ+おすすめ度 -->
+            <!-- おすすめ度 -->
             <v-card-text>
               <v-row justify="space-around">
                 <v-col cols="12" class="pl-2">
-                  <!-- <div v-if="item.tags !== []">
-                    <v-chip
-                      v-for="(tag, idx) in item.tags"
-                      :key="idx"
-                      x-small
-                      outlined
-                      class="mr-1 mb-1"
-                      :color="getTagData(tag).color"
-                    >
-                      {{ getTagData(tag).text }}
-                    </v-chip>
-                  </div> -->
                   <div class="d-flex justify-start">
                     <v-rating
                       v-model="item.avgRating"
@@ -119,22 +107,10 @@
             <v-card-subtitle class="py-0">
               <div class="mr-3">講師： {{ item.teacherName }}</div>
             </v-card-subtitle>
-            <!-- TODO: タグ+おすすめ度 -->
+            <!-- おすすめ度 -->
             <v-card-text>
               <v-row justify="space-around">
                 <v-col cols="12" class="pl-2">
-                  <!-- <div v-if="item.tags !== []">
-                    <v-chip
-                      v-for="(tag, idx) in item.tags"
-                      :key="idx"
-                      x-small
-                      outlined
-                      class="mr-1 mb-1"
-                      :color="getTagData(tag).color"
-                    >
-                      {{ getTagData(tag).text }}
-                    </v-chip>
-                  </div> -->
                   <div class="d-flex justify-start">
                     <v-rating
                       v-model="item.avgRating"

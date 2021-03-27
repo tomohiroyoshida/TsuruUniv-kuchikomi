@@ -1,11 +1,11 @@
 <template>
   <v-text-field
     v-bind="$attrs"
-    :value="$attrs.value"
-    :rules="$attrs.rules"
-    :counter="$attrs.counter"
-    :readonly="$attrs.readonly"
-    :placeholder="$attrs.placeholder"
+    :value="value"
+    :rules="rules"
+    :counter="counter"
+    :readonly="readonly"
+    :placeholder="placeholder"
     :hint="$attrs.hint"
     persistent-hint
     flat
@@ -22,6 +22,26 @@
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
-  name: 'TextInput'
+  name: 'TextInput',
+  props: {
+    value: {
+      type: String
+    },
+    counter: {
+      type: String
+    },
+    placeholder: {
+      type: String
+    },
+    hint: {
+      type: String
+    },
+    rules: {
+      type: Array
+    },
+    readonly: {
+      type: Boolean
+    }
+  }
 })
 </script>

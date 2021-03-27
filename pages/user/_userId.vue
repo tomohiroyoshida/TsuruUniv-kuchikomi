@@ -98,8 +98,9 @@
 
 <script lang="ts">
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
-import { Kuchikomi, Like, User } from '@/types/State'
+import { db } from '@/plugins/firebase'
+import { Kuchikomi, User } from '@/types/State'
+import { Like } from '@/types/General'
 
 const DEPARTMETS = [
   { text: '国文', value: 'japanese' },

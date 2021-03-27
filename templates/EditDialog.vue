@@ -125,7 +125,7 @@ import {
   PropType,
   ref
 } from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 import { setAvgRating } from '@/helpers/setAvgRating'
 

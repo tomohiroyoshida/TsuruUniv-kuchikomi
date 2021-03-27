@@ -32,12 +32,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
-interface Tag {
-  text: string
-  value: string
-  color: string // チップの色
-}
-
+import { Tag } from '@/types/General'
 export default defineComponent({
   name: 'TagsInput',
   props: {

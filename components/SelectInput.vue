@@ -38,9 +38,6 @@ export default defineComponent({
     placeholder: {
       type: String
     }
-  },
-  setup() {}
+  }
 })
 </script>
-
-<style scoped></style>

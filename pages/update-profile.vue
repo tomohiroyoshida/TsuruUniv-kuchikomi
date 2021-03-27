@@ -96,7 +96,7 @@
 
 <script lang="ts" async>
 import { defineComponent, ref, computed } from '@nuxtjs/composition-api'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { User } from '@/types/State'
 import { suid } from 'rand-token'
 

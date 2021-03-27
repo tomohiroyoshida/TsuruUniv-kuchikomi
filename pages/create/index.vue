@@ -156,7 +156,7 @@
 <script lang="ts" async>
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 import { Kuchikomi } from 'types/State'
 import { suid } from 'rand-token'
 import { setAvgRating } from '@/helpers/setAvgRating'

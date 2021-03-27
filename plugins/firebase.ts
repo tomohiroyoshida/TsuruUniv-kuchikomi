@@ -9,8 +9,9 @@ const config = {
 }
 // firebase 初期化
 firebase.initializeApp(config)
-
 // firestore
 const db = firebase.firestore()
+// authentication
+const auth = firebase.auth()
 
-export default db
+export { db, auth }
