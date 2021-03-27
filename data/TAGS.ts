@@ -1,8 +1,4 @@
-interface Tag {
-  text: string
-  value: string
-  color: string // チップの色
-}
+import { Tag } from '@/types/General'
 
 /** 授業につけるカテゴリータグ */
 export const CLASS_TAGS: Tag[] = [

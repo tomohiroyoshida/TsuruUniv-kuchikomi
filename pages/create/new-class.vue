@@ -160,16 +160,11 @@
 <script lang="ts" async>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { Class, Kuchikomi } from '@/types/State'
+import { Tag } from '@/types/General'
 import { CLASS_TAGS } from '@/data/TAGS'
 import { db } from '@/plugins/firebase'
 import firebase from 'firebase'
 import { suid } from 'rand-token'
-
-interface Tag {
-  text: string
-  value: string
-  color: string
-}
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],

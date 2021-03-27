@@ -1,3 +1,5 @@
+import { Tag } from '@/types/General'
+
 // ユーザー
 export interface User {
   uid: string
@@ -13,7 +15,7 @@ export interface Class {
   classTitle: string
   teacherName: string
   avgRating: number
-  tags: string[]
+  tags: Tag[]
   createdBy: string
   createdAt: string
 }
@@ -21,19 +23,11 @@ export interface Class {
 // クチコミ
 export interface Kuchikomi {
   docId: string
-  kuchikomiTitle: String
   classYear: string
   rating: number
+  kuchikomiTitle: String
   kuchikomi: string
   uid: string // クチコミを作成したユーザーの]ID
   username: string
-  createdAt: string
-}
-export interface Like {
-  docId: string
-  classId: string
-  kuchikomiId: string
-  likedBy: string
-  likeTo: string
   createdAt: string
 }
