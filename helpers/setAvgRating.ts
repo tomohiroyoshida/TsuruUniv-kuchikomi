@@ -1,7 +1,7 @@
 /** クチコミのおすすめ度の平均値 avgRating を授業情報に追加
  * おすすめ度は小数点第一位まで(ex: 4.5)
  */
-import db from '@/plugins/firebase'
+import { db } from '@/plugins/firebase'
 
 export async function setAvgRating(classId: string): Promise<void> {
   const avgRatingsArr: number[] = [] // おすすめ度を格納する配列
@@ -34,7 +34,4 @@ export async function setAvgRating(classId: string): Promise<void> {
       avgRating: 0
     })
   }
-  // else {
-  //   console.error('error')
-  // }
 }
