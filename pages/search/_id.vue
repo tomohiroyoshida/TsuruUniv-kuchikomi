@@ -106,12 +106,7 @@
                 </v-btn>
               </div>
               <!-- いいねボタン -->
-              <div
-                v-if="item.uid !== uid"
-                icon
-                small
-                class="d-flex justify-center"
-              >
+              <div icon small class="d-flex justify-center">
                 <v-icon
                   :id="item.docId"
                   class="likes-icon"
