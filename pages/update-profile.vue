@@ -53,7 +53,7 @@
               max-width="100"
             />
           </div>
-          <div class="text-center text-caption">プレビュー</div>
+          <div class="text-center text-caption pt-2">プレビュー</div>
 
           <!-- 送信・キャンセルボタン -->
           <div class="d-flex justify-center py-3 mt-5">
