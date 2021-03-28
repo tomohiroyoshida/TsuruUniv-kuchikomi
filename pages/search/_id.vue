@@ -59,26 +59,19 @@
             >
               <!-- アイコン＋ユーザー名 -->
               <div class="user-info">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <div
-                      class="d-flex mx-1 mt-2"
-                      @click.stop="goToUserPage(item.uid)"
-                    >
-                      <!-- TODO: プロフィール画像  -->
-                      <!-- <v-img :src="getUserPhotoURL()" class="image" /> -->
-                      <v-icon color="primary" v-bind="attrs" v-on="on">
-                        mdi-account-circle
-                      </v-icon>
-                      <a class="text-body-2 pa-1" v-bind="attrs" v-on="on">
-                        <span class="black--text">
-                          {{ getUsername(item.uid) }}
-                        </span>
-                      </a>
-                    </div>
-                  </template>
-                  <span>プロフィール詳細へ</span>
-                </v-tooltip>
+                <div
+                  class="d-flex mx-1 mt-2"
+                  @click.stop="goToUserPage(item.uid)"
+                >
+                  <!-- TODO: プロフィール画像  -->
+                  <!-- <v-img :src="getUserPhotoURL()" class="image" /> -->
+                  <v-icon color="primary"> mdi-account-circle </v-icon>
+                  <a class="text-body-2 pa-1">
+                    <span class="black--text">
+                      {{ getUsername(item.uid) }}
+                    </span>
+                  </a>
+                </div>
               </div>
 
               <!-- タイトル＋レーティング -->
@@ -107,57 +100,28 @@
               </div>
               <!-- 編集・削除ボタン -->
               <div v-if="uid === item.uid" class="buttons">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      fab
-                      icon
-                      small
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="openUpdateDialog(item)"
-                    >
-                      <v-icon color="teal lighten-2">mdi-pencil-outline</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>クチコミ編集</span>
-                </v-tooltip>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      fab
-                      icon
-                      small
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="openDeleteConfirm(item.docId)"
-                    >
-                      <v-icon color="grey darken-2"
-                        >mdi-trash-can-outline</v-icon
-                      >
-                    </v-btn>
-                  </template>
-                  <span>クチコミ削除</span>
-                </v-tooltip>
+                <v-btn fab icon small @click="openUpdateDialog(item)">
+                  <v-icon color="teal lighten-2">mdi-pencil-outline</v-icon>
+                </v-btn>
+                <v-btn fab icon small @click="openDeleteConfirm(item.docId)">
+                  <v-icon color="grey darken-2">mdi-trash-can-outline</v-icon>
+                </v-btn>
               </div>
               <!-- いいねボタン -->
               <div class="d-flex justify-center">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-icon
-                      :id="item.docId"
-                      class="likes-icon"
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="clickHeart(item.docId)"
-                      >mdi-heart-outline</v-icon
-                    >
-                    <div class="text-body-2 ml-2 mt-2">
-                      {{ getLikesCount(item.docId) || 0 }}
-                    </div>
-                  </template>
+                <v-icon
+                  :id="item.docId"
+                  class="likes-icon"
+                  @click="clickHeart(item.docId)"
+                  >mdi-heart-outline</v-icon
+                >
+                <div class="text-body-2 ml-2 mt-2">
+                  {{ getLikesCount(item.docId) || 0 }}
+                </div>
+                <!-- <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }"> </template>
                   <span>いいね</span>
-                </v-tooltip>
+                </v-tooltip> -->
               </div>
             </v-card>
           </v-col>

@@ -53,18 +53,13 @@
         >
           <!-- 授業名 -->
           <div class="user-info">
-            <v-tooltip bottom>
-              <template v-slot:activator="{ on, attrs }">
-                <div class="mx-1 mt-2" @click="goToKuchikomiPage(item.classId)">
-                  <a class="pl-1" v-bind="attrs" v-on="on">
-                    <span class="black--text font-weight-medium">
-                      {{ item.classTitle }}
-                    </span>
-                  </a>
-                </div>
-              </template>
-              <span>この授業のクチコミ一覧へ</span>
-            </v-tooltip>
+            <div class="mx-1 mt-2" @click="goToKuchikomiPage(item.classId)">
+              <a class="pl-1">
+                <span class="black--text font-weight-medium">
+                  {{ item.classTitle }}
+                </span>
+              </a>
+            </div>
             <div class="text-body-2 pl-2">
               {{ item.classTeacherName }}
             </div>
