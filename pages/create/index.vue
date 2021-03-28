@@ -35,7 +35,7 @@
           </v-row>
 
           <!--  授業の情報の書かれたカード -->
-          <v-row v-show="classCardInfo.docId" no-gutters justify="center">
+          <v-row v-show="selectedClassId" no-gutters justify="center">
             <v-col cols="11">
               <TextCaption title="授業の情報" />
               <v-card rounded outlined>
@@ -47,13 +47,6 @@
             </v-col>
           </v-row>
 
-          <!-- TODO: クチコミのタグ -->
-          <!-- <v-row no-gutters justify="center" class="pt-2">
-            <v-col cols="11">
-              <TextCaption title="クチコミタグ(任意)" />
-              <TagsInput v-model="selectedTags" :items="KUCHIKOMI_TAGS" />
-            </v-col>
-          </v-row> -->
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
             <v-col cols="11">
@@ -110,6 +103,7 @@
           <AppBtn
             color="grey darken-2"
             class="mr-1"
+            :disabled="disabled"
             @click="isOpenResetConfirm = true"
           >
             リセット
@@ -117,7 +111,7 @@
           <AppBtn
             color="primary"
             depressed
-            :disabled="!isFormValid"
+            :disabled="!isFormValid || disabled"
             @click="openCreateConfirm"
           >
             作成
@@ -146,7 +140,7 @@
       />
       <SnackBar
         v-model="isOpenErrorSnackbar"
-        text="【エラー】エラーが起きました。画面をリロードしてもう一度試してください😢"
+        text="【エラー】エラーが起きました。画面をリロードしてもう一度試してください😢 直らない場合は運営に連絡してください🙇‍♂️"
         color="error"
       />
     </v-row>
@@ -157,7 +151,7 @@
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import { db } from '@/plugins/firebase'
-import { Kuchikomi } from 'types/State'
+import { Kuchikomi, CollKuchikomi } from 'types/State'
 import { suid } from 'rand-token'
 import { setAvgRating } from '@/helpers/setAvgRating'
 import { KUCHIKOMI_TAGS } from '@/data/TAGS'
@@ -174,6 +168,13 @@ const RULES = {
     (v: string) => (v && v.length <= 30) || '30文字以下で記入してください'
   ]
 } as const
+interface CurrentClass {
+  docId: string
+  classTitle: string
+  teacherName: string
+  createdBy: string
+  createdAt: string
+}
 
 export default defineComponent({
   name: 'create',
@@ -186,31 +187,35 @@ export default defineComponent({
     const kuchikomi = ref('')
     const classYear = ref('')
     const years = ref(['2016', '2017', '2018', '2019', '2020', '2021', '不明']) // TODO: daysjsとか使って最新の年月~10年前？まで選択できるように
+    const disabled = ref(false)
 
     // 授業情報のカード
     // Vuex Storeにある currentClass のデータ
-    const storedClass = root.$store.getters.currentClass
-    const classCardInfo = ref({
-      docId: storedClass.docId || '',
-      classTitle: storedClass.classTitle || '',
-      teacherName: storedClass.teacherName || '',
-      createdAt: storedClass.createdAt || '',
-      createdBy: storedClass.createdBy || ''
-    })
-    const selectedClassId = ref(root.$store.getters.currentClass.docId || '')
+    const currentClass: CurrentClass = Object.assign(
+      {},
+      root.$store.getters.currentClass
+    )
+    const selectedClassId = ref(currentClass.docId || '')
     // 選択された授業名を監視
     watch(selectedClassId, (classId: string) => {
       classList.value.find((item) =>
         item.docId === classId ? (classCardInfo.value = item) : ''
       )
+      selectedClassId.value = classId
+      console.debug('selectedId', selectedClassId.value)
+    })
+
+    const classCardInfo = ref({
+      docId: currentClass.docId || selectedClassId.value,
+      classTitle: currentClass.classTitle || '',
+      teacherName: currentClass.teacherName || '',
+      createdAt: currentClass.createdAt || '',
+      createdBy: currentClass.createdBy || ''
     })
 
     // クチコミ作成
     // 選択された授業のidを格納
     const targetClassId = ref(selectedClassId || '')
-    watch(selectedClassId, (id: string) => {
-      targetClassId.value = id
-    })
 
     // クチコミ作成
     const isOpenCreateConfirm = ref(false)
@@ -231,6 +236,7 @@ export default defineComponent({
       isOpenErrorSnackbar.value = false
     }
     const createKuchikomi = async (): Promise<void> => {
+      disabled.value = true
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
         return
@@ -245,22 +251,40 @@ export default defineComponent({
       try {
         const data: Kuchikomi = {
           docId: docRef.id,
-          kuchikomiTitle: kuchikomiTitle.value,
-          kuchikomi: kuchikomi.value,
           rating: rating.value,
           classYear: classYear.value,
+          kuchikomiTitle: kuchikomiTitle.value,
+          kuchikomi: kuchikomi.value,
           uid: root.$store.getters.user.uid,
           username: root.$store.getters.user.username,
           createdAt: new Date().toLocaleString()
         }
-        await docRef.set(data)
+        await docRef.set(data) // 追加
+
+        // kuchikomis collection に追加
+        const collectionData: CollKuchikomi = {
+          docId: docRef.id,
+          rating: rating.value,
+          classYear: classYear.value,
+          kuchikomiTitle: kuchikomiTitle.value,
+          kuchikomi: kuchikomi.value,
+          uid: root.$store.getters.user.uid,
+          username: root.$store.getters.user.username,
+          classId: classCardInfo.value.docId,
+          classTitle: classCardInfo.value.classTitle,
+          classTeacherName: classCardInfo.value.teacherName,
+          createdAt: new Date().toLocaleString()
+        }
+        await db.collection('kuchikomis').doc(data.docId).set(collectionData)
         await setAvgRating(targetClassId.value) // おすすめ度の平均値を更新
         resetInput()
         isOpenSuccessSnackbar.value = true
         emptyCurrentClass()
+        disabled.value = false
       } catch (e) {
         console.error('create', e)
         isOpenErrorSnackbar.value = true
+        disabled.value = false
       }
     }
 
@@ -268,14 +292,13 @@ export default defineComponent({
     const isOpenResetConfirm = ref(false)
     // 記入内容を全てリセット
     const form = ref(null)
-    const resetInput = (): void => {
+    const resetInput = () => {
       isOpenResetConfirm.value = false
       selectedClassId.value = ''
       classYear.value = ''
       rating.value = 0.5
       kuchikomiTitle.value = ''
       kuchikomi.value = ''
-      // classCardInfo.value.docId = ''
       // @ts-ignore "Object is possibly null" エラーをignore
       form.value.resetValidation()
     }
@@ -324,7 +347,8 @@ export default defineComponent({
       kuchikomi,
       classYear,
       years,
-      storedClass,
+      disabled,
+      currentClass,
       classList,
       selectedClassId,
       autoCompleteClasses,

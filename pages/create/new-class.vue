@@ -42,17 +42,6 @@
               />
             </v-col>
           </v-row>
-          <!-- TODO: クチコミタグ -->
-          <!-- <v-row no-gutters justify="center">
-            <v-col cols="11">
-              <TextCaption title="カテゴリータグ(任意)" />
-              <TagsInput
-                v-model="selectedTags"
-                :items="CLASS_TAGS"
-                placeholder="タグは複数選択できます"
-              />
-            </v-col>
-          </v-row> -->
 
           <!-- 受講した年 -->
           <v-row no-gutters justify="center">
@@ -159,7 +148,7 @@
 
 <script lang="ts" async>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
-import { Class, Kuchikomi } from '@/types/State'
+import { Class, Kuchikomi, CollKuchikomi } from '@/types/State'
 import { Tag } from '@/types/General'
 import { CLASS_TAGS } from '@/data/TAGS'
 import { db } from '@/plugins/firebase'
@@ -217,9 +206,9 @@ export default defineComponent({
       isOpenErrorSnackbar.value = false
     }
     /**  追加処理 */
-    const addClass = (
+    const addClass = async (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
-    ): void => {
+    ) => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
         return
@@ -236,13 +225,13 @@ export default defineComponent({
         createdBy: uid,
         createdAt: new Date().toLocaleString()
       }
-      docRef.set(data)
+      await docRef.set(data)
       root.$store.dispatch('pushClass', data)
     }
     // クチコミを追加
     const addKuchikomi = (
       docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
-    ): void => {
+    ) => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
         return
@@ -262,10 +251,32 @@ export default defineComponent({
         username: root.$store.getters.user.username,
         createdAt: new Date().toLocaleString()
       }
-      kuchikomiRef.set(data)
+      const setKuchikomi = kuchikomiRef.set(data)
+
+      // kuchikomis collection にクチコミ情報を追加
+      const collectionData: CollKuchikomi = {
+        docId: docRef.id,
+        rating: rating.value,
+        classYear: classYear.value,
+        kuchikomiTitle: kuchikomiTitle.value,
+        kuchikomi: kuchikomi.value,
+        uid: root.$store.getters.user.uid,
+        username: root.$store.getters.user.username,
+        classId: kuchikomiRef.id,
+        classTitle: classTitle.value,
+        classTeacherName: teacherName.value,
+        createdAt: new Date().toLocaleString()
+      }
+      const setCollKuchikomi = db
+        .collection('kuchikomis')
+        .doc(data.docId)
+        .set(collectionData)
+      console.debug('collectionData', collectionData)
+      Promise.all([setKuchikomi, setCollKuchikomi])
     }
+
     // 授業＋クチコミ作成
-    const createClassAndKuchikomi = (): void => {
+    const createClassAndKuchikomi = () => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
         return
@@ -326,7 +337,7 @@ export default defineComponent({
     })
     const csrfToken = suid(16)
     root.$store.dispatch('setCsrfToken', csrfToken)
-    const storedCsrfToken = root.$store.getters.csrfToken
+    const storedCsrfToken: string = root.$store.getters.csrfToken
 
     return {
       RULES,

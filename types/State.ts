@@ -21,11 +21,26 @@ export interface Class {
 // クチコミ
 export interface Kuchikomi {
   docId: string
-  classYear: string
   rating: number
+  classYear: string
   kuchikomiTitle: String
   kuchikomi: string
   uid: string // クチコミを作成したユーザーの]ID
   username: string
+  createdAt: string
+}
+
+// kuchikomis collection のクチコミ情報
+export interface CollKuchikomi {
+  docId: string
+  rating: number
+  classYear: string
+  kuchikomiTitle: String
+  kuchikomi: string
+  uid: string // クチコミを作成したユーザーの]ID
+  username: string
+  classId: string
+  classTitle: string
+  classTeacherName: string
   createdAt: string
 }

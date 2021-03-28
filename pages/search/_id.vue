@@ -310,13 +310,13 @@ export default defineComponent({
     }
 
     // 削除
-    const deleteTargetId = ref('')
-    const openDeleteConfirm = (docId: string): void => {
+    const deleteTargetDocId = ref('')
+    const openDeleteConfirm = async (docId: string) => {
       isOpenDeleteConfirm.value = true
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false
       isOpenErrorSnackbar.value = false
-      deleteTargetId.value = docId
+      deleteTargetDocId.value = docId
     }
     // 削除処理
     const deleteKuchikomi = async (): Promise<void> => {
@@ -325,7 +325,7 @@ export default defineComponent({
           .collection('classes')
           .doc(classId)
           .collection('kuchikomis')
-          .doc(deleteTargetId.value)
+          .doc(deleteTargetDocId.value)
           .delete()
         // 削除後のクチコミ全てをFirestoreから取得 -> クチコミ一覧を上書き
         const newKuchikoims: Kuchikomi[] = []
@@ -339,6 +339,25 @@ export default defineComponent({
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
           })
+
+        // kuchikomis collection からクチコミ削除
+        await db.collection('kuchikomis').doc(deleteTargetDocId.value).delete()
+
+        // likes collection からクチコミにされたいいねを全て削除
+        const likesArr: Like[] = []
+        await db
+          .collection('likes')
+          .where('kuchikomiId', '==', deleteTargetDocId.value)
+          .get()
+          .then((snap) => {
+            snap.forEach((doc) => {
+              likesArr.push(doc.data() as Like)
+            })
+          })
+        likesArr.forEach(async (like) => {
+          await db.collection('likes').doc(like.docId).delete()
+        })
+
         setAvgRating(classId) // おすすめ度の平均値を更新
         kuchikomiList.value = newKuchikoims // クチコミの一覧を上書き
         isOpenDeleteConfirm.value = false
