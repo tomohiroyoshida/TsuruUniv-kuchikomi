@@ -12,7 +12,7 @@
             <TextInput
               v-model="user.username"
               :rules="RULES.required"
-              counter="30"
+              :counter="30"
             />
           </div>
           <!-- 学科 -->
