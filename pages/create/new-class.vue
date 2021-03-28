@@ -231,7 +231,7 @@ export default defineComponent({
     }
     // クチコミを追加
     const addKuchikomi = (
-      docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+      classRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ) => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
@@ -239,7 +239,7 @@ export default defineComponent({
       }
       const kuchikomiRef = db
         .collection('classes')
-        .doc(docRef.id)
+        .doc(classRef.id)
         .collection('kuchikomis')
         .doc()
       const data: Kuchikomi = {
@@ -263,7 +263,7 @@ export default defineComponent({
         kuchikomi: kuchikomi.value,
         uid: root.$store.getters.user.uid,
         username: root.$store.getters.user.username,
-        classId: docRef.id,
+        classId: classRef.id,
         classTitle: classTitle.value,
         classTeacherName: teacherName.value,
         createdAt: getNewDate()
