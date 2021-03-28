@@ -58,8 +58,8 @@
         <v-list-item-group color="grey darken-1">
           <v-list-item two-line @click="goToProfile">
             <v-list-item-title>
-              <v-icon>mdi-account-cog-outline</v-icon>
-              プロフィール設定
+              <v-icon>mdi-account-outline</v-icon>
+              プロフィール
             </v-list-item-title>
           </v-list-item>
           <v-divider />
@@ -92,9 +92,9 @@ export default defineComponent({
       required: true
     }
   },
-  setup(_, { root }) {
+  setup(props, { root }) {
     const goToProfile = () => {
-      root.$router.push('/update-profile')
+      root.$router.push(`/user/${props.loggedinUser.uid}`)
     }
 
     const signOut = () => {
