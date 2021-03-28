@@ -180,6 +180,9 @@ export default defineComponent({
     const ok = () => {
       disabled.value = true
       emit('ok')
+      setTimeout(() => {
+        disabled.value = false
+      }, 2000)
     }
     return { disabled, ok }
   }

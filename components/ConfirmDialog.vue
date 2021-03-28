@@ -1,14 +1,14 @@
 <template>
   <v-dialog
     v-model="value"
+    v-bind="$attrs"
     persistent
     width="30rem"
     class="confirm-dialog"
-    v-bind="$attrs"
   >
     <v-card rounded>
       <!-- タイトル -->
-      <v-toolbar color="primary" class="d-flex justify-center" flat dense>
+      <v-toolbar flat dense color="primary" class="d-flex justify-center">
         <v-toolbar-title class="white--text">確認</v-toolbar-title>
       </v-toolbar>
       <!-- 中身 -->
@@ -39,18 +39,18 @@
         <!-- ボタン -->
         <v-col cols="12" class="d-flex justify-center py-3">
           <AppBtn
+            :disabled="disabled"
             color="grey darken-2"
             class="mx-1"
-            :disabled="disabled"
             @click.stop="$emit('input', false)"
           >
             いいえ
           </AppBtn>
           <AppBtn
             depressed
-            class="mr-2"
-            :color="text === 'delete' ? 'red' : 'primary'"
             :disabled="disabled"
+            :color="text === 'delete' ? 'red' : 'primary'"
+            class="mr-2"
             @click.stop="ok"
           >
             はい
@@ -79,8 +79,11 @@ export default defineComponent({
     const ok = () => {
       disabled.value = true
       emit('ok')
+      setTimeout(() => {
+        disabled.value = false
+      }, 2000)
     }
-    return { ok, disabled }
+    return { disabled, ok }
   }
 })
 </script>
