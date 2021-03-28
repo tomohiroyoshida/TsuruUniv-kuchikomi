@@ -136,6 +136,7 @@
               <AppBtn
                 color="grey darken-2"
                 class="mr-1"
+                :disabled="disabled"
                 @click="$emit('input', false)"
               >
                 いいえ
@@ -144,7 +145,8 @@
                 color="primary"
                 class="mr-3"
                 depressed
-                @click="$emit('ok')"
+                :disabled="disabled"
+                @click="ok"
               >
                 はい
               </AppBtn>
@@ -157,7 +159,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 export default defineComponent({
   name: 'KuchikomiConfirm',
   props: {
@@ -172,6 +174,14 @@ export default defineComponent({
     type: {
       type: String
     }
+  },
+  setup(_, { emit }) {
+    const disabled = ref(false)
+    const ok = () => {
+      disabled.value = true
+      emit('ok')
+    }
+    return { disabled, ok }
   }
 })
 </script>
