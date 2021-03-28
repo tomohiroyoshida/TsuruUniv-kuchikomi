@@ -152,9 +152,10 @@ import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import { db } from '@/plugins/firebase'
 import { Kuchikomi, CollKuchikomi } from 'types/State'
-import { suid } from 'rand-token'
-import { setAvgRating } from '@/helpers/setAvgRating'
 import { KUCHIKOMI_TAGS } from '@/data/TAGS'
+import { setAvgRating } from '@/helpers/setAvgRating'
+import { getNewDate } from '@/helpers/getNewDate'
+import { suid } from 'rand-token'
 
 const RULES = {
   required: [(v: string) => !!v || 'この欄の入力は必須です'],
@@ -202,7 +203,6 @@ export default defineComponent({
         item.docId === classId ? (classCardInfo.value = item) : ''
       )
       selectedClassId.value = classId
-      console.debug('selectedId', selectedClassId.value)
     })
 
     const classCardInfo = ref({
@@ -257,7 +257,7 @@ export default defineComponent({
           kuchikomi: kuchikomi.value,
           uid: root.$store.getters.user.uid,
           username: root.$store.getters.user.username,
-          createdAt: new Date().toLocaleString()
+          createdAt: getNewDate()
         }
         await docRef.set(data) // 追加
 
@@ -273,7 +273,7 @@ export default defineComponent({
           classId: classCardInfo.value.docId,
           classTitle: classCardInfo.value.classTitle,
           classTeacherName: classCardInfo.value.teacherName,
-          createdAt: new Date().toLocaleString()
+          createdAt: getNewDate()
         }
         await db.collection('kuchikomis').doc(data.docId).set(collectionData)
         await setAvgRating(targetClassId.value) // おすすめ度の平均値を更新

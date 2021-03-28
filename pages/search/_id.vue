@@ -200,9 +200,10 @@
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
 import { Kuchikomi, User, Class } from '@/types/State'
-import { setAvgRating } from '@/helpers/setAvgRating'
-import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 import { Like } from '@/types/General'
+import { setAvgRating } from '@/helpers/setAvgRating'
+import { getNewDate } from '@/helpers/getNewDate'
+import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 
 export default defineComponent({
   name: 'SearchId',
@@ -237,7 +238,7 @@ export default defineComponent({
             kuchikomiId,
             likedBy: uid.value,
             likeTo: targetKuchikomiAuthorUid,
-            createdAt: new Date().toLocaleString()
+            createdAt: getNewDate()
           }
           likesList.value.push(input)
           likesMap.value.set(kuchikomiId, docRef.id)
@@ -311,7 +312,7 @@ export default defineComponent({
 
     // 削除
     const deleteTargetDocId = ref('')
-    const openDeleteConfirm = async (docId: string) => {
+    const openDeleteConfirm = (docId: string) => {
       isOpenDeleteConfirm.value = true
       isOpenSuccessUpdateSnackbar.value = false
       isOpenSuccessDeleteSnackbar.value = false

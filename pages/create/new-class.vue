@@ -148,11 +148,12 @@
 
 <script lang="ts" async>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { db } from '@/plugins/firebase'
 import { Class, Kuchikomi, CollKuchikomi } from '@/types/State'
 import { Tag } from '@/types/General'
-import { CLASS_TAGS } from '@/data/TAGS'
-import { db } from '@/plugins/firebase'
 import firebase from 'firebase'
+import { getNewDate } from '@/helpers/getNewDate'
+import { CLASS_TAGS } from '@/data/TAGS'
 import { suid } from 'rand-token'
 
 const RULES = {
@@ -223,7 +224,7 @@ export default defineComponent({
         avgRating: rating.value,
         tags: tagValues,
         createdBy: uid,
-        createdAt: new Date().toLocaleString()
+        createdAt: getNewDate()
       }
       await docRef.set(data)
       root.$store.dispatch('pushClass', data)
@@ -249,7 +250,7 @@ export default defineComponent({
         kuchikomi: kuchikomi.value,
         uid,
         username: root.$store.getters.user.username,
-        createdAt: new Date().toLocaleString()
+        createdAt: getNewDate()
       }
       const setKuchikomi = kuchikomiRef.set(data)
 
@@ -265,7 +266,7 @@ export default defineComponent({
         classId: kuchikomiRef.id,
         classTitle: classTitle.value,
         classTeacherName: teacherName.value,
-        createdAt: new Date().toLocaleString()
+        createdAt: getNewDate()
       }
       const setCollKuchikomi = db
         .collection('kuchikomis')
