@@ -272,7 +272,6 @@ export default defineComponent({
         .collection('kuchikomis')
         .doc(data.docId)
         .set(collectionData)
-      console.debug('collectionData', collectionData)
       Promise.all([setKuchikomi, setCollKuchikomi])
     }
 
