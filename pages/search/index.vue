@@ -159,7 +159,7 @@ export default defineComponent({
     const filteredClasses = ref<Class[]>([])
     const searchingTitle = ref('')
     // 検索欄に文字が入力されるたびにマッチする授業を探す
-    watch(searchingTitle, (title: string): void => {
+    watch(searchingTitle, (title: string) => {
       isSearching.value = true
       // フィルタリングされた結果が空配列でなければ一度filteredClassesを空にしてから
       if (filteredClasses.value.length) filteredClasses.value = []
@@ -170,12 +170,11 @@ export default defineComponent({
 
       // Storeを綺麗にする
       root.$store.dispatch('setSearchingTitle', '')
-      // root.$store.dispatch('setFilteredClasses', [])
       isSearching.value = false
     })
 
     // クチコミのページへ飛ぶ
-    const goToKuchikomi = (id: string): void => {
+    const goToKuchikomi = (id: string) => {
       root.$store.dispatch('setSearchingTitle', searchingTitle.value)
       root.$router.push(`/search/${id}`)
     }
