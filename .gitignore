@@ -89,6 +89,7 @@ sw.*
 # Vim swap files
 *.swp
 
+# 以下は自分が追加したもの
 # env file
 .env
 
