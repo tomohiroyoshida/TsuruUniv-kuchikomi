@@ -10,6 +10,17 @@
       <v-col cols="12" class="">
         <v-img :src="userData.photoURL" alt="ユーザー画像" class="image" />
       </v-col>
+      <AppBtn
+        v-if="userId === loggedinUser.uid"
+        small
+        rounded
+        outlined
+        color="primary"
+        class="mt-3"
+        @click="goToUpdateProfile"
+      >
+        プロフィールを編集
+      </AppBtn>
       <!-- ユーザーネーム -->
       <v-col cols="11" class="pt-3 d-flex justify-center">
         <div class="text-h5 font-weight-bold">
@@ -29,7 +40,7 @@
       </v-col>
       <!-- ユーザー情報 -->
       <v-col cols="11">
-        <TextCaption title="プロフィール" />
+        <TextCaption title="ユーザー情報" />
         <v-card rounded outlined>
           <div class="pa-4">
             <div>
@@ -116,6 +127,7 @@ export default defineComponent({
     const isLoading = ref(false)
 
     const userId = root.$route.params.userId
+    const loggedinUser: User = root.$store.getters.user
     const userData = ref<User>({
       uid: userId,
       username: '',
@@ -130,9 +142,10 @@ export default defineComponent({
       return DEPARTMETS.find((item) => item.value === value)?.text
     }
 
-    const goToKuchikomiPage = (classId: string) => {
+    const goToKuchikomiPage = (classId: string) =>
       root.$router.push(`/search/${classId}`)
-    }
+
+    const goToUpdateProfile = () => root.$router.push('/user')
 
     /**
      * init
@@ -188,13 +201,15 @@ export default defineComponent({
     return {
       DEPARTMETS,
       isLoading,
+      loggedinUser,
       userId,
       userData,
       getUserDepartment,
       likesCount,
       kuchikomisCount,
       kuchikomiList,
-      goToKuchikomiPage
+      goToKuchikomiPage,
+      goToUpdateProfile
     }
   }
 })
