@@ -256,14 +256,14 @@ export default defineComponent({
 
       // kuchikomis collection にクチコミ情報を追加
       const collectionData: CollKuchikomi = {
-        docId: docRef.id,
+        docId: kuchikomiRef.id,
         rating: rating.value,
         classYear: classYear.value,
         kuchikomiTitle: kuchikomiTitle.value,
         kuchikomi: kuchikomi.value,
         uid: root.$store.getters.user.uid,
         username: root.$store.getters.user.username,
-        classId: kuchikomiRef.id,
+        classId: docRef.id,
         classTitle: classTitle.value,
         classTeacherName: teacherName.value,
         createdAt: getNewDate()
