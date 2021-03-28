@@ -5,7 +5,7 @@ import { db } from '@/plugins/firebase'
 
 export async function setAvgRating(classId: string): Promise<void> {
   const avgRatingsArr: number[] = [] // おすすめ度を格納する配列
-  // 授業の全部クチコミのおすすめ度を取得
+  // この授業の全クチコミのおすすめ度を取得
   await db
     .collection('classes')
     .doc(classId)
