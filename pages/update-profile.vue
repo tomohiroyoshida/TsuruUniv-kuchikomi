@@ -192,6 +192,7 @@ export default defineComponent({
         root.$store.dispatch('setUsers', newUsers)
         setTimeout(() => {
           root.$router.push('/search')
+          disabled.value = false
         }, 600)
       } catch (e) {
         console.error('update', e)
