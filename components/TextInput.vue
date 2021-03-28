@@ -28,7 +28,7 @@ export default defineComponent({
       type: String
     },
     counter: {
-      type: String
+      type: Number
     },
     placeholder: {
       type: String
