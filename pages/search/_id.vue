@@ -142,12 +142,12 @@
         <!-- スナックバー -->
         <SnackBar
           v-model="isOpenSuccessUpdateSnackbar"
-          text="【成功】クチコミの編集に成功しました💡"
+          text="【成功】クチコミを編集しました👍"
           color="success"
         />
         <SnackBar
           v-model="isOpenSuccessDeleteSnackbar"
-          text="【成功】クチコミの削除に成功しました🍙"
+          text="【成功】クチコミを削除しました🗑"
           color="success"
         />
         <SnackBar

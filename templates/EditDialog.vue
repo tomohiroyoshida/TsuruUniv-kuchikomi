@@ -104,7 +104,7 @@
           <!-- スナックバー -->
           <SnackBar
             v-model="isOpenSuccessSnackbar"
-            text="【成功】クチコミを編集しました✨"
+            text="【成功】クチコミを編集しました✍️"
             color="success"
           />
           <SnackBar
