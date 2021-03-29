@@ -54,9 +54,6 @@
             class="hoge"
           >
             こちらのQ&Aページをご覧ください
-            <!--TODO:  <v-icon small color="primary" class="new-tab"
-              >mdi-open-in-new</v-icon
-            > -->
           </a>
         </div>
       </v-col>
