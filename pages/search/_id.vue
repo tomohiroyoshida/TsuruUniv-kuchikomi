@@ -191,7 +191,7 @@ export default defineComponent({
       }
       // いいねが押されていれば追加・なければ削除
       if (target && target.className.includes('liked')) {
-        const docRef = await db.collection('likes').doc()
+        const docRef = db.collection('likes').doc()
         const targetKuchikomiAuthorUid = kuchikomiList.value.find(
           (item) => item.docId === kuchikomiId
         )?.uid
@@ -250,7 +250,7 @@ export default defineComponent({
     // 編集
     const updatingKuchikomi = ref({})
     const originalKuchikomi = ref({})
-    const openUpdateDialog = (kuchikomi: Kuchikomi): void => {
+    const openUpdateDialog = (kuchikomi: Kuchikomi) => {
       // 編集するクチコミ情報のコピーを作成
       originalKuchikomi.value = Object.assign({}, kuchikomi)
       updatingKuchikomi.value = Object.assign({}, kuchikomi)
@@ -261,7 +261,7 @@ export default defineComponent({
       isOpenErrorSnackbar.value = false
     }
     // 更新された内容を一覧に反映させる処理
-    const updateKuchikomi = (updatedKuchikomi: Kuchikomi): void => {
+    const updateKuchikomi = (updatedKuchikomi: Kuchikomi) => {
       isOpenUpdateDialog.value = false
       const docId = updatedKuchikomi.docId
       const targetIndex = kuchikomiList.value.findIndex(
@@ -269,7 +269,7 @@ export default defineComponent({
       )
       kuchikomiList.value[targetIndex] = updatedKuchikomi
     }
-    const cancelUpdate = (): void => {
+    const cancelUpdate = () => {
       updatingKuchikomi.value = originalKuchikomi.value
       isOpenUpdateDialog.value = false
     }
@@ -284,7 +284,7 @@ export default defineComponent({
       deleteTargetDocId.value = docId
     }
     // 削除処理
-    const deleteKuchikomi = async (): Promise<void> => {
+    const deleteKuchikomi = async () => {
       try {
         await db // 削除
           .collection('classes')
@@ -342,7 +342,7 @@ export default defineComponent({
      * init
      */
     // ユーザーネーム取得
-    const getUsername = (uid: string): string => {
+    const getUsername = (uid: string) => {
       const users: User[] = root.$store.getters.users
       const username = users.find((user) => user.uid === uid)?.username
       return username || '名無しのユーザー'
@@ -351,7 +351,7 @@ export default defineComponent({
     const classList: Class[] = root.$store.getters.classes
     const currentClass = classList.find((item) => item.docId === classId)
     // TODO: プロフィール画像
-    const getUserPhotoURL = (uid: string): ArrayBuffer | string => {
+    const getUserPhotoURL = (uid: string) => {
       const users: User[] = root.$store.getters.users
       const photoURL = users.find((item) => item.uid === uid)?.photoURL
       return (
