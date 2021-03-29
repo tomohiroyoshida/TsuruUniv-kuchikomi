@@ -13,5 +13,9 @@ firebase.initializeApp(config)
 const db = firebase.firestore()
 // authentication
 const auth = firebase.auth()
+// auth provider(Google)
+const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
+// auth provider(Twitter)
+const twitterAuthProvider = new firebase.auth.TwitterAuthProvider()
 
-export { db, auth }
+export { db, auth, googleAuthProvider, twitterAuthProvider }
