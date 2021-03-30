@@ -5,7 +5,8 @@ import { Class } from '@/types/State'
 
 export default defineNuxtPlugin(async ({ store }) => {
   const fetchedClasses: Class[] = []
-  if (store.getters.classes !== []) {
+  const storeClasses: Class[] = store.getters.classes as Class[]
+  if (!storeClasses.length) {
     await db
       .collection('classes')
       .orderBy('classTitle', 'asc')
@@ -15,6 +16,7 @@ export default defineNuxtPlugin(async ({ store }) => {
           fetchedClasses.push(doc.data() as Class)
         })
       })
+    console.debug('plugin classes')
     store.dispatch('setClasses', fetchedClasses)
   }
 })
