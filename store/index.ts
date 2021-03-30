@@ -36,7 +36,7 @@ export const state = () => ({
   } as Class,
   // 授業一覧が何で並べ替えされているか
   orderedBy: {
-    rating: false,
+    rating: true,
     tags: []
   } as OrderedBy
 })
