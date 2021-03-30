@@ -13,7 +13,6 @@ export default defineNuxtPlugin(async ({ store }) => {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => users.push(doc.data() as User))
       })
-    console.debug('plugin users')
     store.dispatch('setUsers', users)
   }
 })

@@ -10,7 +10,6 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
   const isLoggedIn = () => {
     return !!store.getters.user.uid
   }
-  console.debug('関数の外のisLoggedIn', isLoggedIn())
 
   /** 認証状態の監視 */
   auth.onAuthStateChanged(async (signInUser) => {
@@ -22,8 +21,6 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
       const fireUser: User = await docRef
         .get()
         .then((doc) => doc.data() as User)
-      console.debug('middleware fireUser', fireUser)
-      console.debug('store user', store.getters.user)
 
       // 2回目以降のログイン
       if (fireUser) {

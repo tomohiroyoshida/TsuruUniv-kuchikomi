@@ -16,7 +16,6 @@ export default defineNuxtPlugin(async ({ store }) => {
           fetchedClasses.push(doc.data() as Class)
         })
       })
-    console.debug('plugin classes')
     store.dispatch('setClasses', fetchedClasses)
   }
 })
