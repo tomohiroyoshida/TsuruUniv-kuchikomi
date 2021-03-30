@@ -15,8 +15,6 @@ export const state = () => ({
     photoURL: '',
     twitterURL: ''
   } as User,
-  // CSRF対策のtoken
-  csrfToken: '',
   // 登録されているユーザー一覧
   users: [] as User[],
   //  授業のリスト
@@ -38,7 +36,9 @@ export const state = () => ({
   orderedBy: {
     rating: true,
     tags: []
-  } as OrderedBy
+  } as OrderedBy,
+  // CSRF対策のtoken
+  csrfToken: ''
 })
 
 export const getters = {
@@ -63,9 +63,6 @@ export const getters = {
   orderedBy: (state: NuxtState): OrderedBy => {
     return state.orderedBy
   }
-  // filteredClasses: (state: NuxtState): Class[] => {
-  //   return state.filteredClasses
-  // },
 }
 
 export const mutations = {
@@ -93,9 +90,6 @@ export const mutations = {
   setOrderedByRating(state: NuxtState, isOrderedByRating: boolean) {
     state.orderedBy.rating = isOrderedByRating
   }
-  // setFilteredClasses(state: NuxtState, filteredClasses: string) {
-  //   state.filteredClasses = filteredClasses
-  // },
 }
 
 export const actions = {
@@ -132,8 +126,4 @@ export const actions = {
   setCurrentClass({ commit }: NuxtAppOptions, currentClass: string) {
     commit('setCurrentClass', currentClass)
   }
-  // 検索ページでフィルタリングされた授業一覧
-  // setFilteredClasses({ commit }: NuxtAppOptions, filteredClasses: Class[]) {
-  //   commit('setFilteredClasses', filteredClasses)
-  // },
 }
