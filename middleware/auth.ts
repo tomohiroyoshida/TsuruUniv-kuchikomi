@@ -21,6 +21,7 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
       const fireUser: User = await docRef
         .get()
         .then((doc) => doc.data() as User)
+      // console.debug('既存のfirestoreのユーザー', fireUser)
 
       // 2回目以降のログイン
       if (fireUser) {
@@ -32,6 +33,7 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
           photoURL: fireUser.photoURL || defaultImage,
           twitterURL: fireUser.twitterURL || ''
         }
+        // console.debug('既存のユーザー', userInfo)
         store.dispatch('setUser', userInfo)
         // docRef.set(userInfo)
       }
@@ -44,15 +46,15 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
           photoURL: signInUser.photoURL || defaultImage,
           twitterURL: ''
         }
+        // console.debug('新しいユーザー', userInfo)
         store.dispatch('setUser', userInfo)
         docRef.set(userInfo)
       }
     }
     // ログインしていない場合
-    else if (!signInUser || !isLoggedIn()) {
+    else if (!(signInUser || isLoggedIn())) {
       // 現在のパスが「ログインしていなくてもアクセスできるパス」でないならリダイレクト
       const currentPath = route.name
-      console.debug('ログインしてないよ', currentPath)
       if (currentPath)
         if (!NO_LOGIN_NEEDED_PATHS.includes(currentPath)) redirect('/login')
     }
