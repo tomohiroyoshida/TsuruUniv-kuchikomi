@@ -126,7 +126,7 @@ import {
   ref
 } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
-import { CollKuchikomi, Kuchikomi, Class } from 'types/State'
+import { CollKuchikomi, Kuchikomi, Class, User } from 'types/State'
 import { setAvgRating } from '@/helpers/setAvgRating'
 
 const RULES = {
@@ -174,27 +174,11 @@ export default defineComponent({
     }
 
     // 更新処理
+    // TODO:kuchikomis collection に統合
     const update = async () => {
       disabled.value = true
-      const classId = root.$route.params.id
-      const docRef = db
-        .collection('classes')
-        .doc(classId)
-        .collection('kuchikomis')
-        .doc(props.updatingKuchikomi.docId)
       try {
-        // 更新した内容
-        const data: Kuchikomi = {
-          docId: props.updatingKuchikomi.docId,
-          rating: props.updatingKuchikomi.rating,
-          classYear: props.updatingKuchikomi.classYear,
-          kuchikomiTitle: props.updatingKuchikomi.kuchikomiTitle,
-          kuchikomi: props.updatingKuchikomi.kuchikomi,
-          uid: root.$store.getters.user.uid,
-          username: root.$store.getters.user.username,
-          createdAt: props.updatingKuchikomi.createdAt
-        }
-        await docRef.set(data, { merge: true }) // 更新
+        const classId = root.$route.params.id
         await setAvgRating(classId) // 授業のおすすめ度の平均値を更新
         const targetClass: Class = await db
           .collection('classes')
@@ -202,28 +186,33 @@ export default defineComponent({
           .get()
           .then((doc) => doc.data() as Class)
 
-        // kuchikomis colection を更新
+        const storeUser = ref<User>(root.$store.getters.user)
+        // 更新した内容
         const collKuchikomi: CollKuchikomi = {
           docId: props.updatingKuchikomi.docId,
           rating: props.updatingKuchikomi.rating,
           classYear: props.updatingKuchikomi.classYear,
           kuchikomiTitle: props.updatingKuchikomi.kuchikomiTitle,
           kuchikomi: props.updatingKuchikomi.kuchikomi,
-          uid: root.$store.getters.user.uid,
-          username: root.$store.getters.user.username,
+          uid: storeUser.value.uid,
+          username: storeUser.value.username,
           classId,
           classTitle: targetClass.classTitle,
           classTeacherName: targetClass.teacherName,
           createdAt: props.updatingKuchikomi.createdAt
         }
-        await db.collection('kuchikomis').doc(data.docId).set(collKuchikomi)
+        // kuchikomis colection を更新
+        await db
+          .collection('kuchikomis')
+          .doc(collKuchikomi.docId)
+          .set(collKuchikomi)
 
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
         setTimeout(() => {
-          emit('updated', data)
+          emit('updated', collKuchikomi)
           disabled.value = false
-        }, 1500)
+        }, 1200)
       } catch (e) {
         console.error('update', e)
         isOpenErrorSnackbar.value = true

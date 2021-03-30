@@ -149,7 +149,7 @@
 <script lang="ts" async>
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
-import { Class, Kuchikomi, CollKuchikomi } from '@/types/State'
+import { Class, CollKuchikomi, User } from '@/types/State'
 import { Tag } from '@/types/General'
 import firebase from 'firebase'
 import { getNewDate } from '@/helpers/getNewDate'
@@ -212,7 +212,7 @@ export default defineComponent({
     }
     /**  追加処理 */
     const addClass = async (
-      docRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+      classDocRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ) => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
@@ -222,7 +222,7 @@ export default defineComponent({
       const tagValues: string[] = []
       selectedTags.value.forEach((item) => tagValues.push(item.value))
       const data: Class = {
-        docId: docRef.id,
+        docId: classDocRef.id,
         classTitle: classTitle.value,
         teacherName: teacherName.value,
         avgRating: rating.value,
@@ -230,53 +230,39 @@ export default defineComponent({
         createdBy: uid,
         createdAt: getNewDate()
       }
-      await docRef.set(data)
+      await classDocRef.set(data) // 授業追加
       root.$store.dispatch('pushClass', data)
     }
     // クチコミを追加
-    const addKuchikomi = (
-      classRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+    const addKuchikomi = async (
+      classDocRef: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
     ) => {
       if (csrfToken !== storedCsrfToken) {
         isOpenErrorSnackbar.value = true
         return
       }
-      const kuchikomiRef = db
-        .collection('classes')
-        .doc(classRef.id)
-        .collection('kuchikomis')
-        .doc()
-      const data: Kuchikomi = {
-        docId: kuchikomiRef.id,
-        kuchikomiTitle: kuchikomiTitle.value,
-        classYear: classYear.value,
-        rating: rating.value,
-        kuchikomi: kuchikomi.value,
-        uid,
-        username: root.$store.getters.user.username,
-        createdAt: getNewDate()
-      }
-      const setKuchikomi = kuchikomiRef.set(data)
-
+      const kuchikomiDocRef = db.collection('kuchikomis').doc()
+      const storeUser = ref<User>(root.$store.getters.user)
+      const createdAt = getNewDate()
       // kuchikomis collection にクチコミ情報を追加
       const collectionData: CollKuchikomi = {
-        docId: kuchikomiRef.id,
+        docId: kuchikomiDocRef.id,
         rating: rating.value,
         classYear: classYear.value,
         kuchikomiTitle: kuchikomiTitle.value,
         kuchikomi: kuchikomi.value,
-        uid: root.$store.getters.user.uid,
-        username: root.$store.getters.user.username,
-        classId: classRef.id,
+        uid: storeUser.value.uid,
+        username: storeUser.value.username,
+        classId: classDocRef.id,
         classTitle: classTitle.value,
         classTeacherName: teacherName.value,
-        createdAt: getNewDate()
+        createdAt
       }
-      const setCollKuchikomi = db
+      // クチコミ追加
+      await db
         .collection('kuchikomis')
-        .doc(data.docId)
+        .doc(kuchikomiDocRef.id)
         .set(collectionData)
-      Promise.all([setKuchikomi, setCollKuchikomi])
     }
 
     // 授業＋クチコミ作成
@@ -285,20 +271,26 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
         return
       }
-      // 入力した授業と同じ授業名かつ講師名が存在するかのフラグ
+      // 一度falseに初期化
+      isOpenErrorSnackbar.value = false
+      isOpenDuplicatedSnackbar.value = false
+
+      // 「入力した授業と同じ授業名かつ講師名が存在するか」のフラグ
       const isTitleAndTeacherNameSame = classList.value.find(
         (item) =>
           item.classTitle === classTitle.value &&
           item.teacherName === teacherName.value
       )
       if (!isTitleAndTeacherNameSame) {
-        const docRef = db.collection('classes').doc()
+        const classDocRef = db.collection('classes').doc()
         try {
-          Promise.all([addClass(docRef), addKuchikomi(docRef)])
-          db.collection('classes')
-          resetInput()
-          isOpenCreateConfirm.value = false
-          isOpenSuccessSnackbar.value = true
+          Promise.all([addClass(classDocRef), addKuchikomi(classDocRef)]).then(
+            () => {
+              resetInput()
+              isOpenCreateConfirm.value = false
+              isOpenSuccessSnackbar.value = true
+            }
+          )
         } catch (e) {
           console.error('create-new', e)
           isOpenErrorSnackbar.value = true

@@ -18,7 +18,7 @@ export interface Class {
   createdAt: string
 }
 
-// クチコミ
+// // クチコミ
 export interface Kuchikomi {
   docId: string
   rating: number
@@ -27,8 +27,22 @@ export interface Kuchikomi {
   kuchikomi: string
   uid: string // クチコミを作成したユーザーの]ID
   username: string
+  classId: string
+  classTitle: string
+  classTeacherName: string
   createdAt: string
 }
+// 旧クチコミ型(classes -> kuchikomis)
+// export interface Kuchikomi {
+//   docId: string
+//   rating: number
+//   classYear: string
+//   kuchikomiTitle: String
+//   kuchikomi: string
+//   uid: string // クチコミを作成したユーザーの]ID
+//   username: string
+//   createdAt: string
+// }
 
 // kuchikomis collection のクチコミ情報
 export interface CollKuchikomi {

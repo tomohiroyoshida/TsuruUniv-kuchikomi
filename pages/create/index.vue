@@ -151,7 +151,7 @@
 import { defineComponent, ref, watch } from '@nuxtjs/composition-api'
 import { Class } from '@/types/State'
 import { db } from '@/plugins/firebase'
-import { Kuchikomi, CollKuchikomi } from 'types/State'
+import { CollKuchikomi, User } from 'types/State'
 import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 import { setAvgRating } from '@/helpers/setAvgRating'
 import { getNewDate } from '@/helpers/getNewDate'
@@ -241,41 +241,29 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
         return
       }
-      isOpenCreateConfirm.value = false
-      //  Firestoreにクチコミの情報追加
-      const docRef = db
-        .collection('classes')
-        .doc(targetClassId.value)
-        .collection('kuchikomis')
-        .doc()
-      try {
-        const data: Kuchikomi = {
-          docId: docRef.id,
-          rating: rating.value,
-          classYear: classYear.value,
-          kuchikomiTitle: kuchikomiTitle.value,
-          kuchikomi: kuchikomi.value,
-          uid: root.$store.getters.user.uid,
-          username: root.$store.getters.user.username,
-          createdAt: getNewDate()
-        }
-        await docRef.set(data) // 追加
 
-        // kuchikomis collection に追加
+      isOpenCreateConfirm.value = false
+      // kuchikomis collection に追加
+      try {
+        const kuchikomiDocRef = db.collection('kuchikomis').doc()
+        const storeUser = ref<User>(root.$store.getters.user)
         const collectionData: CollKuchikomi = {
-          docId: docRef.id,
+          docId: kuchikomiDocRef.id,
           rating: rating.value,
           classYear: classYear.value,
           kuchikomiTitle: kuchikomiTitle.value,
           kuchikomi: kuchikomi.value,
-          uid: root.$store.getters.user.uid,
-          username: root.$store.getters.user.username,
+          uid: storeUser.value.uid,
+          username: storeUser.value.username,
           classId: classCardInfo.value.docId,
           classTitle: classCardInfo.value.classTitle,
           classTeacherName: classCardInfo.value.teacherName,
           createdAt: getNewDate()
         }
-        await db.collection('kuchikomis').doc(data.docId).set(collectionData)
+        await db
+          .collection('kuchikomis')
+          .doc(collectionData.docId)
+          .set(collectionData)
         await setAvgRating(targetClassId.value) // おすすめ度の平均値を更新
         resetInput()
         isOpenSuccessSnackbar.value = true
@@ -286,6 +274,22 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
         disabled.value = false
       }
+      // const docRef = db
+      //   .collection('classes')
+      //   .doc(targetClassId.value)
+      //   .collection('kuchikomis')
+      //   .doc()
+      //   const data: Kuchikomi = {
+      //     docId: docRef.id,
+      //     rating: rating.value,
+      //     classYear: classYear.value,
+      //     kuchikomiTitle: kuchikomiTitle.value,
+      //     kuchikomi: kuchikomi.value,
+      //     uid: root.$store.getters.user.uid,
+      //     username: root.$store.getters.user.username,
+      //     createdAt: getNewDate()
+      //   }
+      //   await docRef.set(data) // 追加
     }
 
     // キャンセル

@@ -118,10 +118,6 @@
                 <div class="text-body-2 ml-2 mt-2">
                   {{ getLikesCount(item.docId) || 0 }}
                 </div>
-                <!-- <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }"> </template>
-                  <span>いいね</span>
-                </v-tooltip> -->
               </div>
             </v-card>
           </v-col>
@@ -167,7 +163,6 @@ import { Kuchikomi, User, Class } from '@/types/State'
 import { Like } from '@/types/General'
 import { setAvgRating } from '@/helpers/setAvgRating'
 import { getNewDate } from '@/helpers/getNewDate'
-import { KUCHIKOMI_TAGS } from '@/data/TAGS'
 
 export default defineComponent({
   name: 'SearchId',
@@ -180,6 +175,14 @@ export default defineComponent({
     const isOpenErrorSnackbar = ref(false)
     const isOpenUpdateDialog = ref(false)
     const isOpenDeleteConfirm = ref(false)
+    const classList: Class[] = root.$store.getters.classes // 授業の一覧
+    const currentClass = classList.find((item) => item.docId === classId) // 現在選択されている授業取得
+    // ユーザーネーム取得
+    const getUsername = (uid: string) => {
+      const users: User[] = root.$store.getters.users as User[]
+      const username = users.find((user) => user.uid === uid)?.username
+      return username || '名無しのユーザー'
+    }
 
     // いいねの Map(クチコミID, いいねId)
     const likesMap = ref<Map<string, string>>(new Map())
@@ -231,10 +234,10 @@ export default defineComponent({
     }
     // 自分がこのクチコミにいいねしたか
     const isLikedByMe = (kuchikomiId: string) => {
-      const isKuchikomiLikedByMe = likedKuchikomisByMe.value.filter(
+      const isKuchikomiLikedByMe = likedKuchikomisByMe.value.find(
         (item) => item.kuchikomiId === kuchikomiId
       )
-      return isKuchikomiLikedByMe[0]
+      return !!isKuchikomiLikedByMe
     }
 
     const goToUserPage = (userId: string) => {
@@ -263,9 +266,8 @@ export default defineComponent({
     // 更新された内容を一覧に反映させる処理
     const updateKuchikomi = (updatedKuchikomi: Kuchikomi) => {
       isOpenUpdateDialog.value = false
-      const docId = updatedKuchikomi.docId
       const targetIndex = kuchikomiList.value.findIndex(
-        (item) => item.docId === docId
+        (item) => item.docId === updatedKuchikomi.docId
       )
       kuchikomiList.value[targetIndex] = updatedKuchikomi
     }
@@ -286,27 +288,19 @@ export default defineComponent({
     // 削除処理
     const deleteKuchikomi = async () => {
       try {
-        await db // 削除
-          .collection('classes')
-          .doc(classId)
-          .collection('kuchikomis')
-          .doc(deleteTargetDocId.value)
-          .delete()
+        // kuchikomis collection からクチコミ削除
+        await db.collection('kuchikomis').doc(deleteTargetDocId.value).delete()
         // 削除後のクチコミ全てをFirestoreから取得 -> クチコミ一覧を上書き
         const newKuchikoims: Kuchikomi[] = []
         await db
-          .collection('classes')
-          .doc(classId)
           .collection('kuchikomis')
+          .where('classId', '==', classId)
           .get()
-          .then((querysnapshot): void => {
-            querysnapshot.forEach((doc) => {
+          .then((snapshot): void => {
+            snapshot.forEach((doc) => {
               newKuchikoims.push(doc.data() as Kuchikomi)
             })
           })
-
-        // kuchikomis collection からクチコミ削除
-        await db.collection('kuchikomis').doc(deleteTargetDocId.value).delete()
 
         // likes collection からクチコミにされたいいねを全て削除
         const likesArr: Like[] = []
@@ -314,8 +308,8 @@ export default defineComponent({
           .collection('likes')
           .where('kuchikomiId', '==', deleteTargetDocId.value)
           .get()
-          .then((snap) => {
-            snap.forEach((doc) => {
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
               likesArr.push(doc.data() as Like)
             })
           })
@@ -333,32 +327,18 @@ export default defineComponent({
       }
     }
 
-    // タグのテキストを表示
-    const getTagData = (tag: string) => {
-      return KUCHIKOMI_TAGS.find((item) => item.value === tag)
-    }
-
     /**
      * init
      */
-    // ユーザーネーム取得
-    const getUsername = (uid: string) => {
-      const users: User[] = root.$store.getters.users
-      const username = users.find((user) => user.uid === uid)?.username
-      return username || '名無しのユーザー'
-    }
-    // 現在選択されている授業取得
-    const classList: Class[] = root.$store.getters.classes
-    const currentClass = classList.find((item) => item.docId === classId)
     // TODO: プロフィール画像
-    const getUserPhotoURL = (uid: string) => {
-      const users: User[] = root.$store.getters.users
-      const photoURL = users.find((item) => item.uid === uid)?.photoURL
-      return (
-        photoURL ||
-        'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
-      )
-    }
+    // const getUserPhotoURL = (uid: string) => {
+    //   const users: User[] = root.$store.getters.users
+    //   const photoURL = users.find((item) => item.uid === uid)?.photoURL
+    //   return (
+    //     photoURL ||
+    //     'https://storage.googleapis.com/studio-cms-assets/projects/RQqJDxPBWg/s-1000x1000_v-fs_webp_eb270a46-5d4c-484e-ada2-a42a7f45f182.webp'
+    //   )
+    // }
 
     // クチコミの一覧を取得
     const kuchikomiList = ref<Kuchikomi[]>([])
@@ -366,21 +346,21 @@ export default defineComponent({
     const likesList = ref<Like[]>([])
     // 自分がどれにいいねしたかのリスト
     const likedKuchikomisByMe = ref<Like[]>([])
+
     useFetch(async () => {
       isLoading.value = true
       try {
+        // この授業のクチコミの一覧を取得
         await db
-          .collection('classes')
-          .doc(classId)
           .collection('kuchikomis')
+          .where('classId', '==', classId)
           .get()
-          .then((querySnapshot): void => {
-            querySnapshot.forEach((doc) => {
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
               kuchikomiList.value.push(doc.data() as Kuchikomi)
             })
           })
-        uid.value = root.$store.getters.user.uid
-        // 全いいねのリストを取得
+        // この授業につけられた全いいねの一覧を取得
         await db
           .collection('likes')
           .where('classId', '==', classId)
@@ -388,7 +368,7 @@ export default defineComponent({
           .then((snapshot) => {
             snapshot.forEach((doc) => likesList.value.push(doc.data() as Like))
           })
-        // // 自分がどれにいいねしたかのリスト
+        // 自分がどれにいいねしたかのリスト
         likedKuchikomisByMe.value = likesList.value.filter(
           (item) => item.likedBy === uid.value
         )
@@ -412,8 +392,6 @@ export default defineComponent({
     })
 
     return {
-      KUCHIKOMI_TAGS,
-      getTagData,
       classId,
       kuchikomiList,
       uid,
@@ -439,8 +417,8 @@ export default defineComponent({
       getLikesCount,
       isLikedByMe,
       likedKuchikomisByMe,
-      likesMap,
-      getUserPhotoURL
+      likesMap
+      // getUserPhotoURL
     }
   }
 })
