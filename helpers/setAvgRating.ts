@@ -2,18 +2,22 @@
  * おすすめ度は小数点第一位まで(ex: 4.5)
  */
 import { db } from '@/plugins/firebase'
+import { Kuchikomi } from '@/types/State'
 
 export async function setAvgRating(classId: string): Promise<void> {
   const avgRatingsArr: number[] = [] // おすすめ度を格納する配列
   // この授業の全クチコミのおすすめ度を取得
   await db
-    .collection('classes')
-    .doc(classId)
     .collection('kuchikomis')
+    .where('classId', '==', classId)
     .get()
     .then((snap) => {
-      snap.forEach((doc) => avgRatingsArr.push(doc.data().rating))
+      snap.forEach((doc) => {
+        const data = doc.data() as Kuchikomi
+        avgRatingsArr.push(data.rating)
+      })
     })
+  // console.debug('avgRatingsArr', avgRatingsArr)
 
   // おすすめ度の平均値を算出
   let sum: number = 0 // 合計値

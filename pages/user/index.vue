@@ -179,20 +179,17 @@ export default defineComponent({
         await docRef.set(updatedUser, { merge: true })
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
-
         // 更新後のユーザ一覧
-        const newUsers: User[] = []
-        await db
-          .collection('users')
-          .get()
-          .then((snapshot) => {
-            snapshot.forEach((doc) => newUsers.push(doc.data() as User))
-          })
+        const storeUsers: User[] = root.$store.getters.users as User[]
+        const targetUserIndex = storeUsers.findIndex(
+          (item) => item.uid === user.value.uid
+        )
+        storeUsers[targetUserIndex] = updatedUser
         root.$store.dispatch('setUser', updatedUser)
-        root.$store.dispatch('setUsers', newUsers)
+        root.$store.dispatch('setUsers', storeUsers)
         setTimeout(() => {
           root.$router.push('/search')
-        }, 500)
+        }, 1500)
       } catch (e) {
         console.error('update', e)
         isOpenUpdateConfirm.value = false
