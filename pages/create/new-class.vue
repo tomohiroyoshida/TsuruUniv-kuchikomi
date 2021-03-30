@@ -13,7 +13,7 @@
               <TextInput
                 v-model="classTitle"
                 :rules="RULES.requiredWith50"
-                :counter="30"
+                :counter="50"
                 placeholder="例： 自然と生命Ⅵ"
               />
             </v-col>
