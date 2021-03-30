@@ -170,6 +170,7 @@ export default defineComponent({
 
       // Storeを綺麗にする
       root.$store.dispatch('setSearchingTitle', '')
+      // root.$store.dispatch('setFilteredClasses', [])
       isSearching.value = false
     })
 
@@ -316,10 +317,5 @@ export default defineComponent({
     bottom: 6px;
     right: 6px;
   }
-}
-
-/* 検索欄の虫眼鏡アイコンが持つデフォルトのマージンを消す */
-.v-input >>> .v-input__append-outer {
-  margin: 0;
 }
 </style>
