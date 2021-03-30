@@ -17,5 +17,7 @@ const auth = firebase.auth()
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 // auth provider(Twitter)
 const twitterAuthProvider = new firebase.auth.TwitterAuthProvider()
+// session persistence
+const sessionPersistence = firebase.auth.Auth.Persistence.SESSION
 
-export { db, auth, googleAuthProvider, twitterAuthProvider }
+export { db, auth, googleAuthProvider, twitterAuthProvider, sessionPersistence }
