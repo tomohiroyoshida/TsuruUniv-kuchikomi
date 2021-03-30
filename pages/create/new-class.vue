@@ -12,7 +12,7 @@
               <TextCaption required title="授業名" />
               <TextInput
                 v-model="classTitle"
-                :rules="RULES.requiredWith30"
+                :rules="RULES.requiredWith50"
                 :counter="30"
                 placeholder="例： 自然と生命Ⅵ"
               />
@@ -161,6 +161,10 @@ const RULES = {
   requiredWith30: [
     (v: string) => !!v || 'この欄の入力は必須です',
     (v: string) => (v && v.length <= 30) || '30文字以下で記入してください'
+  ],
+  requiredWith50: [
+    (v: string) => !!v || 'この欄の入力は必須です',
+    (v: string) => (v && v.length <= 50) || '50文字以下で記入してください'
   ],
   kuchikomi: [
     (v: string) => !!v || 'この欄の入力は必須です',
