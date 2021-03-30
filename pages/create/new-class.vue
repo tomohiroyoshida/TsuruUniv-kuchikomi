@@ -22,8 +22,8 @@
               <TextCaption required title="講師名" />
               <TextInput
                 v-model="teacherName"
-                :rules="RULES.requiredWith30"
-                :counter="30"
+                :rules="RULES.requiredWith50"
+                :counter="50"
                 placeholder="例： 都留 千尋"
               />
             </v-col>
