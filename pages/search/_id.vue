@@ -290,17 +290,11 @@ export default defineComponent({
       try {
         // kuchikomis collection からクチコミ削除
         await db.collection('kuchikomis').doc(deleteTargetDocId.value).delete()
-        // 削除後のクチコミ全てをFirestoreから取得 -> クチコミ一覧を上書き
-        const newKuchikoims: Kuchikomi[] = []
-        await db
-          .collection('kuchikomis')
-          .where('classId', '==', classId)
-          .get()
-          .then((snapshot): void => {
-            snapshot.forEach((doc) => {
-              newKuchikoims.push(doc.data() as Kuchikomi)
-            })
-          })
+        // 削除したクチコミの要素をクチコミ一覧から削除する
+        const targetIndex = kuchikomiList.value.findIndex(
+          (item) => item.docId === deleteTargetDocId.value
+        )
+        kuchikomiList.value.splice(targetIndex, 1)
 
         // likes collection からクチコミにされたいいねを全て削除
         const likesArr: Like[] = []
@@ -318,7 +312,6 @@ export default defineComponent({
         })
 
         setAvgRating(classId) // おすすめ度の平均値を更新
-        kuchikomiList.value = newKuchikoims // クチコミの一覧を上書き
         isOpenDeleteConfirm.value = false
         isOpenSuccessDeleteSnackbar.value = true
       } catch (e) {
@@ -350,16 +343,6 @@ export default defineComponent({
     useFetch(async () => {
       isLoading.value = true
       try {
-        // この授業のクチコミの一覧を取得
-        await db
-          .collection('kuchikomis')
-          .where('classId', '==', classId)
-          .get()
-          .then((snapshot) => {
-            snapshot.forEach((doc) => {
-              kuchikomiList.value.push(doc.data() as Kuchikomi)
-            })
-          })
         // この授業につけられた全いいねの一覧を取得
         await db
           .collection('likes')
@@ -375,6 +358,16 @@ export default defineComponent({
         likedKuchikomisByMe.value.forEach((item) => {
           likesMap.value.set(item.kuchikomiId, item.docId)
         })
+        // この授業のクチコミの一覧を取得
+        await db
+          .collection('kuchikomis')
+          .where('classId', '==', classId)
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              kuchikomiList.value.push(doc.data() as Kuchikomi)
+            })
+          })
         // 自分がいいねしたハートはクリックされた状態にする
         await setTimeout(() => {
           kuchikomiList.value.forEach((item) => {
