@@ -289,7 +289,7 @@ export default defineComponent({
     const deleteKuchikomi = async () => {
       try {
         // kuchikomis collection からクチコミ削除
-        await db.collection('kuchikomis').doc(deleteTargetDocId.value).delete()
+        db.collection('kuchikomis').doc(deleteTargetDocId.value).delete()
         // 削除したクチコミの要素をクチコミ一覧から削除する
         const targetIndex = kuchikomiList.value.findIndex(
           (item) => item.docId === deleteTargetDocId.value
@@ -310,7 +310,6 @@ export default defineComponent({
         likesArr.forEach((like) => {
           db.collection('likes').doc(like.docId).delete()
         })
-
         setAvgRating(classId) // おすすめ度の平均値を更新
         isOpenDeleteConfirm.value = false
         isOpenSuccessDeleteSnackbar.value = true
