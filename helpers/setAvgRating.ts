@@ -11,8 +11,8 @@ export async function setAvgRating(classId: string): Promise<void> {
     .collection('kuchikomis')
     .where('classId', '==', classId)
     .get()
-    .then((snap) => {
-      snap.forEach((doc) => {
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
         const data = doc.data() as Kuchikomi
         avgRatingsArr.push(data.rating)
       })
@@ -26,16 +26,12 @@ export async function setAvgRating(classId: string): Promise<void> {
   }
   const nonRoundedSum = sum / avgRatingsArr.length
   const avgRating = Math.round(nonRoundedSum * 10) / 10 // 小数点第2位を四捨五入
-  // avgRating が NaN でなければそのままセット
+  // avgRating が NaN でなければそのまま更新
   if (!isNaN(avgRating)) {
-    await db.collection('classes').doc(classId).update({
-      avgRating
-    })
+    await db.collection('classes').doc(classId).update({ avgRating })
   }
-  // avgRating が NaN(クチコミが存在しない)の場合 デフォルト値として ０ をセット
+  // avgRating が NaN(クチコミが存在しない)の場合、デフォルト値として ０ をセット
   else if (isNaN(avgRating)) {
-    await db.collection('classes').doc(classId).update({
-      avgRating: 0
-    })
+    await db.collection('classes').doc(classId).update({ avgRating: 0 })
   }
 }
