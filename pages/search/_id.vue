@@ -313,8 +313,8 @@ export default defineComponent({
               likesArr.push(doc.data() as Like)
             })
           })
-        likesArr.forEach(async (like) => {
-          await db.collection('likes').doc(like.docId).delete()
+        likesArr.forEach((like) => {
+          db.collection('likes').doc(like.docId).delete()
         })
 
         setAvgRating(classId) // おすすめ度の平均値を更新
