@@ -111,10 +111,10 @@ const RULES = {
 const DEPARTMETS = [
   { text: '国文', value: 'japanese' },
   { text: '英文', value: 'english' },
-  { text: '比文', value: 'comparativeCulture' },
-  { text: '国教', value: 'globalEducation' },
-  { text: '学教', value: 'teacherEducation' },
-  { text: '地社', value: 'communitySociety' }
+  { text: '比較文化', value: 'comparativeCulture' },
+  { text: '国際教育', value: 'globalEducation' },
+  { text: '学校教育', value: 'teacherEducation' },
+  { text: '地域社会', value: 'communitySociety' }
 ]
 
 export default defineComponent({
