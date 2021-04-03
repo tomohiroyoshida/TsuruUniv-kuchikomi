@@ -164,7 +164,7 @@ export default defineComponent({
             snap.forEach((doc) => (userData.value = doc.data() as User))
           })
 
-        // ユーザーがもらった良いね数を取得
+        // ユーザーがもらったいいね数を取得
         const likesArr: any[] = []
         const getLikesCount = await db
           .collection('likes')

@@ -159,15 +159,21 @@
 <script lang="ts" async>
 import { defineComponent, ref, useFetch } from '@nuxtjs/composition-api'
 import { db } from '@/plugins/firebase'
-import { Kuchikomi, User, Class } from '@/types/State'
+import { Kuchikomi, Class } from '@/types/State'
 import { Like } from '@/types/General'
 import { setAvgRating } from '@/helpers/setAvgRating'
 import { getNewDate } from '@/helpers/getNewDate'
+
+interface User {
+  uid: string
+  username: string
+}
 
 export default defineComponent({
   name: 'SearchId',
   setup(_, { root }) {
     const uid = ref<string>(root.$store.getters.user.uid)
+    const users = ref<User[]>([])
     const classId = root.$route.params.id
     const isLoading = ref(false)
     const isOpenSuccessUpdateSnackbar = ref(false)
@@ -179,8 +185,7 @@ export default defineComponent({
     const currentClass = classList.find((item) => item.docId === classId) // 現在選択されている授業取得
     // ユーザーネーム取得
     const getUsername = (uid: string) => {
-      const users: User[] = root.$store.getters.users as User[]
-      const username = users.find((user) => user.uid === uid)?.username
+      const username = users.value.find((user) => user.uid === uid)?.username
       return username || '名無しのユーザー'
     }
 
@@ -367,6 +372,14 @@ export default defineComponent({
               kuchikomiList.value.push(doc.data() as Kuchikomi)
             })
           })
+        // ユーザーネームの一覧を作成
+        await kuchikomiList.value.forEach((item) => {
+          const user = {
+            uid: item.uid,
+            username: item.username
+          }
+          users.value.push(user)
+        })
         // 自分がいいねしたハートはクリックされた状態にする
         await setTimeout(() => {
           kuchikomiList.value.forEach((item) => {
@@ -386,6 +399,7 @@ export default defineComponent({
     return {
       classId,
       kuchikomiList,
+      users,
       uid,
       goToCreatePage,
       goToUserPage,
