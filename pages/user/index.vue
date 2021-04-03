@@ -115,16 +115,22 @@ const DEPARTMETS = [
   { text: '国際教育', value: 'globalEducation' },
   { text: '学校教育', value: 'teacherEducation' },
   { text: '地域社会', value: 'communitySociety' }
-]
+] as const
 
 export default defineComponent({
   name: 'UpdateProfile',
   setup(_, { root }) {
     const isFormValid = ref(true)
     const user = computed<User>(() => {
-      return Object.assign({}, root.$store.getters.user)
+      return Object.assign({}, root.$store.getters.user as User)
     })
+    // TwitterのユーザーIDの部分のみを表示
     const twitterId = ref('')
+    twitterId.value = (function () {
+      const index = user.value.twitterURL.indexOf('m')
+      const userId = user.value.twitterURL.slice(index + 2)
+      return userId
+    })()
 
     const isOpenUpdateConfirm = ref(false)
     const isOpenSuccessSnackbar = ref(false)
@@ -174,20 +180,13 @@ export default defineComponent({
           ? `https://twitter.com/${twitterId.value}`
           : ''
       }
-      // DB更新
+      // user更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
         await docRef.update(updatedUser)
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
-        // 更新後のユーザ一覧
-        const storeUsers: User[] = root.$store.getters.users as User[]
-        const targetUserIndex = storeUsers.findIndex(
-          (item) => item.uid === user.value.uid
-        )
-        storeUsers[targetUserIndex] = updatedUser
         root.$store.dispatch('setUser', updatedUser)
-        root.$store.dispatch('setUsers', storeUsers)
         setTimeout(() => {
           root.$router.push('/search')
         }, 1500)
@@ -204,13 +203,6 @@ export default defineComponent({
     const csrfToken = suid(16)
     root.$store.dispatch('setCsrfToken', csrfToken)
     const storedCsrfToken = root.$store.getters.csrfToken
-
-    // TwitterのユーザーIDの部分のみを表示
-    twitterId.value = (function () {
-      const index = user.value.twitterURL.indexOf('m')
-      const userId = user.value.twitterURL.slice(index + 2)
-      return userId
-    })()
 
     return {
       RULES,
