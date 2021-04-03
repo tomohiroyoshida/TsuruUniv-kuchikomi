@@ -205,7 +205,7 @@ export default defineComponent({
         await db
           .collection('kuchikomis')
           .doc(collKuchikomi.docId)
-          .set(collKuchikomi)
+          .update(collKuchikomi)
 
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
