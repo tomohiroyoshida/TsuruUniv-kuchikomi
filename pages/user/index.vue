@@ -141,6 +141,7 @@ export default defineComponent({
       disabled.value = false
       isOpenFileSizeErrorSnackbar.value = false
       if (file) {
+        // ファイルサイズが1MB以上はエラー
         if (file.size > 1048480) {
           isOpenFileSizeErrorSnackbar.value = true
           disabled.value = true
@@ -176,7 +177,7 @@ export default defineComponent({
       // DB更新
       try {
         const docRef = db.collection('users').doc(user.value.uid)
-        await docRef.set(updatedUser, { merge: true })
+        await docRef.update(updatedUser)
         isOpenUpdateConfirm.value = false
         isOpenSuccessSnackbar.value = true
         // 更新後のユーザ一覧
