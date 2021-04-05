@@ -202,7 +202,6 @@ export default defineComponent({
       classList.value.find((item) =>
         item.docId === classId ? (classCardInfo.value = item) : ''
       )
-      selectedClassId.value = classId
     })
 
     const classCardInfo = ref({
@@ -212,10 +211,6 @@ export default defineComponent({
       createdAt: currentClass.createdAt || '',
       createdBy: currentClass.createdBy || ''
     })
-
-    // クチコミ作成
-    // 選択された授業のidを格納
-    const targetClassId = ref(selectedClassId || '')
 
     // クチコミ作成
     const isOpenCreateConfirm = ref(false)
@@ -264,7 +259,7 @@ export default defineComponent({
           .collection('kuchikomis')
           .doc(collectionData.docId)
           .set(collectionData)
-        await setAvgRating(targetClassId.value) // おすすめ度の平均値を更新
+        await setAvgRating(selectedClassId.value) // おすすめ度の平均値を更新
         resetInput()
         isOpenSuccessSnackbar.value = true
         emptyCurrentClass()
@@ -274,22 +269,6 @@ export default defineComponent({
         isOpenErrorSnackbar.value = true
         disabled.value = false
       }
-      // const docRef = db
-      //   .collection('classes')
-      //   .doc(targetClassId.value)
-      //   .collection('kuchikomis')
-      //   .doc()
-      //   const data: Kuchikomi = {
-      //     docId: docRef.id,
-      //     rating: rating.value,
-      //     classYear: classYear.value,
-      //     kuchikomiTitle: kuchikomiTitle.value,
-      //     kuchikomi: kuchikomi.value,
-      //     uid: root.$store.getters.user.uid,
-      //     username: root.$store.getters.user.username,
-      //     createdAt: getNewDate()
-      //   }
-      //   await docRef.set(data) // 追加
     }
 
     // キャンセル
@@ -367,7 +346,6 @@ export default defineComponent({
       isOpenResetConfirm,
       form,
       classCardInfo,
-      targetClassId,
       openCreateConfirm,
       csrfToken,
       storedCsrfToken
