@@ -102,7 +102,7 @@
 <script lang="ts" async>
 import { defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
-  name: 'About'
+  name: 'Home'
 })
 </script>
 
