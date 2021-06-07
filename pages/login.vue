@@ -70,14 +70,12 @@
 </template>
 
 <script lang="ts" async>
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 import {
-  db,
   auth,
   googleAuthProvider,
   twitterAuthProvider
 } from '@/plugins/firebase'
-import { User } from '@/types/State'
 
 export default defineComponent({
   name: 'login',
@@ -85,24 +83,11 @@ export default defineComponent({
     // Googleでログイン
     const loginWithGoogle = async () => {
       try {
-        await auth
-          .signInWithPopup(googleAuthProvider)
-          .then(async (signedInUser) => {
-            const user = ref<User>()
-            const uid = signedInUser.user?.uid
-            await db
-              .collection('users')
-              .where('uid', '==', uid)
-              .get()
-              .then((snapshot) => {
-                snapshot.forEach((doc) => {
-                  user.value = doc.data() as User
-                })
-              })
-            user.value
-              ? root.$router.replace('/search')
-              : root.$router.replace('/user')
-          })
+        await auth.signInWithPopup(googleAuthProvider).then((signedInUser) => {
+          signedInUser
+            ? root.$router.replace('/search')
+            : root.$router.replace('/user')
+        })
       } catch (e) {
         console.error('google', e)
       }
@@ -110,24 +95,11 @@ export default defineComponent({
     // Twitterでログイン
     const loginWithTwitter = async () => {
       try {
-        await auth
-          .signInWithPopup(twitterAuthProvider)
-          .then(async (signedInUser) => {
-            const user = ref<User>()
-            const uid = signedInUser.user?.uid
-            await db
-              .collection('users')
-              .where('uid', '==', uid)
-              .get()
-              .then((snapshot) => {
-                snapshot.forEach((doc) => {
-                  user.value = doc.data() as User
-                })
-              })
-            user.value
-              ? root.$router.replace('/search')
-              : root.$router.replace('/user')
-          })
+        await auth.signInWithPopup(twitterAuthProvider).then((signedInUser) => {
+          signedInUser
+            ? root.$router.replace('/search')
+            : root.$router.replace('/user')
+        })
       } catch (e) {
         console.error('twitter', e)
       }
