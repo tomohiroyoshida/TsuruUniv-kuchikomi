@@ -55,8 +55,8 @@ export default defineNuxtMiddleware(({ store, route, redirect }) => {
     else if (!(signInUser || isLoggedIn())) {
       // 現在のパスが「ログインしていなくてもアクセスできるパス」でないならリダイレクト
       const currentPath = route.name
-      if (currentPath)
-        if (!NO_LOGIN_NEEDED_PATHS.includes(currentPath)) redirect('/login')
+      if (currentPath && !NO_LOGIN_NEEDED_PATHS.includes(currentPath))
+        redirect('/login')
     }
   })
 
